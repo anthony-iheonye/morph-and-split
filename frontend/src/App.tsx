@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar";
 import ImageSelector from "./components/buttons/ImageSelector";
 import MaskSelector from "./components/buttons/MaskSelector";
 import CopyrightBar from "./components/CopyrightBar";
+import DirectorySelector from "./components/buttons/DirectorySelector";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <GridItem area="main" bg="dodgerblue">
         <ImageSelector />
         <MaskSelector />
+        <DirectorySelector label="Select image folder" />
       </GridItem>
       <GridItem area="copyright" bg="green">
         <CopyrightBar />

@@ -1,7 +1,7 @@
 import FileSelector from "./FileSelector";
 
 const MaskSelector = () => {
-  return <FileSelector fileType="mask" />;
+  return <FileSelector label="Select masks" />;
 };
 
 export default MaskSelector;

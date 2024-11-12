@@ -1,14 +1,14 @@
 import { Button, Icon, Input } from "@chakra-ui/react";
-import { BsImages } from "react-icons/bs";
+import { BsFolder } from "react-icons/bs";
 
 interface Props {
   label: string;
 }
 
-const FileSelector = ({ label }: Props) => {
+const DirectorySelector = ({ label }: Props) => {
   return (
     <Button
-      leftIcon={<Icon as={BsImages} />}
+      leftIcon={<Icon as={BsFolder} />}
       as="label"
       variant="outline"
       cursor="pointer"
@@ -22,9 +22,10 @@ const FileSelector = ({ label }: Props) => {
         padding="0"
         display="None"
         accept={"image/png, image/jpeg, image/jpg"}
+        webkitdirectory="true"
       />
     </Button>
   );
 };
 
-export default FileSelector;
+export default DirectorySelector;
