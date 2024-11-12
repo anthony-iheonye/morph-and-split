@@ -1,5 +1,11 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
+import AugmentationSettings from "./components/AugmentationSettings";
+import AugmentationSetting from "./components/AugmentationSetting";
+import DirectorySelector from "./components/buttons/DirectorySelector";
+import ImageDirectorySelector from "./components/buttons/ImageDirectorySelector";
+import MaskDirectorySelector from "./components/buttons/MaskDirectorySelector";
+import CopyrightBar from "./components/CopyrightBar";
 
 function App() {
   return (
@@ -21,10 +27,11 @@ function App() {
         aside
       </GridItem>
       <GridItem area="main" bg="dodgerblue">
-        Main
+        <ImageDirectorySelector />
+        <MaskDirectorySelector />
       </GridItem>
       <GridItem area="copyright" bg="green">
-        Footer
+        <CopyrightBar />
       </GridItem>
     </Grid>
   );
