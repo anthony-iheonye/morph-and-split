@@ -5,7 +5,7 @@ interface Props {
   fileType: "image" | "mask";
 }
 
-const DirectorySelector = ({ fileType }: Props) => {
+const FileSelector = ({ fileType }: Props) => {
   return (
     <Button
       leftIcon={<Icon as={BsFolder} />}
@@ -27,4 +27,4 @@ const DirectorySelector = ({ fileType }: Props) => {
   );
 };
 
-export default DirectorySelector;
+export default FileSelector;
