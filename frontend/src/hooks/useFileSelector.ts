@@ -2,12 +2,12 @@ import { useState } from "react";
 import AugImage from "../entities/Image";
 import AugMask from "../entities/Mask";
 
-const useFileSelector = (
-  setFilePaths: (files: AugImage[] | AugMask[]) => void
+const useFileSelector = <T extends AugImage | AugMask>(
+  setFilePaths: (files: T[]) => void
 ) => {
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const getFileExt = (file: File): AugImage["extension"] | null => {
+  const getFileExt = (file: File): T["extension"] | null => {
     const ext = file.name.split(".").pop()?.toLowerCase();
     if (ext === "jpg" || ext === "png" || ext === "jpeg") {
       return ext;
@@ -25,7 +25,7 @@ const useFileSelector = (
     }
 
     setError(null);
-    const newFiles: AugImage[] = [];
+    const newFiles: T[] = [];
 
     for (const file of Array.from(curFiles)) {
       const extension = getFileExt(file);
@@ -42,7 +42,7 @@ const useFileSelector = (
           name: file.name,
           extension: extension,
           url: URL.createObjectURL(file),
-        });
+        } as T);
     }
 
     setFilePaths(newFiles);
