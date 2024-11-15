@@ -18,8 +18,7 @@ const useFileSelector = (setFilePaths: (files: Image[] | Mask[]) => void) => {
 
     if (!curFiles || curFiles.length == 0) {
       setError("No files currently selected for upload.");
-      // reset current state if no new file is selected.
-      // setFilePaths([]);
+      // setFilePaths([]);  // reset current state if no new file is selected.
       return;
     }
 
