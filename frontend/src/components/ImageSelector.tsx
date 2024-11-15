@@ -2,12 +2,13 @@ import { Button, Icon, Input, Text, VStack } from "@chakra-ui/react";
 import { BsImages } from "react-icons/bs";
 import useFileSelector from "../hooks/useFileSelector";
 import useAugConfigStore from "../store";
+import AugImage from "../entities/Image";
 
 const ImageSelector = () => {
   const setImages = useAugConfigStore((state) => state.setImages);
   // const filePaths = useAugConfigStore((state) => state.augConfig.images) || [];
 
-  const { error, handleFileChange } = useFileSelector(setImages);
+  const { error, handleFileChange } = useFileSelector<AugImage>(setImages);
   return (
     <VStack>
       <Button

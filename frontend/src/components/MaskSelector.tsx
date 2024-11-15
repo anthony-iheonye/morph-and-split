@@ -2,12 +2,13 @@ import { Button, Icon, Input, Text, VStack } from "@chakra-ui/react";
 import { BsImages } from "react-icons/bs";
 import useFileSelector from "../hooks/useFileSelector";
 import useAugConfigStore from "../store";
+import AugMask from "../entities/Mask";
 
 const MaskSelector = () => {
   const setMasks = useAugConfigStore((state) => state.setMasks);
   // const filePaths = useAugConfigStore((state) => state.augConfig.masks) || [];
 
-  const { error, handleFileChange } = useFileSelector(setMasks);
+  const { error, handleFileChange } = useFileSelector<AugMask>(setMasks);
   return (
     <VStack>
       <Button
