@@ -1,4 +1,4 @@
-export default interface Image {
+export default interface AugImage {
   id: number | string;
   name: string;
   extension: "jpg" | "png" | "jpeg";

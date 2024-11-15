@@ -1,13 +1,13 @@
 import { create } from "zustand";
-import Image from "./entities/Image";
-import Mask from "./entities/Mask";
+import AugImage from "./entities/Image";
+import AugMask from "./entities/Mask";
 import ImgMaskChannels from "./entities/ImgMaskChannels";
 import CropDimension from "./entities/CropDimension";
 import ImgDimension from "./entities/ImgDimension";
 
 interface AugConfig {
-  images?: Image[];
-  masks?: Mask[];
+  images?: AugImage[];
+  masks?: AugMask[];
   saveDirectory?: string;
   initialTrainSaveId?: number;
   initialValSaveId?: number;
@@ -34,8 +34,8 @@ interface AugConfig {
 
 interface AugConfigStore {
   augConfig: AugConfig;
-  setImages: (images: Image[]) => void;
-  setMasks: (masks: Mask[]) => void;
+  setImages: (images: AugImage[]) => void;
+  setMasks: (masks: AugMask[]) => void;
   setSaveDirectory: (saveDirectory: string) => void;
   setInitialTrainSaveId: (initialTrainSaveId: number) => void;
   setInitialValSaveId: (initialValSaveId: number) => void;
