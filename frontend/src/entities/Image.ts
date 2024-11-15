@@ -1,5 +1,6 @@
 export default interface Image {
-  id: number;
+  id: number | string;
   name: string;
   extension: "jpg" | "png" | "jpeg";
+  url: string;
 }

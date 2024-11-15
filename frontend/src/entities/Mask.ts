@@ -1,5 +1,6 @@
 export default interface Mask {
-  id: string;
+  id: number | string;
   name: string;
   extension: "jpg" | "png" | "jpeg";
+  url: string;
 }
