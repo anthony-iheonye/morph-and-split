@@ -1,9 +1,9 @@
-import { Grid, GridItem } from "@chakra-ui/react";
-import NavBar from "./components/NavBar";
-import ImageSelector from "./components/buttons/ImageSelector";
-import MaskSelector from "./components/buttons/MaskSelector";
+import { Grid, GridItem, HStack } from "@chakra-ui/react";
 import CopyrightBar from "./components/CopyrightBar";
-import DirectorySelector from "./components/buttons/DirectorySelector";
+import NavBar from "./components/NavBar";
+import ImageSelector from "./components/ImageSelector";
+import MaskSelector from "./components/MaskSelector";
+import PreviewGrid from "./components/PreviewGrid";
 
 function App() {
   return (
@@ -24,12 +24,14 @@ function App() {
       <GridItem area="aside" bg="gold">
         aside
       </GridItem>
-      <GridItem area="main" bg="dodgerblue">
-        <ImageSelector />
-        <MaskSelector />
-        <DirectorySelector label="Select image folder" />
+      <GridItem area="main">
+        <HStack>
+          <ImageSelector />
+          <MaskSelector />
+        </HStack>
+        <PreviewGrid />
       </GridItem>
-      <GridItem area="copyright" bg="green">
+      <GridItem area="copyright" bg="gray.900">
         <CopyrightBar />
       </GridItem>
     </Grid>
