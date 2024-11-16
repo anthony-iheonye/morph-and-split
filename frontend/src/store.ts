@@ -36,100 +36,54 @@ interface AugConfigStore {
   augConfig: AugConfig;
   previewSelection: boolean;
   setPreviewSelection: (previewSelection: boolean) => void;
+  setAugConfig: <K extends keyof AugConfig>(
+    key: K,
+    value: AugConfig[K]
+  ) => void;
   setImages: (images: AugImage[]) => void;
   setMasks: (masks: AugMask[]) => void;
-  setSaveDirectory: (saveDirectory: string) => void;
-  setInitialTrainSaveId: (initialTrainSaveId: number) => void;
-  setInitialValSaveId: (initialValSaveId: number) => void;
-  setInitialTestSaveId: (initialTestSaveId: number) => void;
-  setVisualAttributesJSONFile: (visualAttributesJSONFile: string) => void;
-  setImageMaskChannels: (imageMaskChannels: ImgMaskChannels) => void;
-  setAugImageDimension: (augImageDimension: ImgDimension) => void;
-  setValSize: (valSize: number) => void;
-  setTestSize: (testSize: number) => void;
-  setSeed: (seed: number) => void;
-  setCrop: (crop: boolean) => void;
-  setCropDimension: (cropDimension: CropDimension) => void;
-  setAugmentValData: (augmentValData: boolean) => void;
-  setRandomCrop: (randomCrop: boolean) => void;
-  setFlipLeftRight: (flipLeftRight: boolean) => void;
-  setFlipUpDown: (flipUpDown: boolean) => void;
-  setRandomRotate: (randomRotate: boolean) => void;
-  setCorruptBrightness: (corruptBrightness: boolean) => void;
-  setCorruptContrast: (corruptContrast: boolean) => void;
-  setCorruptSaturation: (corruptSaturation: boolean) => void;
-  setCacheDirectory: (cacheDirectory: string) => void;
-  setTotalAugmentedImages: (totalAugmentedImages: number) => void;
 }
 
 const useAugConfigStore = create<AugConfigStore>((set) => ({
-  augConfig: {},
+  augConfig: {
+    images: [],
+    masks: [],
+    saveDirectory: "",
+    initialTrainSaveId: 1,
+    initialValSaveId: 1,
+    initialTestSaveId: 1,
+    visualAttributesJSONFile: "",
+    imageMaskChannels: { imgChannels: 3, maskChannels: 1 },
+    augImageDimension: { width: 256, height: 256 },
+    valSize: 0.2,
+    testSize: 0.2,
+    seed: 42,
+    crop: false,
+    cropDimension: {
+      offsetHeight: 0,
+      offsetWidth: 0,
+      targetHeight: 0,
+      targetWidth: 0,
+    },
+    augmentValData: false,
+    randomCrop: false,
+    flipLeftRight: false,
+    flipUpDown: false,
+    randomRotate: false,
+    corruptBrightness: false,
+    corruptContrast: false,
+    corruptSaturation: false,
+    cacheDirectory: "",
+    totalAugmentedImages: 150,
+  },
   previewSelection: false,
   setPreviewSelection: (previewSelection) => set(() => ({ previewSelection })),
   setImages: (images) =>
     set((store) => ({ augConfig: { ...store.augConfig, images } })),
   setMasks: (masks) =>
     set((store) => ({ augConfig: { ...store.augConfig, masks } })),
-  setSaveDirectory: (saveDirectory) =>
-    set((store) => ({ augConfig: { ...store.augConfig, saveDirectory } })),
-  setInitialTrainSaveId: (initialTrainSaveId) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, initialTrainSaveId },
-    })),
-  setInitialValSaveId: (initialValSaveId) =>
-    set((store) => ({ augConfig: { ...store.augConfig, initialValSaveId } })),
-  setInitialTestSaveId: (initialTestSaveId) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, initialTestSaveId },
-    })),
-  setVisualAttributesJSONFile: (visualAttributesJSONFile) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, visualAttributesJSONFile },
-    })),
-  setImageMaskChannels: (imgMaskChannels) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, imgMaskChannels },
-    })),
-  setAugImageDimension: (augImageDimension) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, augImageDimension },
-    })),
-  setValSize: (valSize) =>
-    set((store) => ({ augConfig: { ...store.augConfig, valSize } })),
-  setTestSize: (testSize) =>
-    set((store) => ({ augConfig: { ...store.augConfig, testSize } })),
-  setSeed: (seed) =>
-    set((store) => ({ augConfig: { ...store.augConfig, seed } })),
-  setCrop: (crop) =>
-    set((store) => ({ augConfig: { ...store.augConfig, crop } })),
-  setCropDimension: (cropDimension) =>
-    set((store) => ({ augConfig: { ...store.augConfig, cropDimension } })),
-  setAugmentValData: (augmentValData) =>
-    set((store) => ({ augConfig: { ...store.augConfig, augmentValData } })),
-  setRandomCrop: (randomCrop) =>
-    set((store) => ({ augConfig: { ...store.augConfig, randomCrop } })),
-  setFlipLeftRight: (flipLeftRight) =>
-    set((store) => ({ augConfig: { ...store.augConfig, flipLeftRight } })),
-  setFlipUpDown: (flipUpDown) =>
-    set((store) => ({ augConfig: { ...store.augConfig, flipUpDown } })),
-  setRandomRotate: (randomRotate) =>
-    set((store) => ({ augConfig: { ...store.augConfig, randomRotate } })),
-  setCorruptBrightness: (corruptBrightness) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, corruptBrightness },
-    })),
-  setCorruptContrast: (corruptContrast) =>
-    set((store) => ({ augConfig: { ...store.augConfig, corruptContrast } })),
-  setCorruptSaturation: (corruptSaturation) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, corruptSaturation },
-    })),
-  setCacheDirectory: (cacheDirectory) =>
-    set((store) => ({ augConfig: { ...store.augConfig, cacheDirectory } })),
-  setTotalAugmentedImages: (totalAugmentedImages) =>
-    set((store) => ({
-      augConfig: { ...store.augConfig, totalAugmentedImages },
-    })),
+  setAugConfig: (key, value) =>
+    set((store) => ({ augConfig: { ...store.augConfig, [key]: value } })),
 }));
 
 export default useAugConfigStore;

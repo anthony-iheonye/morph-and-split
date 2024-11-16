@@ -2,9 +2,9 @@ import { HStack, Switch, Text } from "@chakra-ui/react";
 import useAugConfigStore from "../store";
 
 const PreviewSwitch = () => {
-  const setPreviewSelection = useAugConfigStore(
-    (state) => state.setPreviewSelection
-  );
+  const { setPreviewSelection } = useAugConfigStore((state) => ({
+    setPreviewSelection: state.setPreviewSelection,
+  }));
   const previewSelection = useAugConfigStore((state) => state.previewSelection);
 
   return (
