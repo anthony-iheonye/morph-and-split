@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import AugImage from "./entities/Image";
-import AugMask from "./entities/Mask";
-import ImgMaskChannels from "./entities/ImgMaskChannels";
 import CropDimension from "./entities/CropDimension";
+import AugImage from "./entities/Image";
 import ImgDimension from "./entities/ImgDimension";
+import ImgMaskChannels from "./entities/ImgMaskChannels";
+import AugMask from "./entities/Mask";
 
 interface AugConfig {
   images?: AugImage[];
@@ -34,6 +34,8 @@ interface AugConfig {
 
 interface AugConfigStore {
   augConfig: AugConfig;
+  previewSelection: boolean;
+  setPreviewSelection: (previewSelection: boolean) => void;
   setImages: (images: AugImage[]) => void;
   setMasks: (masks: AugMask[]) => void;
   setSaveDirectory: (saveDirectory: string) => void;
@@ -62,6 +64,8 @@ interface AugConfigStore {
 
 const useAugConfigStore = create<AugConfigStore>((set) => ({
   augConfig: {},
+  previewSelection: false,
+  setPreviewSelection: (previewSelection) => set(() => ({ previewSelection })),
   setImages: (images) =>
     set((store) => ({ augConfig: { ...store.augConfig, images } })),
   setMasks: (masks) =>
