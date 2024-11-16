@@ -7,6 +7,7 @@ import PreviewContainer from "./PreviewContainer";
 const PreviewGrid = () => {
   const images = useAugConfigStore((state) => state.augConfig.images);
   const masks = useAugConfigStore((state) => state.augConfig.masks);
+  const previewSelection = useAugConfigStore((state) => state.previewSelection);
 
   const pairedData = useMemo(
     () =>
@@ -16,6 +17,8 @@ const PreviewGrid = () => {
       })),
     [images, masks]
   );
+
+  if (!previewSelection) return null;
 
   return (
     <SimpleGrid
