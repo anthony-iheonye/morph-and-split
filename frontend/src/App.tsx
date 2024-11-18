@@ -4,8 +4,8 @@ import CopyrightBar from "./components/CopyrightBar";
 import ImageSelector from "./components/ImageSelector";
 import MaskSelector from "./components/MaskSelector";
 import NavBar from "./components/NavBar";
-import PreviewSwitch from "./components/PreviewSwitch";
 import PreviewGrid from "./components/PreviewGrid";
+import PreviewSwitch from "./components/PreviewSwitch";
 
 function App() {
   return (
@@ -33,6 +33,7 @@ function App() {
         </HStack>
         <PreviewSwitch />
         <PreviewGrid />
+        <AugSettingsForm />
       </GridItem>
       <GridItem area="copyright" bg="gray.900">
         <CopyrightBar />

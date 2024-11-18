@@ -1,17 +1,11 @@
-import AugImage from "./entities/Image";
-
 // A function to check that filetype is valid
 export const validFileType = (file: File): boolean => {
   const validTypes = ["image/jpeg", "image/png", "image/jpg"];
   return validTypes.includes(file.type);
 };
 
-export const getFileExt = (file: File): AugImage["extension"] | null => {
-  const ext = file.name.split(".").pop()?.toLowerCase();
-  if (ext === "jpg" || ext === "png" || ext === "jpeg") {
-    return ext;
-  }
-  return null;
+export const getFileExt = (file: File): string | undefined | null => {
+  return file.name.split(".").pop()?.toLowerCase();
 };
 
 export const getFileSize = (size: number): string => {

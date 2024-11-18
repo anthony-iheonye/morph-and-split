@@ -4,6 +4,7 @@ import AugImage from "./entities/Image";
 import ImgDimension from "./entities/ImgDimension";
 import ImgMaskChannels from "./entities/ImgMaskChannels";
 import AugMask from "./entities/Mask";
+import VisualAttributeJSONFile from "./entities/VisualAttributeFile";
 
 interface AugConfig {
   images?: AugImage[];
@@ -12,11 +13,13 @@ interface AugConfig {
   initialTrainSaveId?: number;
   initialValSaveId?: number;
   initialTestSaveId?: number;
-  visualAttributesJSONFile?: string;
+  visualAttributesJSONFile?: VisualAttributeJSONFile;
   imageMaskChannels?: ImgMaskChannels;
   augImageDimension?: ImgDimension;
-  valSize?: number;
-  testSize?: number;
+  resizeAugImage: boolean;
+  trainRatio: number;
+  valRatio: number;
+  testRatio: number;
   seed?: number;
   crop?: boolean;
   cropDimension?: CropDimension;
@@ -42,6 +45,7 @@ interface AugConfigStore {
   ) => void;
   setImages: (images: AugImage[]) => void;
   setMasks: (masks: AugMask[]) => void;
+  setRatios: (train: number, val: number, test: number) => void;
 }
 
 const useAugConfigStore = create<AugConfigStore>((set) => ({
@@ -52,11 +56,13 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
     initialTrainSaveId: 1,
     initialValSaveId: 1,
     initialTestSaveId: 1,
-    visualAttributesJSONFile: "",
+    visualAttributesJSONFile: { name: "", url: "" },
     imageMaskChannels: { imgChannels: 3, maskChannels: 1 },
-    augImageDimension: { width: 256, height: 256 },
-    valSize: 0.2,
-    testSize: 0.2,
+    resizeAugImage: false,
+    augImageDimension: { width: 1200, height: 800 },
+    trainRatio: 0.6,
+    valRatio: 0.2,
+    testRatio: 0.2,
     seed: 42,
     crop: false,
     cropDimension: {
@@ -84,6 +90,15 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
     set((store) => ({ augConfig: { ...store.augConfig, masks } })),
   setAugConfig: (key, value) =>
     set((store) => ({ augConfig: { ...store.augConfig, [key]: value } })),
+  setRatios: (train, val, test) =>
+    set((store) => ({
+      augConfig: {
+        ...store.augConfig,
+        trainRatio: train,
+        valRatio: val,
+        testRatio: test,
+      },
+    })),
 }));
 
 export default useAugConfigStore;
