@@ -15,9 +15,9 @@ function App() {
                "aside"
                "main"
                "copyright"`,
-        lg: `"nav nav"
-             "aside main"
-              "copyright copyright"`,
+        md: `"nav aside main"
+             "nav aside main"
+             "nav copyright copyright"`,
       }}
     >
       <GridItem area="nav">
