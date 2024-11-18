@@ -14,7 +14,7 @@ import VisualAttributeFilePicker from "./formInputs/VisualAttributeFilePicker";
 
 const AugSettingsForm = () => {
   return (
-    <VStack>
+    <VStack padding={0}>
       <SaveDirectoryInput />
       <TrainStartIndexInput />
       <ValStartIndexInput />
