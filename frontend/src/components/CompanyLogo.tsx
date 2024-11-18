@@ -4,12 +4,9 @@ import logo from "../assets/logo.webp";
 
 const CompanyLogo = () => {
   return (
-    <HStack>
-      <Link>
-        <Image src={logo} boxSize="60px" objectFit="cover" />
-      </Link>
-      <Text>FoodLens</Text>
-    </HStack>
+    <Link>
+      <Image src={logo} boxSize="60px" objectFit="cover" />
+    </Link>
   );
 };
 
