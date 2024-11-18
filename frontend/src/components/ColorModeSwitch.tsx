@@ -1,9 +1,11 @@
 import { Box, IconButton, useColorMode } from "@chakra-ui/react";
 import { FaMoon } from "react-icons/fa6";
 import { GoSun } from "react-icons/go";
+import useNavIconColor from "../hooks/useNavIconColor";
 
 const ColorModeSwitch = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const backgroundColor = useNavIconColor();
 
   return (
     <Box width="auto" alignSelf="center">
@@ -14,7 +16,7 @@ const ColorModeSwitch = () => {
         variant="ghost"
         size="lg"
         fontSize="1.5rem"
-        colorScheme={colorMode === "dark" ? "yellow" : "teal"}
+        colorScheme={backgroundColor}
       />
     </Box>
   );

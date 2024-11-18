@@ -14,7 +14,7 @@ const NavBar = () => {
     >
       <Flex
         direction={{ base: "row", md: "column" }}
-        gap={{ base: "4", md: 12 }}
+        gap={{ base: 20, md: 20 }}
         flexGrow={1}
       >
         <CompanyLogo />

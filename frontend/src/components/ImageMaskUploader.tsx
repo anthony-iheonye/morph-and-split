@@ -1,8 +1,9 @@
-import { Box, IconButton, useColorMode } from "@chakra-ui/react";
+import { Box, IconButton } from "@chakra-ui/react";
 import { FaFileUpload } from "react-icons/fa";
+import useNavIconColor from "../hooks/useNavIconColor";
 
 const ImageMaskUploader = () => {
-  const { colorMode } = useColorMode();
+  const backgroundColor = useNavIconColor();
 
   return (
     <Box width="auto" alignSelf="center">
@@ -12,7 +13,7 @@ const ImageMaskUploader = () => {
         variant="ghost"
         size="lg"
         fontSize="1.5rem"
-        colorScheme={colorMode === "dark" ? "yellow" : "teal"}
+        colorScheme={backgroundColor}
       />
     </Box>
   );
