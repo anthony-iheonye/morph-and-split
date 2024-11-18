@@ -19,7 +19,7 @@ const useFileSelector = <T extends AugImage | AugMask>(
     const curFiles = event.target.files;
 
     if (!curFiles || curFiles.length == 0) {
-      setError("No files currently selected for upload.");
+      setError("No file currently selected for upload.");
       // setFilePaths([]);  // reset current state if no new file is selected.
       return;
     }
