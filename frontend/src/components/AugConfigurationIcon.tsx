@@ -8,15 +8,16 @@ const AugmentationConfigIcon = () => {
 
   return (
     <Box width="auto" alignSelf="center">
-      <Link to={"/settings"}></Link>
-      <IconButton
-        aria-label="Upload Image and segmentation mask"
-        icon={<IoMdSettings />}
-        variant="ghost"
-        size="lg"
-        fontSize="1.5rem"
-        colorScheme={backgroundColor}
-      />
+      <Link to={"/settings"}>
+        <IconButton
+          aria-label="Upload Image and segmentation mask"
+          icon={<IoMdSettings />}
+          variant="ghost"
+          size="lg"
+          fontSize="1.5rem"
+          colorScheme={backgroundColor}
+        />
+      </Link>
     </Box>
   );
 };
