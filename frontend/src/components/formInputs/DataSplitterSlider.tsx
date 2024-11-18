@@ -1,14 +1,15 @@
 import {
   FormControl,
   FormLabel,
-  Heading,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Stack,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import useAugConfigStore from "../../store";
+import BoundingBox from "../BoundingBox";
 
 const adjustRatios = (
   train: number,
@@ -60,7 +61,7 @@ interface Props {
     | "semibold"
     | "extrabold";
 }
-const DataSplitterSlider = ({ labelweight }: Props) => {
+const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
   const { augConfig, setRatios } = useAugConfigStore((store) => ({
     augConfig: store.augConfig,
     setRatios: store.setRatios,
@@ -86,19 +87,11 @@ const DataSplitterSlider = ({ labelweight }: Props) => {
   const mb = "3px";
 
   return (
-    <>
-      <Heading fontWeight="bold" fontSize="2xl" textAlign="left" width="95%">
-        Data Splitting
-      </Heading>
-      <Stack
-        spacing={{ base: 5, lg: 4 }}
-        align="start"
-        width="95%"
-        direction={{
-          base: "column",
-          md: "row",
-        }}
-      >
+    <BoundingBox>
+      <Text color={"gray.400"} mb={4} fontSize="sm">
+        Select the split percentage for the training, validation and test sets.
+      </Text>
+      <VStack spacing={{ base: 5, lg: 4 }}>
         {/*Training Slider*/}
         <FormControl>
           <FormLabel fontWeight={labelweight} marginBottom={mb}>
@@ -155,8 +148,8 @@ const DataSplitterSlider = ({ labelweight }: Props) => {
             <SliderThumb boxSize={4} />
           </Slider>
         </FormControl>
-      </Stack>
-    </>
+      </VStack>
+    </BoundingBox>
   );
 };
 
