@@ -6,6 +6,7 @@ import DataSplitterSlider from "./pages/DataSplit";
 import AugTransformationsInput from "./pages/Transformations";
 import UploadData from "./pages/UploadData";
 import Preview from "./pages/Preview";
+import ImageUpload from "./pages/ImageUpload";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "images",
-            element: <DataSplitterSlider labelweight="normal" />,
+            element: <ImageUpload />,
           },
           {
             path: "masks",
