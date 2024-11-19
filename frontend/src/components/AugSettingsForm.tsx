@@ -1,8 +1,8 @@
 import { VStack } from "@chakra-ui/react";
 import AugmentValSet from "./formInputs/AugmentValSet";
-import AugTransformationsInput from "./formInputs/AugTransformationsInput";
+import AugTransformationsInput from "../pages/Transformations";
 import CropConfigInput from "./formInputs/CropConfig";
-import DataSplitterSlider from "./formInputs/DataSplitterSlider";
+import DataSplitterSlider from "../pages/DataSplit";
 import ImageMaskChannelInput from "./formInputs/ImageMaskChannelInput";
 import ResizeAugmentedResult from "./formInputs/ResizeAugmentedResult";
 import SaveDirectoryInput from "./formInputs/SaveDirectoryInput";

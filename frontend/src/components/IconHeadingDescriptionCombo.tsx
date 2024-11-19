@@ -13,7 +13,13 @@ const IconHeadingDescriptionCombo = ({ icon, title, description }: Props) => {
         {icon ? <Icon as={icon} boxSize={8} /> : null}
         <FormLabel mb={0}>{title}</FormLabel>
       </HStack>
-      <Text fontSize="sm" fontWeight="thin">
+      <Text
+        fontSize="sm"
+        fontWeight="thin"
+        mb={0}
+        lineHeight="17px"
+        color="gray.400"
+      >
         {description}
       </Text>
     </VStack>
