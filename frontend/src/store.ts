@@ -33,6 +33,18 @@ interface AugConfig {
   corruptSaturation?: boolean;
   cacheDirectory?: string;
   totalAugmentedImages?: number;
+  eccentricity?: boolean;
+  equivalentDiameter?: boolean;
+  feretDiameterMax?: boolean;
+  filledArea?: boolean;
+  perimeter?: boolean;
+  roundness?: boolean;
+  l?: boolean;
+  a?: boolean;
+  b?: boolean;
+  contrast?: boolean;
+  correlation?: boolean;
+  energy?: boolean;
 }
 
 interface AugConfigStore {
@@ -81,6 +93,18 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
     corruptSaturation: false,
     cacheDirectory: "",
     totalAugmentedImages: 150,
+    eccentricity: false,
+    equivalentDiameter: false,
+    feretDiameterMax: false,
+    filledArea: false,
+    perimeter: false,
+    roundness: false,
+    l: false,
+    a: false,
+    b: false,
+    contrast: false,
+    correlation: false,
+    energy: false,
   },
   previewSelection: false,
   setPreviewSelection: (previewSelection) => set(() => ({ previewSelection })),
