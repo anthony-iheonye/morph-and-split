@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormLabel,
+  HStack,
   Slider,
   SliderFilledTrack,
   SliderThumb,
@@ -8,8 +9,11 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import useAugConfigStore from "../store";
+import { FaLayerGroup } from "react-icons/fa6";
 import BoundingBox from "../components/BoundingBox";
+import TotalTrainData from "../components/formInputs/TotalTrainData";
+import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
+import useAugConfigStore from "../store";
 
 const adjustRatios = (
   train: number,
@@ -87,69 +91,83 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
   const mb = "3px";
 
   return (
-    <BoundingBox>
-      <Text color={"gray.400"} mb={4} fontSize="sm">
-        Select the split percentage for the training, validation and test sets.
-      </Text>
-      <VStack spacing={{ base: 5, lg: 4 }}>
-        {/*Training Slider*/}
-        <FormControl>
-          <FormLabel fontWeight={labelweight} marginBottom={mb}>
-            Training split ({(trainRatio * 100).toFixed(1)}%)
-          </FormLabel>
-          <Slider
-            value={trainRatio}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={(value) => handleChange("train", value)}
-          >
-            <SliderTrack bg="teal.100">
-              <SliderFilledTrack bg="teal.500" />
-            </SliderTrack>
-            <SliderThumb boxSize={4} />
-          </Slider>
-        </FormControl>
+    <>
+      <BoundingBox>
+        <Text color={"gray.400"} mb={4} fontSize="sm">
+          Select the split percentage for the training, validation and test
+          sets.
+        </Text>
+        <VStack spacing={{ base: 5, lg: 4 }}>
+          {/*Training Slider*/}
+          <FormControl>
+            <FormLabel fontWeight={labelweight} marginBottom={mb}>
+              Training split ({(trainRatio * 100).toFixed(1)}%)
+            </FormLabel>
+            <Slider
+              value={trainRatio}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(value) => handleChange("train", value)}
+            >
+              <SliderTrack bg="teal.100">
+                <SliderFilledTrack bg="teal.500" />
+              </SliderTrack>
+              <SliderThumb boxSize={4} />
+            </Slider>
+          </FormControl>
 
-        {/* Validation Split slider */}
-        <FormControl>
-          <FormLabel fontWeight={labelweight} marginBottom={mb}>
-            Validation split ({(valRatio * 100).toFixed(1)}%)
-          </FormLabel>
-          <Slider
-            value={valRatio}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={(value) => handleChange("val", value)}
-          >
-            <SliderTrack bg="orange.200">
-              <SliderFilledTrack bg="orange.500" />
-            </SliderTrack>
-            <SliderThumb boxSize={4} />
-          </Slider>
-        </FormControl>
+          {/* Validation Split slider */}
+          <FormControl>
+            <FormLabel fontWeight={labelweight} marginBottom={mb}>
+              Validation split ({(valRatio * 100).toFixed(1)}%)
+            </FormLabel>
+            <Slider
+              value={valRatio}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(value) => handleChange("val", value)}
+            >
+              <SliderTrack bg="orange.200">
+                <SliderFilledTrack bg="orange.500" />
+              </SliderTrack>
+              <SliderThumb boxSize={4} />
+            </Slider>
+          </FormControl>
 
-        {/* Testing Split slider */}
-        <FormControl>
-          <FormLabel fontWeight={labelweight} marginBottom={mb}>
-            Testing split ({(testRatio * 100).toFixed(1)}%)
-          </FormLabel>
-          <Slider
-            value={testRatio}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={(value) => handleChange("test", value)}
-          >
-            <SliderTrack bg="green.200">
-              <SliderFilledTrack bg="green.500" />
-            </SliderTrack>
-            <SliderThumb boxSize={4} />
-          </Slider>
-        </FormControl>
-      </VStack>
-    </BoundingBox>
+          {/* Testing Split slider */}
+          <FormControl>
+            <FormLabel fontWeight={labelweight} marginBottom={mb}>
+              Testing split ({(testRatio * 100).toFixed(1)}%)
+            </FormLabel>
+            <Slider
+              value={testRatio}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(value) => handleChange("test", value)}
+            >
+              <SliderTrack bg="green.200">
+                <SliderFilledTrack bg="green.500" />
+              </SliderTrack>
+              <SliderThumb boxSize={4} />
+            </Slider>
+          </FormControl>
+        </VStack>
+      </BoundingBox>
+
+      <BoundingBox>
+        <HStack justify="space-between" align="start" width="100%">
+          <IconHeadingDescriptionCombo
+            icon={FaLayerGroup}
+            title="Augmented Training Set Size"
+            description="Specifies the desired number of training images post-augmentation."
+          />
+          <TotalTrainData />
+        </HStack>
+      </BoundingBox>
+    </>
   );
 };
 
