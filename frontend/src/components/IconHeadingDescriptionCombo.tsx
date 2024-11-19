@@ -3,8 +3,8 @@ import { IconType } from "react-icons";
 
 interface Props {
   icon?: IconType;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
 }
 const IconHeadingDescriptionCombo = ({ icon, title, description }: Props) => {
   return (
