@@ -1,24 +1,16 @@
-import { Button, Icon, Input, Text, VStack } from "@chakra-ui/react";
-import { BsImages } from "react-icons/bs";
+import { Button, Input, VStack } from "@chakra-ui/react";
+import AugImage from "../entities/Image";
 import useFileSelector from "../hooks/useFileSelector";
 import useAugConfigStore from "../store";
-import AugImage from "../entities/Image";
 
 const ImageSelector = () => {
   const setImages = useAugConfigStore((state) => state.setImages);
-  // const filePaths = useAugConfigStore((state) => state.augConfig.images) || [];
 
-  const { error, handleFileChange } = useFileSelector<AugImage>(setImages);
+  const { handleFileChange } = useFileSelector<AugImage>(setImages);
   return (
     <VStack>
-      <Button
-        leftIcon={<Icon as={BsImages} />}
-        as="label"
-        variant="outline"
-        cursor="pointer"
-        padding={2}
-      >
-        Select Images
+      <Button as="label" variant="outline" cursor="pointer">
+        Click
         <Input
           type="file"
           multiple
@@ -29,8 +21,6 @@ const ImageSelector = () => {
           onChange={handleFileChange}
         />
       </Button>
-
-      {error ? <Text>{error}</Text> : null}
     </VStack>
   );
 };
