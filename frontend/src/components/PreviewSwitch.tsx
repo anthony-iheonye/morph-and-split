@@ -1,4 +1,4 @@
-import { HStack, Switch, Text } from "@chakra-ui/react";
+import { Switch } from "@chakra-ui/react";
 import useAugConfigStore from "../store";
 
 const PreviewSwitch = () => {
