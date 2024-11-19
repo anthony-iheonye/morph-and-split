@@ -8,8 +8,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import useAugConfigStore from "../../store";
-import BoundingBox from "../BoundingBox";
+import useAugConfigStore from "../store";
+import BoundingBox from "../components/BoundingBox";
 
 const adjustRatios = (
   train: number,

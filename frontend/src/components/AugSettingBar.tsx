@@ -30,7 +30,7 @@ const AugSettingBar = () => {
       <Link to={"/settings/data_split"}>
         <HStack gap={0}>
           <IconButton
-            aria-label="Upload Image and segmentation mask"
+            aria-label="Split data into train, val and test sets."
             icon={<FaLayerGroup />}
             variant="ghost"
             size="lg"
@@ -44,7 +44,7 @@ const AugSettingBar = () => {
       <Link to={"/settings/select_transformation"}>
         <HStack gap={0}>
           <IconButton
-            aria-label="Upload Image and segmentation mask"
+            aria-label="Apply random transformations"
             icon={<FaMagic />}
             variant="ghost"
             size="lg"
@@ -58,7 +58,7 @@ const AugSettingBar = () => {
       <Link to={"/settings/visual_attributes_file"}>
         <HStack gap={0}>
           <IconButton
-            aria-label="Upload Image and segmentation mask"
+            aria-label="Select visual attributes JSON file"
             icon={<IoIosColorPalette />}
             variant="ghost"
             size="lg"
@@ -72,7 +72,7 @@ const AugSettingBar = () => {
       <Link to={"/settings/pre_processing"}>
         <HStack gap={0}>
           <IconButton
-            aria-label="Upload Image and segmentation mask"
+            aria-label="Apply pre-processing values"
             icon={<PiResizeBold />}
             variant="ghost"
             size="lg"
