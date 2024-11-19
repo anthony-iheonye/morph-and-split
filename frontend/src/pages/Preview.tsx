@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
@@ -18,11 +18,17 @@ const Preview = () => {
           <PreviewSwitch />
         </HStack>
       </BoundingBox>
-      <BoundingBox>
+      <BoundingBox overflowY="auto">
         <Text color={"gray.400"} mb={4} fontSize="sm">
           Preview of Selected Images and Masks.
         </Text>
-        <PreviewGrid />
+        <Box
+          overflowY="auto"
+          maxHeight={{ sm: "320px", md: "500px", lg: "850px" }}
+          mt={4}
+        >
+          <PreviewGrid />
+        </Box>
       </BoundingBox>
     </>
   );

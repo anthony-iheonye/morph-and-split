@@ -4,7 +4,8 @@ import useBoundingBoxColor from "../hooks/useBoundingBoxColor";
 
 interface Props {
   children: ReactNode;
-  maxHeight?: string;
+  maxHeight?: string | { base?: string; md?: string; lg?: string };
+  flex?: string;
   overflowY?:
     | "auto"
     | "clip"
@@ -12,11 +13,12 @@ interface Props {
     | "scroll"
     | "unset"
     | "visible"
-    | { base: string; md: string; lg: string };
+    | { base?: string; md?: string; lg?: string };
 }
 
 const BoundingBox = ({
   children,
+  flex,
   maxHeight = "none",
   overflowY = undefined,
 }: Props) => {
@@ -30,6 +32,7 @@ const BoundingBox = ({
       backgroundColor={backgroundColor}
       maxHeight={maxHeight}
       overflow={overflowY}
+      flex={flex}
     >
       {children}
     </Box>

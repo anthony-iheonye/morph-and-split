@@ -1,24 +1,16 @@
-import { Button, Icon, Input, Text, VStack } from "@chakra-ui/react";
-import { BsImages } from "react-icons/bs";
+import { Button, Input, VStack } from "@chakra-ui/react";
+import AugMask from "../entities/Mask";
 import useFileSelector from "../hooks/useFileSelector";
 import useAugConfigStore from "../store";
-import AugMask from "../entities/Mask";
 
 const MaskSelector = () => {
   const setMasks = useAugConfigStore((state) => state.setMasks);
-  // const filePaths = useAugConfigStore((state) => state.augConfig.masks) || [];
 
-  const { error, handleFileChange } = useFileSelector<AugMask>(setMasks);
+  const { handleFileChange } = useFileSelector<AugMask>(setMasks);
   return (
     <VStack>
-      <Button
-        leftIcon={<Icon as={BsImages} />}
-        as="label"
-        variant="outline"
-        cursor="pointer"
-        padding={2}
-      >
-        Select Masks
+      <Button as="label" variant="outline" cursor="pointer">
+        Click
         <Input
           type="file"
           multiple
@@ -29,7 +21,6 @@ const MaskSelector = () => {
           onChange={handleFileChange}
         />
       </Button>
-      {error ? <Text>{error}</Text> : null}
     </VStack>
   );
 };

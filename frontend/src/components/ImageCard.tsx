@@ -11,7 +11,7 @@ const ImageCard = ({ file }: Props) => {
     <Card borderRadius={0}>
       <Image src={file.url} />
       <CardBody paddingTop={1} paddingBottom={1}>
-        <Text color="gray" fontSize="xs">
+        <Text color="gray" fontSize="small" overflowWrap="normal">
           {file.name}
         </Text>
       </CardBody>

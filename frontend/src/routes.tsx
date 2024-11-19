@@ -7,6 +7,7 @@ import AugTransformationsInput from "./pages/Transformations";
 import UploadData from "./pages/UploadData";
 import Preview from "./pages/Preview";
 import ImageUpload from "./pages/ImageUpload";
+import MaskUpload from "./pages/MaskUpload";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
           },
           {
             path: "masks",
-            element: <AugTransformationsInput />,
+            element: <MaskUpload />,
           },
           { path: "preview", element: <Preview /> },
         ],

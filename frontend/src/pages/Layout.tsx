@@ -20,7 +20,7 @@ const Layout = () => {
       </GridItem>
 
       <GridItem area="outlet">
-        <Box>
+        <Box height="100vh">
           <Outlet />
         </Box>
       </GridItem>

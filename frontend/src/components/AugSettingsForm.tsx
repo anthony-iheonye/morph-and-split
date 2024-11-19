@@ -11,10 +11,14 @@ import TotalTrainData from "./formInputs/TotalTrainData";
 import TrainStartIndexInput from "./formInputs/TrainStartIndexInput";
 import ValStartIndexInput from "./formInputs/ValStartIndexInput";
 import VisualAttributeFilePicker from "./formInputs/VisualAttributeFilePicker";
+import ImageSelector from "./ImageSelector";
+import MaskSelector from "./MaskSelector";
 
 const AugSettingsForm = () => {
   return (
     <VStack padding={0}>
+      <ImageSelector />
+      <MaskSelector />
       <SaveDirectoryInput />
       <TrainStartIndexInput />
       <ValStartIndexInput />
