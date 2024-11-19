@@ -5,7 +5,6 @@ import SaveDirectoryInput from "./formInputs/SaveDirectoryInput";
 import TestStartIndexInput from "./formInputs/TestStartIndexInput";
 import TrainStartIndexInput from "./formInputs/TrainStartIndexInput";
 import ValStartIndexInput from "./formInputs/ValStartIndexInput";
-import VisualAttributeFilePicker from "./formInputs/VisualAttributeFilePicker";
 
 const AugSettingsForm = () => {
   return (

@@ -11,6 +11,7 @@ import { IoIosColorPalette } from "react-icons/io";
 import { PiResizeBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import useBoundingBoxColor from "../hooks/useBoundingBoxColor";
+import { PiCirclesThreeFill } from "react-icons/pi";
 
 const AugSettingBar = () => {
   const { colorMode } = useColorMode();
@@ -31,7 +32,7 @@ const AugSettingBar = () => {
         <HStack gap={0}>
           <IconButton
             aria-label="Split data into train, val and test sets."
-            icon={<FaLayerGroup />}
+            icon={<PiCirclesThreeFill />}
             variant="ghost"
             size="lg"
             fontSize="1.5rem"
