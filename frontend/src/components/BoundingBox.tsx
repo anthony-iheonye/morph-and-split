@@ -1,8 +1,8 @@
-import { Box } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import useBoundingBoxColor from "../hooks/useBoundingBoxColor";
 
-interface Props {
+interface Props extends BoxProps {
   children: ReactNode;
 }
 

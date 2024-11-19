@@ -8,14 +8,11 @@ const PreviewSwitch = () => {
   const previewSelection = useAugConfigStore((state) => state.previewSelection);
 
   return (
-    <HStack>
-      <Switch
-        colorScheme="green"
-        isChecked={previewSelection === true}
-        onChange={() => setPreviewSelection(!previewSelection)}
-      />
-      <Text whiteSpace="nowrap">Preview selection</Text>
-    </HStack>
+    <Switch
+      colorScheme="green"
+      isChecked={previewSelection === true}
+      onChange={() => setPreviewSelection(!previewSelection)}
+    />
   );
 };
 
