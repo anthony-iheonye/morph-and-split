@@ -11,6 +11,9 @@ import { BiSolidArea } from "react-icons/bi";
 import { TbTexture } from "react-icons/tb";
 import { GiRollingEnergy } from "react-icons/gi";
 import { FaCircleNotch } from "react-icons/fa6";
+import { TbOvalVertical } from "react-icons/tb";
+import { RxDimensions } from "react-icons/rx";
+import { GoCircleSlash } from "react-icons/go";
 
 const VisualAttributes = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -139,7 +142,7 @@ const VisualAttributes = () => {
 
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
-              icon={RiCropFill}
+              icon={GoCircleSlash}
               title="Ferret Diameter"
               description={transforms.feretDiameterMax}
             />
@@ -167,7 +170,7 @@ const VisualAttributes = () => {
 
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
-              icon={RiCropFill}
+              icon={RxDimensions}
               title="Perimeter"
               description={transforms.perimeter}
             />
@@ -195,7 +198,7 @@ const VisualAttributes = () => {
 
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
-              icon={RiCropFill}
+              icon={TbOvalVertical}
               title="Eccentricity"
               description={transforms.eccentricity}
             />
