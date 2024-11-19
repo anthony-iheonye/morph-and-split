@@ -4,10 +4,9 @@ import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import ImageChannel from "../components/ImageChannel";
+import MaskChannel from "../components/MaskChannel";
 import MaskSelector from "../components/MaskSelector";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import MaskChannel from "../components/MaskChannel";
 
 const MaskUpload = () => {
   const { augConfig } = useAugConfigAndSetter();
