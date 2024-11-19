@@ -7,6 +7,7 @@ import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCom
 import ImageChannel from "../components/ImageChannel";
 import MaskSelector from "../components/MaskSelector";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import MaskChannel from "../components/MaskChannel";
 
 const MaskUpload = () => {
   const { augConfig } = useAugConfigAndSetter();
@@ -31,7 +32,7 @@ const MaskUpload = () => {
             title="Number of Mask Channels"
             description="Select the number of mask channels from the dropdown list."
           />
-          <ImageChannel />
+          <MaskChannel />
         </HStack>
       </BoundingBox>
       <BoundingBox>
