@@ -55,7 +55,7 @@ const AugSettingBar = () => {
         </HStack>
       </Link>
 
-      <Link to={"/settings/visual_attributes_file"}>
+      <Link to={"/settings/visual_attributes"}>
         <HStack gap={0}>
           <IconButton
             aria-label="Select visual attributes JSON file"

@@ -8,6 +8,7 @@ import UploadData from "./pages/UploadData";
 import Preview from "./pages/Preview";
 import ImageUpload from "./pages/ImageUpload";
 import MaskUpload from "./pages/MaskUpload";
+import VisualAttributes from "./pages/VisualAttributes";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
             path: "select_transformation",
             element: <AugTransformationsInput />,
           },
-          { path: "visual_attributes_file", element: <AugSettingsForm /> },
+          { path: "visual_attributes", element: <VisualAttributes /> },
           { path: "pre_processing", element: <AugSettingsForm /> },
         ],
       },

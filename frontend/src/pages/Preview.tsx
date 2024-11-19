@@ -24,7 +24,7 @@ const Preview = () => {
         </Text>
         <Box
           overflowY="auto"
-          maxHeight={{ sm: "320px", md: "500px", lg: "850px" }}
+          maxHeight={{ sm: "320px", md: "500px", lg: "700px" }}
           mt={4}
         >
           <PreviewGrid />

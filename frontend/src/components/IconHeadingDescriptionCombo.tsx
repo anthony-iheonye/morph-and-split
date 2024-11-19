@@ -17,6 +17,7 @@ const IconHeadingDescriptionCombo = ({ icon, title, description }: Props) => {
         fontSize="sm"
         fontWeight="thin"
         mb={0}
+        mt={0.6}
         lineHeight="17px"
         color="gray.400"
       >

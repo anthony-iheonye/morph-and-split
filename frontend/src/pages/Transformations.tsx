@@ -51,7 +51,7 @@ const AugTransformationsInput = () => {
           optionally to the validation set, to enhance data variability.
         </Text>
         <FormControl>
-          <SimpleGrid columns={{ base: 1 }} spacing={5}>
+          <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5, md: 4, lg: 8 }}>
             {/*random crop*/}
             <HStack justify="space-between" align="start" width="100%">
               <IconHeadingDescriptionCombo
