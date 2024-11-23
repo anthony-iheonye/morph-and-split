@@ -6,6 +6,9 @@ interface Props {
   children: ReactNode;
   maxHeight?: string | { base?: string; md?: string; lg?: string };
   flex?: string;
+  justify?: string | { base?: string; md?: string; lg?: string };
+  borderRadius?: number | string | { base?: string; md?: string; lg?: string };
+  padding?: number | string | { base?: string; md?: string; lg?: string };
   overflowY?:
     | "auto"
     | "clip"
@@ -14,25 +17,35 @@ interface Props {
     | "unset"
     | "visible"
     | { base?: string; md?: string; lg?: string };
+  width?: string | { base?: string; md?: string; lg?: string };
+  maxWidth?: string | { base?: string; md?: string; lg?: string };
 }
 
 const BoundingBox = ({
   children,
+  width,
+  maxWidth,
   flex,
+  justify,
+  padding = 5,
   maxHeight = "none",
   overflowY = undefined,
+  borderRadius = 4,
 }: Props) => {
   const backgroundColor = useBoundingBoxColor();
 
   return (
     <Box
-      padding={5}
+      padding={padding}
       margin={4}
-      borderRadius={4}
+      borderRadius={borderRadius}
       backgroundColor={backgroundColor}
       maxHeight={maxHeight}
       overflow={overflowY}
       flex={flex}
+      width={width}
+      maxWidth={maxWidth}
+      justifySelf={justify}
     >
       {children}
     </Box>

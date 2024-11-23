@@ -6,16 +6,18 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import sizes from "../services/size";
 
 const TestStartIndex = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
+  const width = sizes.numberInput.width;
 
   return (
     <NumberInput
       min={1}
       max={100000}
       allowMouseWheel
-      width="auto"
+      maxWidth={width}
       value={augConfig.initialTestSaveId}
       onChange={(value) => setAugConfig("initialTestSaveId", parseInt(value))}
     >
