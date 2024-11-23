@@ -1,14 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
-import AugSettingsForm from "./components/AugSettingsForm";
 import AugmentationSettings from "./pages/AugmentationSettings";
-import Layout from "./pages/Layout";
 import DataSplitterSlider from "./pages/DataSplit";
+import ImageUpload from "./pages/ImageUpload";
+import InitiateAugmentation from "./pages/InitiateAugmentation";
+import Layout from "./pages/Layout";
+import MaskUpload from "./pages/MaskUpload";
+import PreProcessing from "./pages/Preprocessing";
+import Preview from "./pages/Preview";
+import StartAugmentation from "./pages/StartAugmentation";
 import AugTransformationsInput from "./pages/Transformations";
 import UploadData from "./pages/UploadData";
-import Preview from "./pages/Preview";
-import ImageUpload from "./pages/ImageUpload";
-import MaskUpload from "./pages/MaskUpload";
 import VisualAttributes from "./pages/VisualAttributes";
+import PreviewAugmentedResults from "./pages/PreviewAugmentedResults";
 
 const router = createBrowserRouter([
   {
@@ -16,25 +19,13 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/settings",
-        element: <AugmentationSettings />,
-        children: [
-          {
-            path: "data_split",
-            element: <DataSplitterSlider labelweight="normal" />,
-          },
-          {
-            path: "select_transformation",
-            element: <AugTransformationsInput />,
-          },
-          { path: "visual_attributes", element: <VisualAttributes /> },
-          { path: "pre_processing", element: <AugSettingsForm /> },
-        ],
-      },
-      {
         path: "/upload_data",
         element: <UploadData />,
         children: [
+          {
+            path: "",
+            element: <ImageUpload />,
+          },
           {
             path: "images",
             element: <ImageUpload />,
@@ -44,6 +35,44 @@ const router = createBrowserRouter([
             element: <MaskUpload />,
           },
           { path: "preview", element: <Preview /> },
+        ],
+      },
+      {
+        path: "/settings",
+        element: <AugmentationSettings />,
+        children: [
+          {
+            path: "",
+            element: <DataSplitterSlider labelweight="normal" />,
+          },
+          {
+            path: "data_split",
+            element: <DataSplitterSlider labelweight="normal" />,
+          },
+          {
+            path: "select_transformation",
+            element: <AugTransformationsInput />,
+          },
+          { path: "visual_attributes", element: <VisualAttributes /> },
+          { path: "pre_processing", element: <PreProcessing /> },
+        ],
+      },
+      {
+        path: "/augment",
+        element: <InitiateAugmentation />,
+        children: [
+          {
+            path: "",
+            element: <StartAugmentation />,
+          },
+          {
+            path: "start_augmentation",
+            element: <StartAugmentation />,
+          },
+          {
+            path: "preview",
+            element: <PreviewAugmentedResults />,
+          },
         ],
       },
     ],

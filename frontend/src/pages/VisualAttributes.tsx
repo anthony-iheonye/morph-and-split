@@ -1,19 +1,18 @@
 import { HStack, Switch, VStack } from "@chakra-ui/react";
+import { BiSolidArea } from "react-icons/bi";
 import { BsFiletypeJson } from "react-icons/bs";
-import BoundingBox from "../components/BoundingBox";
-import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import ImageSelector from "../components/ImageSelector";
-import { RiCropFill } from "react-icons/ri";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import { FaCircleNotch } from "react-icons/fa6";
+import { GiRollingEnergy } from "react-icons/gi";
+import { GoCircleSlash } from "react-icons/go";
 import { IoColorPaletteSharp } from "react-icons/io5";
 import { MdOutlineContrast } from "react-icons/md";
-import { BiSolidArea } from "react-icons/bi";
-import { TbTexture } from "react-icons/tb";
-import { GiRollingEnergy } from "react-icons/gi";
-import { FaCircleNotch } from "react-icons/fa6";
-import { TbOvalVertical } from "react-icons/tb";
 import { RxDimensions } from "react-icons/rx";
-import { GoCircleSlash } from "react-icons/go";
+import { TbOvalVertical, TbTexture } from "react-icons/tb";
+import BoundingBox from "../components/BoundingBox";
+import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
+import PageTitle from "../components/PageTitle";
+import VisualAttributeFilePicker from "../components/formInputs/VisualAttributeFilePicker";
+import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 
 const VisualAttributes = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -43,6 +42,7 @@ const VisualAttributes = () => {
   };
   return (
     <>
+      <PageTitle title="Visual Attributes" />
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
@@ -50,7 +50,7 @@ const VisualAttributes = () => {
             title="Upload Visual Attribute Data"
             description="Select the JSON file containing the visual attributes of the food in the image."
           />
-          <ImageSelector />
+          <VisualAttributeFilePicker />
         </HStack>
       </BoundingBox>
 
@@ -179,20 +179,6 @@ const VisualAttributes = () => {
               colorScheme="teal"
               isChecked={augConfig.perimeter}
               onChange={() => handleCheckBoxChange("perimeter")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={RiCropFill}
-              title="Fill Area"
-              description={transforms.filledArea}
-            />
-            <Switch
-              id="filledArea"
-              colorScheme="teal"
-              isChecked={augConfig.filledArea}
-              onChange={() => handleCheckBoxChange("filledArea")}
             />
           </HStack>
 
