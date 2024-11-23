@@ -1,22 +1,22 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import AugSettingBar from "../components/bars/AugSettingBar";
+import AugmentBar from "../components/bars/AugmentBar";
 
-const AugmentationSettings = () => {
+const InitiateAugmentation = () => {
   return (
     <Grid
       templateAreas={{
-        base: `"settings"
+        base: `"augment"
                "outlet"`,
-        md: `"settings outlet"`,
+        md: `"augment outlet"`,
       }}
       templateColumns={{
         base: "1fr",
         md: "200px 1fr",
       }}
     >
-      <GridItem area="settings">
-        <AugSettingBar />
+      <GridItem area="augment">
+        <AugmentBar />
       </GridItem>
 
       <GridItem area="outlet">
@@ -28,4 +28,4 @@ const AugmentationSettings = () => {
   );
 };
 
-export default AugmentationSettings;
+export default InitiateAugmentation;

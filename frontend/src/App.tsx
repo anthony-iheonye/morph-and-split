@@ -1,9 +1,8 @@
 import { Grid, GridItem, HStack } from "@chakra-ui/react";
-import AugSettingsForm from "./components/AugSettingsForm";
 import CopyrightBar from "./components/CopyrightBar";
 import ImageSelector from "./components/ImageSelector";
 import MaskSelector from "./components/MaskSelector";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/bars/NavBar";
 import PreviewGrid from "./components/PreviewGrid";
 import PreviewSwitch from "./components/PreviewSwitch";
 
@@ -33,7 +32,6 @@ function App() {
         </HStack>
         <PreviewSwitch />
         <PreviewGrid />
-        <AugSettingsForm />
       </GridItem>
       <GridItem area="copyright" bg="gray.900">
         <CopyrightBar />

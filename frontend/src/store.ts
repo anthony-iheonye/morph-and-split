@@ -9,6 +9,8 @@ import VisualAttributeJSONFile from "./entities/VisualAttributeFile";
 interface AugConfig {
   images?: AugImage[];
   masks?: AugMask[];
+  augmentedImages?: AugImage[];
+  augmentedMasks?: AugMask[];
   saveDirectory?: string;
   initialTrainSaveId?: number;
   initialValSaveId?: number;
@@ -50,13 +52,17 @@ interface AugConfig {
 interface AugConfigStore {
   augConfig: AugConfig;
   previewSelection: boolean;
+  previewAugmentedResult: boolean;
   setPreviewSelection: (previewSelection: boolean) => void;
+  setPreviewAugmentedResult: (previewAugmentedResult: boolean) => void;
   setAugConfig: <K extends keyof AugConfig>(
     key: K,
     value: AugConfig[K]
   ) => void;
   setImages: (images: AugImage[]) => void;
   setMasks: (masks: AugMask[]) => void;
+  setAugmentedImages: (augmentedImages: AugImage[]) => void;
+  setAugmentedMasks: (augmentedMasks: AugMask[]) => void;
   setRatios: (train: number, val: number, test: number) => void;
 }
 
@@ -64,6 +70,8 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
   augConfig: {
     images: [],
     masks: [],
+    augmentedImages: [],
+    augmentedMasks: [],
     saveDirectory: "",
     initialTrainSaveId: 1,
     initialValSaveId: 1,
@@ -78,10 +86,10 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
     seed: 42,
     crop: false,
     cropDimension: {
-      offsetHeight: 0,
-      offsetWidth: 0,
-      targetHeight: 0,
-      targetWidth: 0,
+      offsetHeight: 1,
+      offsetWidth: 1,
+      targetHeight: 10,
+      targetWidth: 10,
     },
     augmentValData: false,
     randomCrop: false,
@@ -107,11 +115,18 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
     energy: false,
   },
   previewSelection: false,
+  previewAugmentedResult: false,
   setPreviewSelection: (previewSelection) => set(() => ({ previewSelection })),
+  setPreviewAugmentedResult: (previewAugmentedResult) =>
+    set(() => ({ previewAugmentedResult })),
   setImages: (images) =>
     set((store) => ({ augConfig: { ...store.augConfig, images } })),
   setMasks: (masks) =>
     set((store) => ({ augConfig: { ...store.augConfig, masks } })),
+  setAugmentedImages: (augmentedImages) =>
+    set((store) => ({ augConfig: { ...store.augConfig, augmentedImages } })),
+  setAugmentedMasks: (augmentedMasks) =>
+    set((store) => ({ augConfig: { ...store.augConfig, augmentedMasks } })),
   setAugConfig: (key, value) =>
     set((store) => ({ augConfig: { ...store.augConfig, [key]: value } })),
   setRatios: (train, val, test) =>
