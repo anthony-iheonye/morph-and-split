@@ -1,6 +1,6 @@
 import { Button, Icon, Input, Text, VStack } from "@chakra-ui/react";
 import { BsFiletypeJson } from "react-icons/bs";
-import useVisualAttributesFile from "../../hooks/useVisualAttributesFile";
+import useVisualAttributesFile from "../hooks/useVisualAttributesFile";
 
 const VisualAttributeFilePicker = () => {
   const { error, augConfig, handleFileChange } = useVisualAttributesFile();

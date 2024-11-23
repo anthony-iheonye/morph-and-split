@@ -5,7 +5,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../../hooks/useAugConfigAndSetter";
+import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 
 const TotalTrainData = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

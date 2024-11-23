@@ -11,7 +11,7 @@ import { TbOvalVertical, TbTexture } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
-import VisualAttributeFilePicker from "../components/formInputs/VisualAttributeFilePicker";
+import VisualAttributeFilePicker from "../components/VisualAttributeFilePicker";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 
 const VisualAttributes = () => {

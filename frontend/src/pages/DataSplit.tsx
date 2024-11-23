@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { FaLayerGroup } from "react-icons/fa6";
 import BoundingBox from "../components/BoundingBox";
-import TotalTrainData from "../components/formInputs/TotalTrainData";
+import TotalTrainData from "../components/TotalTrainData";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import useAugConfigStore from "../store";
 import PageTitle from "../components/PageTitle";
