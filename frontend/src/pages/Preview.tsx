@@ -4,10 +4,12 @@ import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PreviewGrid from "../components/PreviewGrid";
 import PreviewSwitch from "../components/PreviewSwitch";
+import PageTitle from "../components/PageTitle";
 
 const Preview = () => {
   return (
     <>
+      <PageTitle title="Preview" />
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo

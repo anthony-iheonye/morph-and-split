@@ -14,6 +14,7 @@ import BoundingBox from "../components/BoundingBox";
 import TotalTrainData from "../components/formInputs/TotalTrainData";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import useAugConfigStore from "../store";
+import PageTitle from "../components/PageTitle";
 
 const adjustRatios = (
   train: number,
@@ -92,8 +93,9 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
 
   return (
     <>
+      <PageTitle title="Data Split" />
       <BoundingBox>
-        <Text color={"gray.400"} mb={4} fontSize="sm">
+        <Text color={"gray.400"} mb={4} fontSize="md">
           Select the split percentage for the training, validation and test
           sets.
         </Text>

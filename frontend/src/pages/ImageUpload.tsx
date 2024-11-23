@@ -7,6 +7,7 @@ import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCom
 import ImageChannel from "../components/ImageChannel";
 import ImageSelector from "../components/ImageSelector";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import PageTitle from "../components/PageTitle";
 
 const ImageUpload = () => {
   const { augConfig } = useAugConfigAndSetter();
@@ -14,6 +15,7 @@ const ImageUpload = () => {
 
   return (
     <>
+      <PageTitle title="Images" />
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo

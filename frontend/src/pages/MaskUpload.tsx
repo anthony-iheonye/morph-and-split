@@ -7,6 +7,7 @@ import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCom
 import MaskChannel from "../components/MaskChannel";
 import MaskSelector from "../components/MaskSelector";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import PageTitle from "../components/PageTitle";
 
 const MaskUpload = () => {
   const { augConfig } = useAugConfigAndSetter();
@@ -14,6 +15,7 @@ const MaskUpload = () => {
 
   return (
     <>
+      <PageTitle title="Segmentation Masks" />
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo

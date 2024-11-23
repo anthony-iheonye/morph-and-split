@@ -17,6 +17,7 @@ import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 import { RiContrastDropLine } from "react-icons/ri";
+import PageTitle from "../components/PageTitle";
 
 const AugTransformationsInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -45,6 +46,7 @@ const AugTransformationsInput = () => {
   };
   return (
     <>
+      <PageTitle title="Transformations" />
       <BoundingBox>
         <Text color={"gray.400"} mb={4} fontSize="sm">
           Choose random transformations to apply to the training set, and
