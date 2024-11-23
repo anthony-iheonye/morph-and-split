@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import UploadDataBar from "../components/UploadDataBar";
+import UploadDataBar from "../components/bars/UploadDataBar";
 
 const UploadData = () => {
   return (
