@@ -8,24 +8,24 @@ import {
 import useAugConfigAndSetter from "../../hooks/useAugConfigAndSetter";
 import sizes from "../../services/size";
 
-const TargetWidthInput = () => {
+const TargetHeightInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
 
   return (
     <NumberInput
+      maxWidth={width}
       min={1}
       max={100000}
       allowMouseWheel
-      maxWidth={width}
-      value={augConfig.cropDimension?.targetWidth}
+      value={augConfig.cropDimension?.targetHeight}
       onChange={(value) =>
         setAugConfig("cropDimension", {
           ...augConfig.cropDimension,
           offsetHeight: augConfig.cropDimension!.offsetHeight,
           offsetWidth: augConfig.cropDimension!.offsetWidth,
-          targetHeight: augConfig.cropDimension!.targetHeight,
-          targetWidth: parseInt(value),
+          targetHeight: parseInt(value),
+          targetWidth: augConfig.cropDimension!.targetWidth,
         })
       }
     >
@@ -38,4 +38,4 @@ const TargetWidthInput = () => {
   );
 };
 
-export default TargetWidthInput;
+export default TargetHeightInput;
