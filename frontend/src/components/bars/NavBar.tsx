@@ -5,7 +5,7 @@ import AugmentIcon from "../AugmentIcon";
 import ColorModeSwitch from "../ColorModeSwitch";
 import CompanyLogo from "../CompanyLogo";
 import ImageMaskUploader from "../ImageMaskUploader";
-// import ViewState from "../ViewState";
+import ViewState from "../ViewState";
 
 const NavBar = () => {
   return (
@@ -27,7 +27,7 @@ const NavBar = () => {
         <ImageMaskUploader />
         <AugmentationConfigIcon />
         <AugmentIcon />
-        {/* <ViewState /> */}
+        <ViewState />
       </Flex>
 
       <Box
