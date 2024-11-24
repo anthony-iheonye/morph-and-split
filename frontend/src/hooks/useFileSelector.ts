@@ -3,9 +3,15 @@ import AugImage from "../entities/Image";
 import AugMask from "../entities/Mask";
 
 const useFileSelector = <T extends AugImage | AugMask>(
-  setFilePaths: (files: T[]) => void
+  setFilePaths: (files: T[]) => void,
+  onError?: (error: string | null) => void
 ) => {
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<string | null>(null);
+
+  const setError = (error: string | null) => {
+    setErrorState(error);
+    if (onError) onError(error);
+  };
 
   const getFileExt = (file: File): T["extension"] | null => {
     const ext = file.name.split(".").pop()?.toLowerCase();
@@ -20,11 +26,9 @@ const useFileSelector = <T extends AugImage | AugMask>(
 
     if (!curFiles || curFiles.length == 0) {
       setError("No file currently selected for upload.");
-      // setFilePaths([]);  // reset current state if no new file is selected.
       return;
     }
 
-    setError(null);
     const newFiles: T[] = [];
 
     for (const file of Array.from(curFiles)) {
@@ -42,9 +46,11 @@ const useFileSelector = <T extends AugImage | AugMask>(
           name: file.name,
           extension: extension,
           url: URL.createObjectURL(file),
+          file: file,
         } as T);
     }
 
+    setError(null); //clear any previous errors.
     setFilePaths(newFiles);
   };
   return { error, handleFileChange };
