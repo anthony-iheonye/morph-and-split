@@ -3,4 +3,5 @@ export default interface AugMask {
   name: string;
   extension: "jpg" | "png" | "jpeg";
   url: string;
+  file: File;
 }

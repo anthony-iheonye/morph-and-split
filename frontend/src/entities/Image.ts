@@ -3,4 +3,5 @@ export default interface AugImage {
   name: string;
   extension: "jpg" | "png" | "jpeg";
   url: string;
+  file: File;
 }
