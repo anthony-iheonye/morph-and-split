@@ -1,6 +1,6 @@
 import { Card, CardBody, Image, Text } from "@chakra-ui/react";
-import AugImage from "../entities/Image";
-import AugMask from "../entities/Mask";
+import AugImage from "../entities/AugImage";
+import AugMask from "../entities/AugMask";
 
 interface Props {
   file: AugImage | AugMask;

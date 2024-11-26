@@ -1,5 +1,5 @@
 import { Button, Input, VStack } from "@chakra-ui/react";
-import AugImage from "../entities/Image";
+import AugImage from "../entities/AugImage";
 import useFileSelector from "../hooks/useFileSelector";
 import useAugConfigStore from "../store";
 
