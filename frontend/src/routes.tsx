@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/upload_data",
+        path: "upload_data",
         element: <UploadData />,
         children: [
           {
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/settings",
+        path: "settings",
         element: <AugmentationSettings />,
         children: [
           {
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/augment",
+        path: "augment",
         element: <InitiateAugmentation />,
         children: [
           {
