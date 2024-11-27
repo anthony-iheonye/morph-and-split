@@ -13,7 +13,7 @@ import { FaLayerGroup } from "react-icons/fa6";
 import BoundingBox from "../components/BoundingBox";
 import TotalTrainData from "../components/TotalTrainData";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import useAugConfigStore from "../store";
+import useAugConfigStore from "../store/augConfigStore";
 import PageTitle from "../components/PageTitle";
 
 const adjustRatios = (

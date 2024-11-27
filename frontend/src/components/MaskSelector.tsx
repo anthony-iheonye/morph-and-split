@@ -1,7 +1,7 @@
 import { Button, Input, VStack } from "@chakra-ui/react";
 import AugMask from "../entities/AugMask";
 import useFileSelector from "../hooks/useFileSelector";
-import useAugConfigStore from "../store";
+import useAugConfigStore from "../store/augConfigStore";
 
 const MaskSelector = () => {
   const setMasks = useAugConfigStore((state) => state.setMasks);

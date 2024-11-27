@@ -3,17 +3,17 @@ import { useState } from "react";
 import { FaPlay } from "react-icons/fa6";
 import AugmentResponse from "../entities/AugmentResponse";
 import APIClient from "../services/api-client";
-import useAugConfigStore from "../store";
+import useAugConfigStore from "../store/augConfigStore";
 import BoundingBox from "./BoundingBox";
 import IconHeadingDescriptionCombo from "./IconHeadingDescriptionCombo";
+import useAugResponseStore from "../store/augResponseStore";
 
 const Augment = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [augmentedData, setAugmentedData] = useState<AugmentResponse | null>(
-    null
-  );
-  const { augConfig } = useAugConfigStore();
   const AugmentationAPI = new APIClient<AugmentResponse>("/augment");
+
+  const [isLoading, setIsLoading] = useState(false);
+  const { augmentedResponse, setAugmentedResponse } = useAugResponseStore();
+  const { augConfig } = useAugConfigStore();
 
   const handleAugment = async () => {
     setIsLoading(true);
@@ -35,7 +35,7 @@ const Augment = () => {
       const response = await AugmentationAPI.uploadFiles(formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setAugmentedData(response);
+      setAugmentedResponse(response);
     } catch (error) {
       console.error("Error during augmentation:", error);
     } finally {
@@ -75,11 +75,11 @@ const Augment = () => {
       </BoundingBox>
 
       <BoundingBox>
-        {augmentedData && (
+        {augmentedResponse && (
           <div>
             <h3>Augmented Images</h3>
             <ul>
-              {augmentedData.images?.map((img, idx) => (
+              {augmentedResponse.images?.map((img, idx) => (
                 <li key={idx}>
                   <img
                     src={`data:image/${img.filename.split(".").pop()};base64,${
@@ -104,7 +104,7 @@ const Augment = () => {
             </ul>
             <h3>Augmented Masks</h3>
             <ul>
-              {augmentedData.masks?.map((mask, idx) => (
+              {augmentedResponse.masks?.map((mask, idx) => (
                 <li key={idx}>
                   <img
                     src={`data:image/${mask.filename.split(".").pop()};base64,${

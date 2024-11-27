@@ -1,5 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import useAugConfigStore from "../store";
+import useAugConfigStore from "../store/augConfigStore";
 import PreviewCard from "./PreviewCard";
 import { useMemo } from "react";
 import PreviewContainer from "./PreviewContainer";

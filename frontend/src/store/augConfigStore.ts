@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import CropDimension from "./entities/CropDimension";
-import AugImage from "./entities/AugImage";
-import ImgDimension from "./entities/ImgDimension";
-import ImgMaskChannels from "./entities/ImgMaskChannels";
-import AugMask from "./entities/AugMask";
-import VisualAttributeJSONFile from "./entities/VisualAttributeFile";
+import CropDimension from "../entities/CropDimension";
+import AugImage from "../entities/AugImage";
+import ImgDimension from "../entities/ImgDimension";
+import ImgMaskChannels from "../entities/ImgMaskChannels";
+import AugMask from "../entities/AugMask";
+import VisualAttributeJSONFile from "../entities/VisualAttributeFile";
 
 interface AugConfig {
   images?: AugImage[];

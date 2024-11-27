@@ -1,7 +1,7 @@
 import { VStack, Button, Input } from "@chakra-ui/react";
 import AugMask from "../entities/AugMask";
 import useFileSelector from "../hooks/useFileSelector";
-import useAugConfigStore from "../store";
+import useAugConfigStore from "../store/augConfigStore";
 
 const AugmentedMaskSelector = () => {
   const setAugmentedMasks = useAugConfigStore(

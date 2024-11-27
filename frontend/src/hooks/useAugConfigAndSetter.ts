@@ -1,4 +1,4 @@
-import useAugConfigStore from "../store";
+import useAugConfigStore from "../store/augConfigStore";
 
 const useAugConfigAndSetter = () => {
   const { augConfig, setAugConfig } = useAugConfigStore((store) => ({

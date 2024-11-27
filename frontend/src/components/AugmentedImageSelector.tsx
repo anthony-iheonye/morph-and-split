@@ -1,7 +1,7 @@
 import { Button, Input, VStack } from "@chakra-ui/react";
 import AugImage from "../entities/AugImage";
 import useFileSelector from "../hooks/useFileSelector";
-import useAugConfigStore from "../store";
+import useAugConfigStore from "../store/augConfigStore";
 
 const AugmentedImageSelector = () => {
   const setAugmentedImages = useAugConfigStore(
