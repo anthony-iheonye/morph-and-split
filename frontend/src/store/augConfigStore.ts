@@ -47,6 +47,7 @@ interface AugConfig {
   contrast?: boolean;
   correlation?: boolean;
   energy?: boolean;
+  reset?: boolean;
 }
 
 interface AugConfigStore {
@@ -64,58 +65,63 @@ interface AugConfigStore {
   setAugmentedImages: (augmentedImages: AugImage[]) => void;
   setAugmentedMasks: (augmentedMasks: AugMask[]) => void;
   setRatios: (train: number, val: number, test: number) => void;
+  resetAugConfig: () => void;
 }
 
-const useAugConfigStore = create<AugConfigStore>((set) => ({
-  augConfig: {
-    images: [],
-    masks: [],
-    augmentedImages: [],
-    augmentedMasks: [],
-    saveDirectory: "",
-    initialTrainSaveId: 1,
-    initialValSaveId: 1,
-    initialTestSaveId: 1,
-    visualAttributesJSONFile: { name: "", url: "" },
-    imageMaskChannels: { imgChannels: 3, maskChannels: 1 },
-    resizeAugImage: false,
-    augImageDimension: { width: 1200, height: 800 },
-    trainRatio: 0.6,
-    valRatio: 0.2,
-    testRatio: 0.2,
-    seed: 42,
-    crop: false,
-    cropDimension: {
-      offsetHeight: 1,
-      offsetWidth: 1,
-      targetHeight: 10,
-      targetWidth: 10,
-    },
-    augmentValData: false,
-    randomCrop: false,
-    flipLeftRight: false,
-    flipUpDown: false,
-    randomRotate: false,
-    corruptBrightness: false,
-    corruptContrast: false,
-    corruptSaturation: false,
-    cacheDirectory: "",
-    totalAugmentedImages: 150,
-    eccentricity: false,
-    equivalentDiameter: false,
-    feretDiameterMax: false,
-    filledArea: false,
-    perimeter: false,
-    roundness: false,
-    l: false,
-    a: false,
-    b: false,
-    contrast: false,
-    correlation: false,
-    energy: false,
+const initialAugConfig: AugConfig = {
+  images: [],
+  masks: [],
+  augmentedImages: [],
+  augmentedMasks: [],
+  saveDirectory: "",
+  initialTrainSaveId: 1,
+  initialValSaveId: 1,
+  initialTestSaveId: 1,
+  visualAttributesJSONFile: { name: "", url: "" },
+  imageMaskChannels: { imgChannels: 3, maskChannels: 3 },
+  resizeAugImage: false,
+  augImageDimension: { width: 2000, height: 2000 },
+  trainRatio: 0.6,
+  valRatio: 0.2,
+  testRatio: 0.2,
+  seed: 42,
+  crop: false,
+  cropDimension: {
+    offsetHeight: 1,
+    offsetWidth: 1,
+    targetHeight: 10,
+    targetWidth: 10,
   },
+  augmentValData: false,
+  randomCrop: false,
+  flipLeftRight: false,
+  flipUpDown: false,
+  randomRotate: false,
+  corruptBrightness: false,
+  corruptContrast: false,
+  corruptSaturation: false,
+  cacheDirectory: "",
+  totalAugmentedImages: 150,
+  eccentricity: false,
+  equivalentDiameter: false,
+  feretDiameterMax: false,
+  filledArea: false,
+  perimeter: false,
+  roundness: false,
+  l: false,
+  a: false,
+  b: false,
+  contrast: false,
+  correlation: false,
+  energy: false,
+  reset: false,
+};
+
+const useAugConfigStore = create<AugConfigStore>((set) => ({
+  augConfig: initialAugConfig,
   previewSelection: false,
   previewAugmentedResult: false,
+  setAugConfig2: () => set(() => ({ augConfig: initialAugConfig })),
   setPreviewSelection: (previewSelection) => set(() => ({ previewSelection })),
   setPreviewAugmentedResult: (previewAugmentedResult) =>
     set(() => ({ previewAugmentedResult })),
@@ -138,6 +144,7 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
         testRatio: test,
       },
     })),
+  resetAugConfig: () => set(() => ({ augConfig: initialAugConfig })),
 }));
 
 export default useAugConfigStore;
