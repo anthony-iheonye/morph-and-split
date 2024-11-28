@@ -1,15 +1,11 @@
 import { create } from "zustand";
+import AugmentedData from "../entities/AugmentData";
 
-interface AugmentedData {
-  filename: string;
-  path: string;
-  data: BinaryData;
-}
-
-interface AugmentedResponse {
+export interface AugmentedResponse {
   images: AugmentedData[];
   masks: AugmentedData[];
   config: string[];
+  zipPath: string | null;
 }
 
 interface AugmentedResponseStore {
