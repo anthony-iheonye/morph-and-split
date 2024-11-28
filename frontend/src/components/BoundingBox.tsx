@@ -19,6 +19,7 @@ interface Props {
     | { base?: string; md?: string; lg?: string };
   width?: string | { base?: string; md?: string; lg?: string };
   maxWidth?: string | { base?: string; md?: string; lg?: string };
+  transparent?: boolean;
 }
 
 const BoundingBox = ({
@@ -31,6 +32,7 @@ const BoundingBox = ({
   maxHeight = "none",
   overflowY = undefined,
   borderRadius = 4,
+  transparent = false,
 }: Props) => {
   const backgroundColor = useBoundingBoxColor();
 
@@ -39,7 +41,7 @@ const BoundingBox = ({
       padding={padding}
       margin={4}
       borderRadius={borderRadius}
-      backgroundColor={backgroundColor}
+      backgroundColor={transparent ? "transparent" : backgroundColor}
       maxHeight={maxHeight}
       overflow={overflowY}
       flex={flex}
