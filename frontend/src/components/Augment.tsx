@@ -1,19 +1,28 @@
 import { Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaPlay } from "react-icons/fa6";
-import AugmentResponse from "../entities/AugmentResponse";
 import APIClient from "../services/api-client";
 import useAugConfigStore from "../store/augConfigStore";
+import useAugResponseStore, {
+  AugmentedResponse,
+} from "../store/augResponseStore";
 import BoundingBox from "./BoundingBox";
+import DownloadButton from "./DownloadButton";
 import IconHeadingDescriptionCombo from "./IconHeadingDescriptionCombo";
-import useAugResponseStore from "../store/augResponseStore";
 
 const Augment = () => {
-  const AugmentationAPI = new APIClient<AugmentResponse>("/augment");
+  const AugmentationAPI = new APIClient<AugmentedResponse>("/augment");
+  const DownloadAPI = new APIClient<Blob>("/download");
 
-  const [isLoading, setIsLoading] = useState(false);
-  const { augmentedResponse, setAugmentedResponse } = useAugResponseStore();
   const { augConfig } = useAugConfigStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { augmentedResponse, setAugmentedResponse } = useAugResponseStore(
+    (store) => ({
+      setAugmentedResponse: store.setAugmentedResponse,
+      augmentedResponse: store.augmentedResponse,
+    })
+  );
 
   const handleAugment = async () => {
     setIsLoading(true);
@@ -74,62 +83,15 @@ const Augment = () => {
         </Button>
       </BoundingBox>
 
-      <BoundingBox>
-        {augmentedResponse && (
-          <div>
-            <h3>Augmented Images</h3>
-            <ul>
-              {augmentedResponse.images?.map((img, idx) => (
-                <li key={idx}>
-                  <img
-                    src={`data:image/${img.filename.split(".").pop()};base64,${
-                      img.data
-                    }`}
-                    alt={`Augmented Image ${idx + 1}`}
-                    style={{
-                      maxWidth: "300px",
-                      display: "block",
-                      margin: "10px 0",
-                    }}
-                  />
-                  <a
-                    href={`http://127.0.0.1:5000/${img.path}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {img.filename}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <h3>Augmented Masks</h3>
-            <ul>
-              {augmentedResponse.masks?.map((mask, idx) => (
-                <li key={idx}>
-                  <img
-                    src={`data:image/${mask.filename.split(".").pop()};base64,${
-                      mask.data
-                    }`}
-                    alt={`Augmented Mask ${idx + 1}`}
-                    style={{
-                      maxWidth: "300px",
-                      display: "block",
-                      margin: "10px 0",
-                    }}
-                  />
-                  <a
-                    href={`http://127.0.0.1:5000/${mask.path}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {mask.filename}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </BoundingBox>
+      {augmentedResponse && (
+        <BoundingBox justify={"center"} transparent={true}>
+          <DownloadButton
+            filename="augmented_data.zip"
+            label="Download augmented data"
+            onDownload={DownloadAPI.downloadFile}
+          />
+        </BoundingBox>
+      )}
     </>
   );
 };
