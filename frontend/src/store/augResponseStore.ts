@@ -11,11 +11,16 @@ export interface AugmentedResponse {
 interface AugmentedResponseStore {
   augmentedResponse: AugmentedResponse | null;
   setAugmentedResponse: (augResponse: AugmentedResponse | null) => void;
+  resetAugmentedResponse: () => void;
 }
 
+const initialAugmentedResponse: AugmentedResponse | null = null;
+
 const useAugResponseStore = create<AugmentedResponseStore>((set) => ({
-  augmentedResponse: null,
+  augmentedResponse: initialAugmentedResponse,
   setAugmentedResponse: (data) => set({ augmentedResponse: data }),
+  resetAugmentedResponse: () =>
+    set({ augmentedResponse: initialAugmentedResponse }),
 }));
 
 export default useAugResponseStore;
