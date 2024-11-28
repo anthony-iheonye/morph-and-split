@@ -5,6 +5,7 @@ import AugmentIcon from "../AugmentIcon";
 import ColorModeSwitch from "../ColorModeSwitch";
 import CompanyLogo from "../CompanyLogo";
 import ImageMaskUploader from "../ImageMaskUploader";
+import ResetIcon from "../ResetIcon";
 import ViewState from "../ViewState";
 
 const NavBar = () => {
@@ -27,6 +28,7 @@ const NavBar = () => {
         <ImageMaskUploader />
         <AugmentationConfigIcon />
         <AugmentIcon />
+        <ResetIcon />
         <ViewState />
       </Flex>
 
