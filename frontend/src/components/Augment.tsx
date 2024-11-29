@@ -36,8 +36,14 @@ const Augment = () => {
       formData.append("masks", mask.file);
     });
 
+    if (augConfig.visualAttributesJSONFile?.file)
+      formData.append(
+        "visualAttributesJSONFile",
+        augConfig.visualAttributesJSONFile.file
+      );
     // Exclude images and masks form config and add reduced config
-    const { images, masks, ...reducedConfig } = augConfig; // Destruture to exclude
+    const { images, masks, visualAttributesJSONFile, ...reducedConfig } =
+      augConfig; // Destruture to exclude
     formData.append("config", JSON.stringify(reducedConfig)); // Add only the reduced
 
     try {
