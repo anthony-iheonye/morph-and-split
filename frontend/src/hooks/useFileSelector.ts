@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AugImage from "../entities/AugImage";
 import AugMask from "../entities/AugMask";
+import sortByName from "../services/sortByName";
 
 const useFileSelector = <T extends AugImage | AugMask>(
   setFilePaths: (files: T[]) => void,
@@ -29,9 +30,12 @@ const useFileSelector = <T extends AugImage | AugMask>(
       return;
     }
 
+    // Convert FileList to Array and sort it alphabetically by file name
+    const sortedFiles = sortByName(Array.from(curFiles), (file) => file.name);
+
     const newFiles: T[] = [];
 
-    for (const file of Array.from(curFiles)) {
+    for (const file of sortedFiles) {
       const extension = getFileExt(file);
 
       if (!extension) {
