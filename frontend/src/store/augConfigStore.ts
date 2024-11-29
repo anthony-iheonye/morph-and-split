@@ -77,7 +77,7 @@ const initialAugConfig: AugConfig = {
   initialTrainSaveId: 1,
   initialValSaveId: 1,
   initialTestSaveId: 1,
-  visualAttributesJSONFile: { name: "", url: "" },
+  visualAttributesJSONFile: { name: "", file: null },
   imageMaskChannels: { imgChannels: 3, maskChannels: 3 },
   resizeAugImage: false,
   augImageDimension: { width: 2000, height: 2000 },

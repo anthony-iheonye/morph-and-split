@@ -25,7 +25,7 @@ const useVisualAttributesFile = () => {
 
     setAugConfig("visualAttributesJSONFile", {
       name: result.name,
-      url: URL.createObjectURL(result),
+      file: result,
     });
   };
 
