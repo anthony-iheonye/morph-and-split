@@ -13,6 +13,8 @@ import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCom
 import PageTitle from "../components/PageTitle";
 import VisualAttributeFilePicker from "../components/VisualAttributeFilePicker";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import SplitParameterSelector from "../components/SplitParameterSelector";
+import { HiOutlineArrowsExpand } from "react-icons/hi";
 
 const VisualAttributes = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -43,6 +45,17 @@ const VisualAttributes = () => {
   return (
     <>
       <PageTitle title="Visual Attributes" />
+      <BoundingBox>
+        <HStack justify="space-between" align="start" width="100%">
+          <IconHeadingDescriptionCombo
+            icon={HiOutlineArrowsExpand}
+            title="Stratified Split Parameter"
+            description="Select the split parameter to ensure consistent class distribution across training, validation, and test datasets."
+          />
+          <SplitParameterSelector />
+        </HStack>
+      </BoundingBox>
+
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
