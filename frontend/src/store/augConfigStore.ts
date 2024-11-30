@@ -16,6 +16,7 @@ interface AugConfig {
   initialValSaveId?: number;
   initialTestSaveId?: number;
   visualAttributesJSONFile?: VisualAttributeJSONFile;
+  splitParameter: string;
   imageMaskChannels?: ImgMaskChannels;
   augImageDimension?: ImgDimension;
   resizeAugImage: boolean;
@@ -78,6 +79,7 @@ const initialAugConfig: AugConfig = {
   initialValSaveId: 1,
   initialTestSaveId: 1,
   visualAttributesJSONFile: { name: "", file: null },
+  splitParameter: "a",
   imageMaskChannels: { imgChannels: 3, maskChannels: 3 },
   resizeAugImage: false,
   augImageDimension: { width: 2000, height: 2000 },
