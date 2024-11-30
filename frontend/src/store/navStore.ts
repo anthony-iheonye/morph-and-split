@@ -1,5 +1,22 @@
 import { create } from "zustand";
 
+export const parentNames = {
+  uploadImageAndMask: "uploadImageAndMask",
+  augmentationConfig: "augmentationConfig",
+  augment: "augment",
+};
+
+export const subParentNames = {
+  uploadImages: "uploadImages",
+  uploadMasks: "uploadMasks",
+  previewUpload: "previewUpload",
+  dataSplit: "dataSplit",
+  transformation: "transformation",
+  visualAtttributes: "visualAttributes",
+  preProcessing: "preprocessing",
+  startAugmentation: "startAugmentation",
+};
+
 interface NavStore {
   activeParent: string | null;
   activeSubParent: string | null;
