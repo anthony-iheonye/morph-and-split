@@ -10,11 +10,18 @@ import {
 import { IoImages, IoImagesOutline } from "react-icons/io5";
 import { MdGridView } from "react-icons/md";
 import { Link } from "react-router-dom";
+import useActiveNavColor from "../../hooks/useActiveParentColor";
+import useActiveSubParent from "../../hooks/useActiveSubParent";
 import useBoundingBoxColor from "../../hooks/useBoundingBoxColor";
+import { subParentNames } from "../../store/navStore";
 
 const UploadDataBar = () => {
   const { colorMode } = useColorMode();
   const backgroundColor = useBoundingBoxColor();
+  const { activeSubParent, setActiveSubParent } = useActiveSubParent();
+
+  const { subParentColor } = useActiveNavColor();
+  const { uploadImages, uploadMasks, previewUpload } = subParentNames;
 
   return (
     <Flex
@@ -28,9 +35,17 @@ const UploadDataBar = () => {
       <Heading as="h2" fontWeight={500} padding={2}>
         Dataset
       </Heading>
-      <Link to={"/upload_data/images"}>
+      <Link
+        to={"/upload_data/images"}
+        onClick={() => setActiveSubParent(uploadImages)}
+      >
         <Tooltip label="Select Images" placement="top-start">
-          <HStack gap={0}>
+          <HStack
+            gap={0}
+            backgroundColor={
+              activeSubParent === uploadImages ? subParentColor : "transparent"
+            }
+          >
             <IconButton
               aria-label="Upload Images."
               icon={<IoImages />}
@@ -44,9 +59,17 @@ const UploadDataBar = () => {
         </Tooltip>
       </Link>
 
-      <Link to={"/upload_data/masks"}>
+      <Link
+        to={"/upload_data/masks"}
+        onClick={() => setActiveSubParent(uploadMasks)}
+      >
         <Tooltip label="Select segmentation masks" placement="top-start">
-          <HStack gap={0}>
+          <HStack
+            gap={0}
+            backgroundColor={
+              activeSubParent === uploadMasks ? subParentColor : "transparent"
+            }
+          >
             <IconButton
               aria-label="Upload masks"
               icon={<IoImagesOutline />}
@@ -60,9 +83,17 @@ const UploadDataBar = () => {
         </Tooltip>
       </Link>
 
-      <Link to={"/upload_data/preview"}>
+      <Link
+        to={"/upload_data/preview"}
+        onClick={() => setActiveSubParent(previewUpload)}
+      >
         <Tooltip label="Preview images and masks" placement="top-start">
-          <HStack gap={0}>
+          <HStack
+            gap={0}
+            backgroundColor={
+              activeSubParent === previewUpload ? subParentColor : "transparent"
+            }
+          >
             <IconButton
               aria-label="Preview selected image and masks"
               icon={<MdGridView />}

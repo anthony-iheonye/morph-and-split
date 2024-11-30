@@ -15,6 +15,7 @@ export const subParentNames = {
   visualAtttributes: "visualAttributes",
   preProcessing: "preprocessing",
   startAugmentation: "startAugmentation",
+  previewResult: "previewResult",
 };
 
 interface NavStore {

@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import useActiveParent from "../hooks/useActiveParent";
 import useNavIconColor from "../hooks/useNavIconColor";
 import { parentNames } from "../store/navStore";
-import useActiveParentColor from "../hooks/useActiveParentColor";
+import useActiveNavColor from "../hooks/useActiveParentColor";
 
 const AugmentationConfigIcon = () => {
   const backgroundColor = useNavIconColor();
   const { activeParent, setActiveParent } = useActiveParent();
   const parentName = parentNames.augmentationConfig;
-  const color = useActiveParentColor();
+  const { parentColor } = useActiveNavColor();
 
   return (
     <Box width="auto" alignSelf="center">
@@ -24,7 +24,7 @@ const AugmentationConfigIcon = () => {
             fontSize="1.5rem"
             colorScheme={backgroundColor}
             backgroundColor={
-              activeParent === parentName ? color : "transparent"
+              activeParent === parentName ? parentColor : "transparent"
             }
           />
         </Tooltip>

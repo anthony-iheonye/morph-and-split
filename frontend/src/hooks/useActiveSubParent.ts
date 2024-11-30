@@ -1,10 +1,11 @@
 import useNavStore from "../store/navStore";
 
 const useActiveSubParent = () => {
-  const { setActiveSubParent } = useNavStore((store) => ({
-    setActiveSubParent: store.activeSubParent,
+  const { activeSubParent, setActiveSubParent } = useNavStore((store) => ({
+    activeSubParent: store.activeSubParent,
+    setActiveSubParent: store.setActiveSubParent,
   }));
-  return setActiveSubParent;
+  return { activeSubParent, setActiveSubParent };
 };
 
 export default useActiveSubParent;

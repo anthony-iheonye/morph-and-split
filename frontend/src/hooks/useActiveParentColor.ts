@@ -1,9 +1,11 @@
 import { useColorMode } from "@chakra-ui/react";
 
-const useActiveParentColor = () => {
+const useActiveNavColor = () => {
   const { colorMode } = useColorMode();
 
-  return colorMode === "dark" ? "teal.900" : "blackAlpha.400";
+  return colorMode === "dark"
+    ? { parentColor: "teal.900", subParentColor: "teal.700" }
+    : { parentColor: "blackAlpha.400", subParentColor: "blackAlpha.200" };
 };
 
-export default useActiveParentColor;
+export default useActiveNavColor;

@@ -12,10 +12,19 @@ import { IoIosColorPalette } from "react-icons/io";
 import { PiCirclesThreeFill, PiResizeBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import useBoundingBoxColor from "../../hooks/useBoundingBoxColor";
+import useActiveSubParent from "../../hooks/useActiveSubParent";
+import { subParentNames } from "../../store/navStore";
+import useActiveNavColor from "../../hooks/useActiveParentColor";
+import Preview from "../../pages/Preview";
 
 const AugSettingBar = () => {
   const { colorMode } = useColorMode();
   const backgroundColor = useBoundingBoxColor();
+  const { activeSubParent, setActiveSubParent } = useActiveSubParent();
+
+  const { subParentColor } = useActiveNavColor();
+  const { dataSplit, transformation, visualAtttributes, preProcessing } =
+    subParentNames;
 
   return (
     <Flex
@@ -29,12 +38,20 @@ const AugSettingBar = () => {
       <Heading as="h2" fontWeight={500} padding={2}>
         Settings
       </Heading>
-      <Link to={"/settings/data_split"}>
+      <Link
+        to={"/settings/data_split"}
+        onClick={() => setActiveSubParent(dataSplit)}
+      >
         <Tooltip
           label="Split data into train, val & test sets "
           placement="top-start"
         >
-          <HStack gap={0}>
+          <HStack
+            gap={0}
+            backgroundColor={
+              activeSubParent === dataSplit ? subParentColor : "transparent"
+            }
+          >
             <IconButton
               aria-label="Split data into train, val and test sets."
               icon={<PiCirclesThreeFill />}
@@ -48,9 +65,19 @@ const AugSettingBar = () => {
         </Tooltip>
       </Link>
 
-      <Link to={"/settings/select_transformation"}>
+      <Link
+        to={"/settings/select_transformation"}
+        onClick={() => setActiveSubParent(transformation)}
+      >
         <Tooltip label="Select transformations" placement="top-start">
-          <HStack gap={0}>
+          <HStack
+            gap={0}
+            backgroundColor={
+              activeSubParent === transformation
+                ? subParentColor
+                : "transparent"
+            }
+          >
             <IconButton
               aria-label="Apply random transformations"
               icon={<FaMagic />}
@@ -64,9 +91,19 @@ const AugSettingBar = () => {
         </Tooltip>
       </Link>
 
-      <Link to={"/settings/visual_attributes"}>
+      <Link
+        to={"/settings/visual_attributes"}
+        onClick={() => setActiveSubParent(visualAtttributes)}
+      >
         <Tooltip label="Select visual attribute file" placement="top-start">
-          <HStack gap={0}>
+          <HStack
+            gap={0}
+            backgroundColor={
+              activeSubParent === visualAtttributes
+                ? subParentColor
+                : "transparent"
+            }
+          >
             <IconButton
               aria-label="Select visual attributes JSON file"
               icon={<IoIosColorPalette />}
@@ -80,9 +117,17 @@ const AugSettingBar = () => {
         </Tooltip>
       </Link>
 
-      <Link to={"/settings/pre_processing"}>
+      <Link
+        to={"/settings/pre_processing"}
+        onClick={() => setActiveSubParent(preProcessing)}
+      >
         <Tooltip label="Apply pre-processing steps" placement="top-start">
-          <HStack gap={0}>
+          <HStack
+            gap={0}
+            backgroundColor={
+              activeSubParent === preProcessing ? subParentColor : "transparent"
+            }
+          >
             <IconButton
               aria-label="Apply pre-processing values"
               icon={<PiResizeBold />}
