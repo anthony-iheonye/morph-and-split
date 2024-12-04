@@ -1,5 +1,20 @@
 import os
 import shutil
+import attr
+
+
+@attr.s
+class DirectoryStore:
+    image_dir = attr.ib(type=str, default='images/')
+    mask_dir = attr.ib(type=str, default='masks/')
+    visual_attributes_dir = attr.ib(type=str, default='visual_attributes/')
+    augmented = attr.ib(type=str, default='augmented/')
+    train_dir = attr.ib(type=str, default='augmented/train/')
+    val_dir = attr.ib(type=str, default='augmented/val/')
+    test_dir = attr.ib(type=str, default='augmented/test/')
+
+directory_store = DirectoryStore()
+
 
 
 def create_directory(dir_name, return_dir=False, overwrite_if_existing=False):
@@ -61,3 +76,5 @@ def current_directory(file_path=None):
         return os.path.dirname(os.path.abspath(file_path))
     else:
         return os.getcwd()
+
+
