@@ -1,5 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
 
+export interface FetchResponse<T> {
+  count: number;
+  results: T[];
+}
+
 const axiosInstance = axios.create({
   baseURL: "http://127.0.0.1:5000", // Backend base URL
 });
@@ -52,6 +57,11 @@ class APIClient<T> {
       console.error("Failed to dowload file.");
     }
   };
+
+  getAll = (requestConfig?: AxiosRequestConfig) =>
+    axiosInstance
+      .get<FetchResponse<T>>(this.endpoint, requestConfig)
+      .then((res) => res.data);
 }
 
 export default APIClient;
