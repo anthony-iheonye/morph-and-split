@@ -5,10 +5,9 @@ import { TbLayersSelected } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import ImageChannel from "../components/ImageChannel";
-import ImageSelector from "../components/ImageSelector";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import PageTitle from "../components/PageTitle";
 import ImageUploader from "../components/ImageUploader";
+import PageTitle from "../components/PageTitle";
+import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 
 const ImageUpload = () => {
   const { augConfig } = useAugConfigAndSetter();
@@ -24,7 +23,7 @@ const ImageUpload = () => {
             title="Upload Images"
             description="Click button to select images for augmentation."
           />
-          <ImageSelector />
+          <ImageUploader />
         </HStack>
       </BoundingBox>
       <BoundingBox>
@@ -56,7 +55,6 @@ const ImageUpload = () => {
           )}
         </Box>
       </BoundingBox>
-      <ImageUploader />
     </>
   );
 };

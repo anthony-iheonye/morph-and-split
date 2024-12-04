@@ -8,6 +8,7 @@ import MaskChannel from "../components/MaskChannel";
 import MaskSelector from "../components/MaskSelector";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 import PageTitle from "../components/PageTitle";
+import MaskUploader from "../components/MaskUploader";
 
 const MaskUpload = () => {
   const { augConfig } = useAugConfigAndSetter();
@@ -23,7 +24,7 @@ const MaskUpload = () => {
             title="Select Segmentation Masks"
             description="Click button to select masks for augmentation."
           />
-          <MaskSelector />
+          <MaskUploader />
         </HStack>
       </BoundingBox>
       <BoundingBox>
