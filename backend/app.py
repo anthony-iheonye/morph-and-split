@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
-from app.routes import image_upload, mask_upload, file_download, augment
+from app.routes import image_upload, mask_upload, file_download, augment, image_mask_metadata
 from app.utils import create_project_directories
 
 # Flask app setup
@@ -19,6 +19,7 @@ for directory in directories.values():
 # Register blueprints
 app.register_blueprint(image_upload)
 app.register_blueprint(mask_upload)
+app.register_blueprint(image_mask_metadata)
 app.register_blueprint(file_download)
 app.register_blueprint(augment)
 
