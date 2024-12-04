@@ -1,6 +1,7 @@
 import os
 import shutil
 import attr
+import re
 
 
 @attr.s
@@ -76,5 +77,28 @@ def current_directory(file_path=None):
         return os.path.dirname(os.path.abspath(file_path))
     else:
         return os.getcwd()
+
+def sort_filenames(file_paths):
+        return sorted(file_paths, key=lambda var: [
+            int(x) if x.isdigit() else x.lower() for x in re.findall(r'\D+|\d+', var)
+        ])
+
+def get_sorted_filepaths(images_dir):
+    """
+    Generates the sorted list of path for images within a specified directory.
+
+    :param images_dir: a directory containing images
+    :return: Returns a list containing the file path for the images
+    """
+    image_file_list = os.listdir(path=images_dir)
+    image_paths = [os.path.join(images_dir, filename) for filename in image_file_list]
+
+    # sort the file paths in ascending order
+    image_paths = sort_filenames(image_paths)
+
+    return image_paths
+
+
+
 
 
