@@ -10,7 +10,7 @@ from keras.layers import RandomRotation
 from skimage import io
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import train_test_split
-from visual_attributes_service import VisualAttributesDatasetCreator
+from .visual_attributes_service import VisualAttributesDatasetCreator
 
 from app.utils import create_directory
 
@@ -610,6 +610,7 @@ class DataSplitterAugmenterAndSaver:
             pea's body (1), or pea outline (3).
         """
         image, mask = self._read_and_decode_image_and_mask(image_path=image_path, mask_path=mask_path)
+        tf.print(image_path, mask_path)
         image, mask = self._crop_image_and_mask(image=image, mask=mask)
         # image, mask = self._convert_image_to_float(image=image, mask=mask)
         image, mask = self._resize_image_and_mask(image=image, mask=mask)
