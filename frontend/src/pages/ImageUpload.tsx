@@ -8,6 +8,7 @@ import ImageChannel from "../components/ImageChannel";
 import ImageSelector from "../components/ImageSelector";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 import PageTitle from "../components/PageTitle";
+import ImageUploader from "../components/ImageUploader";
 
 const ImageUpload = () => {
   const { augConfig } = useAugConfigAndSetter();
@@ -20,7 +21,7 @@ const ImageUpload = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={BiSolidImageAdd}
-            title="Select Images"
+            title="Upload Images"
             description="Click button to select images for augmentation."
           />
           <ImageSelector />
@@ -41,7 +42,7 @@ const ImageUpload = () => {
           icon={TbLayersSelected}
           title="Selected Images"
         />
-        <Box overflowY="auto" maxHeight="400px" mt={4}>
+        <Box overflowY="auto" maxHeight="320px" mt={4}>
           {images && images?.length > 0 ? (
             images?.map((image) => (
               <Text fontWeight="thin" fontSize="md" key={image.id}>
@@ -55,6 +56,7 @@ const ImageUpload = () => {
           )}
         </Box>
       </BoundingBox>
+      <ImageUploader />
     </>
   );
 };
