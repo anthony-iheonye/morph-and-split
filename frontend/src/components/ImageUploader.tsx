@@ -3,7 +3,7 @@ import useFileUploader from "../hooks/useFileUploader";
 import APIClient from "../services/api-client";
 
 const ImageUploader = () => {
-  const uploadClient = new APIClient("/upload_images");
+  const uploadClient = new APIClient("/upload/images");
 
   const { error, isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
