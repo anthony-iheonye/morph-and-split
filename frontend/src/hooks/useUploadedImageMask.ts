@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import ms from "ms";
-import ImageMaskMetadata from "../entities/ImageMaskMetaData";
+import UploadedImageMask from "../entities/UploadedImageMask";
 import APIClient, { FetchResponse } from "../services/api-client";
 
-const apiClient = new APIClient<ImageMaskMetadata>("/metadata/image_mask");
+const apiClient = new APIClient<UploadedImageMask>("/metadata/image_mask");
 
 /**
  * Custom hook to fetch metadata of uploaded images and masks from the backend.
@@ -39,7 +39,7 @@ const apiClient = new APIClient<ImageMaskMetadata>("/metadata/image_mask");
  * - Other properties from `useQuery` (e.g., `refetch`, `isFetching`).
  */
 const useUploadedImageMask = () =>
-  useQuery<FetchResponse<ImageMaskMetadata>, Error>({
+  useQuery<FetchResponse<UploadedImageMask>, Error>({
     queryKey: ["metadata"],
     queryFn: apiClient.getAll,
     staleTime: ms("10min"), // Cache the data for 10 minutes
