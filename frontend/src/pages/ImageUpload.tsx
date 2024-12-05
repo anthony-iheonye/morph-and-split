@@ -7,11 +7,10 @@ import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCom
 import ImageChannel from "../components/ImageChannel";
 import ImageUploader from "../components/ImageUploader";
 import PageTitle from "../components/PageTitle";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import useUploadedImageNames from "../hooks/useUploadedImageNames";
 
 const ImageUpload = () => {
-  const { augConfig } = useAugConfigAndSetter();
-  const images = augConfig.images;
+  const { data, isLoading } = useUploadedImageNames();
 
   return (
     <>
@@ -42,10 +41,10 @@ const ImageUpload = () => {
           title="Selected Images"
         />
         <Box overflowY="auto" maxHeight="320px" mt={4}>
-          {images && images?.length > 0 ? (
-            images?.map((image) => (
-              <Text fontWeight="thin" fontSize="md" key={image.id}>
-                {image.name}
+          {data?.results && data?.results.length > 0 ? (
+            data?.results.map((name, index) => (
+              <Text fontWeight="thin" fontSize="md" key={index}>
+                {name}
               </Text>
             ))
           ) : (
