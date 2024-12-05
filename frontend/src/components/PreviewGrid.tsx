@@ -1,35 +1,24 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid, Spinner } from "@chakra-ui/react";
+import useUploadedImageMask from "../hooks/useUploadedImageMask";
 import useAugConfigStore from "../store/augConfigStore";
 import PreviewCard from "./PreviewCard";
-import { useMemo } from "react";
 import PreviewContainer from "./PreviewContainer";
 
 const PreviewGrid = () => {
-  const images = useAugConfigStore((state) => state.augConfig.images);
-  const masks = useAugConfigStore((state) => state.augConfig.masks);
   const previewSelection = useAugConfigStore((state) => state.previewSelection);
 
-  const pairedData = useMemo(
-    () =>
-      images?.map((image, index) => ({
-        image,
-        mask: masks?.[index],
-      })),
-    [images, masks]
-  );
+  const { data, error, isLoading } = useUploadedImageMask();
 
   if (!previewSelection) return null;
+  if (isLoading) return <Spinner />;
 
   return (
     <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={6} padding={"10px"}>
-      {pairedData?.map(
-        (pair, index) =>
-          pair.mask && (
-            <PreviewContainer key={index}>
-              <PreviewCard image={pair.image} mask={pair.mask} />
-            </PreviewContainer>
-          )
-      )}
+      {data?.results.map(({ image, mask }) => (
+        <PreviewContainer key={image.name}>
+          <PreviewCard image={image} mask={mask} />
+        </PreviewContainer>
+      ))}
     </SimpleGrid>
   );
 };
