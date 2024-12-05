@@ -1,18 +1,27 @@
 import { Button, Input } from "@chakra-ui/react";
 import useFileUploader from "../hooks/useFileUploader";
 import APIClient from "../services/api-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MaskUploader = () => {
-  const uploadClient = new APIClient("/upload/masks");
+  const queryClient = useQueryClient();
+  const uploadClient = new APIClient<string[]>("/upload/masks");
 
   const { error, isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
       const formData = new FormData();
       files.forEach((file) => formData.append("masks", file));
 
-      await uploadClient.uploadFiles(formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      try {
+        await uploadClient.uploadFiles(formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        // Invalidate the 'image_names' query to refresh the updated list
+        queryClient.invalidateQueries(["mask_names"]);
+      } catch (err) {
+        console.log("Upload failed: ", err);
+      }
     }
   );
 
