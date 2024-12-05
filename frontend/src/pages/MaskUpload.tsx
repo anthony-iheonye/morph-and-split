@@ -5,14 +5,12 @@ import { TbLayersSelected } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import MaskChannel from "../components/MaskChannel";
-import MaskSelector from "../components/MaskSelector";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import PageTitle from "../components/PageTitle";
 import MaskUploader from "../components/MaskUploader";
+import PageTitle from "../components/PageTitle";
+import useUploadedMaskNames from "../hooks/useUploadedMaskNames";
 
 const MaskUpload = () => {
-  const { augConfig } = useAugConfigAndSetter();
-  const masks = augConfig.masks;
+  const { data, isLoading } = useUploadedMaskNames();
 
   return (
     <>
@@ -21,7 +19,7 @@ const MaskUpload = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={BiSolidImageAdd}
-            title="Select Segmentation Masks"
+            title="Upload Segmentation Masks"
             description="Click button to select masks for augmentation."
           />
           <MaskUploader />
@@ -43,10 +41,10 @@ const MaskUpload = () => {
           title="Selected Masks"
         />
         <Box overflowY="auto" maxHeight="400px" mt={4}>
-          {masks && masks?.length > 0 ? (
-            masks?.map((mask) => (
-              <Text fontWeight="thin" fontSize="md" key={mask.id}>
-                {mask.name}
+          {data?.results && data?.results.length > 0 ? (
+            data?.results.map((name, index) => (
+              <Text fontWeight="thin" fontSize="md" key={index}>
+                {name}
               </Text>
             ))
           ) : (
