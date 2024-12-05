@@ -1,15 +1,14 @@
 import { Card, CardBody, Image, Text } from "@chakra-ui/react";
-import AugImage from "../entities/AugImage";
-import AugMask from "../entities/AugMask";
+import { Metadata } from "../entities/UploadedImageMask";
 
 interface Props {
-  file: AugImage | AugMask;
+  file: Metadata;
 }
 
 const ImageCard = ({ file }: Props) => {
   return (
     <Card borderRadius={0}>
-      <Image src={file.url} />
+      <Image src={file.url} objectFit="contain" />
       <CardBody paddingTop={1} paddingBottom={1}>
         <Text color="gray" fontSize="small" overflowWrap="normal">
           {file.name}

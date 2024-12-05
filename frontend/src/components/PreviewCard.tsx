@@ -1,11 +1,10 @@
 import { HStack } from "@chakra-ui/react";
-import AugImage from "../entities/AugImage";
-import AugMask from "../entities/AugMask";
+import { Metadata } from "../entities/UploadedImageMask";
 import ImageCard from "./ImageCard";
 
 interface Props {
-  image: AugImage;
-  mask: AugMask;
+  image: Metadata;
+  mask: Metadata;
 }
 
 const PreviewCard = ({ image, mask }: Props) => {
