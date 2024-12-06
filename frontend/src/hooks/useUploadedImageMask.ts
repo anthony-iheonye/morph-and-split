@@ -42,7 +42,7 @@ const useUploadedImageMask = () =>
   useQuery<FetchResponse<UploadedImageMask>, Error>({
     queryKey: ["metadata"],
     queryFn: apiClient.getAll,
-    staleTime: ms("10min"), // Cache the data for 10 minutes
+    staleTime: ms("30min"), // Cache the data for 10 minutes
   });
 
 export default useUploadedImageMask;
