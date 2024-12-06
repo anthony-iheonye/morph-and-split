@@ -7,8 +7,6 @@ import AugMask from "../entities/AugMask";
 import VisualAttributeJSONFile from "../entities/VisualAttributeFile";
 
 interface AugConfig {
-  images?: AugImage[];
-  masks?: AugMask[];
   augmentedImages?: AugImage[];
   augmentedMasks?: AugMask[];
   saveDirectory?: string;
@@ -61,8 +59,6 @@ interface AugConfigStore {
     key: K,
     value: AugConfig[K]
   ) => void;
-  setImages: (images: AugImage[]) => void;
-  setMasks: (masks: AugMask[]) => void;
   setAugmentedImages: (augmentedImages: AugImage[]) => void;
   setAugmentedMasks: (augmentedMasks: AugMask[]) => void;
   setRatios: (train: number, val: number, test: number) => void;
@@ -70,8 +66,6 @@ interface AugConfigStore {
 }
 
 const initialAugConfig: AugConfig = {
-  images: [],
-  masks: [],
   augmentedImages: [],
   augmentedMasks: [],
   saveDirectory: "",
@@ -127,10 +121,6 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
   setPreviewSelection: (previewSelection) => set(() => ({ previewSelection })),
   setPreviewAugmentedResult: (previewAugmentedResult) =>
     set(() => ({ previewAugmentedResult })),
-  setImages: (images) =>
-    set((store) => ({ augConfig: { ...store.augConfig, images } })),
-  setMasks: (masks) =>
-    set((store) => ({ augConfig: { ...store.augConfig, masks } })),
   setAugmentedImages: (augmentedImages) =>
     set((store) => ({ augConfig: { ...store.augConfig, augmentedImages } })),
   setAugmentedMasks: (augmentedMasks) =>
