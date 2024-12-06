@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import BackendResponse from "../entities/BackendResponse";
 
 export interface FetchResponse<T> {
   count: number;
@@ -41,7 +42,7 @@ class APIClient<T> {
 
     // handle file download
     if (response) {
-      // wrap the file content in a Blob, so its treated a downloadable file
+      // wrap the file content in a Blob, so it is treated as a downloadable file
       const blob = new Blob([response.data]);
       // create temporary url pointing to the blob
       const url = window.URL.createObjectURL(blob);
@@ -62,6 +63,17 @@ class APIClient<T> {
     axiosInstance
       .get<FetchResponse<T>>(this.endpoint, requestConfig)
       .then((res) => res.data);
+
+  resetSession = (
+    requestConfig?: AxiosRequestConfig
+  ): Promise<BackendResponse> =>
+    axiosInstance
+      .post<BackendResponse>(this.endpoint, requestConfig)
+      .then((res) => res.data)
+      .catch((err) => {
+        console.error("Error resetting session: ", err.messsage);
+        return { success: false, error: err.messsage };
+      });
 }
 
 export default APIClient;
