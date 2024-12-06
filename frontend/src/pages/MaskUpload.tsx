@@ -10,7 +10,7 @@ import PageTitle from "../components/PageTitle";
 import useUploadedMaskNames from "../hooks/useUploadedMaskNames";
 
 const MaskUpload = () => {
-  const { data, isLoading } = useUploadedMaskNames();
+  const { data } = useUploadedMaskNames();
 
   return (
     <>

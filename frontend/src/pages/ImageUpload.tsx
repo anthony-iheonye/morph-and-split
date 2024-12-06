@@ -10,7 +10,7 @@ import PageTitle from "../components/PageTitle";
 import useUploadedImageNames from "../hooks/useUploadedImageNames";
 
 const ImageUpload = () => {
-  const { data, isLoading } = useUploadedImageNames();
+  const { data } = useUploadedImageNames();
 
   return (
     <>
@@ -40,7 +40,7 @@ const ImageUpload = () => {
           icon={TbLayersSelected}
           title="Selected Images"
         />
-        <Box overflowY="auto" maxHeight="320px" mt={4}>
+        <Box overflowY="auto" maxHeight="400px" mt={4}>
           {data?.results && data?.results.length > 0 ? (
             data?.results.map((name, index) => (
               <Text fontWeight="thin" fontSize="md" key={index}>
