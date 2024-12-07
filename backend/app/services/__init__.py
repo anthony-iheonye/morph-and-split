@@ -1,1 +1,2 @@
 from .augment import DataSplitterAugmenterAndSaver
+from .data_preprocessing import resize_image

@@ -2,7 +2,7 @@ import os
 import random
 import re
 from typing import Union, Tuple
-
+import gc
 import matplotlib.pyplot as plt
 import pandas as pd
 import tensorflow as tf
@@ -10,9 +10,9 @@ from keras.layers import RandomRotation
 from skimage import io
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import train_test_split
-from .visual_attributes_service import VisualAttributesDatasetCreator
 
 from app.utils import create_directory
+from .visual_attributes_service import VisualAttributesDatasetCreator
 
 
 class DataSplitterAugmenterAndSaver:
@@ -610,7 +610,6 @@ class DataSplitterAugmenterAndSaver:
             pea's body (1), or pea outline (3).
         """
         image, mask = self._read_and_decode_image_and_mask(image_path=image_path, mask_path=mask_path)
-        tf.print(image_path, mask_path)
         image, mask = self._crop_image_and_mask(image=image, mask=mask)
         # image, mask = self._convert_image_to_float(image=image, mask=mask)
         image, mask = self._resize_image_and_mask(image=image, mask=mask)
@@ -791,6 +790,7 @@ class DataSplitterAugmenterAndSaver:
         training_dataset = training_dataset.prefetch(buffer_size=self.tune)
         list(training_dataset.as_numpy_iterator())
         print('\n\t1. Training images and masks saved')
+        del training_dataset
 
     def _process_and_save_validation_data(self, image_paths, mask_paths):
         """
@@ -821,6 +821,7 @@ class DataSplitterAugmenterAndSaver:
         validation_dataset = validation_dataset.prefetch(buffer_size=self.tune)
         list(validation_dataset.as_numpy_iterator())
         print('\t2. Validation images and masks saved')
+        del validation_dataset
 
     def _process_and_save_test_data(self, image_paths, mask_paths):
         """
@@ -851,6 +852,7 @@ class DataSplitterAugmenterAndSaver:
         test_dataset = test_dataset.prefetch(buffer_size=self.tune)
         list(test_dataset.as_numpy_iterator())
         print('\t3. Test images and masks saved')
+        del test_dataset
 
     def _process_images_and_masks(self):
         self._process_and_save_training_data(image_paths=self.training_image_paths,
@@ -868,5 +870,6 @@ class DataSplitterAugmenterAndSaver:
         print('\nProcess started . . . ', end='\n')
         self._process_images_and_masks()
         print(f'\nProcess completed!!\n')
+        gc.collect()
 
 

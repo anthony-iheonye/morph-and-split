@@ -4,6 +4,7 @@ from typing import Union, Tuple
 
 import numpy as np
 import tensorflow as tf
+from PIL import Image
 from skimage import io
 
 from app.utils import create_directory
@@ -570,4 +571,8 @@ def produce_multiple_crop_dimensions(parent_image_shape: tuple[int, int], new_im
     return crop_dimension_list
 
 
-
+def resize_image(original_image_path, resized_image_path, size=(256, 256)):
+    """Resize image to a specific dimension and save."""
+    with Image.open(original_image_path) as img:
+        img = img.resize(size, Image.Resampling.BILINEAR)
+        img.save(resized_image_path)
