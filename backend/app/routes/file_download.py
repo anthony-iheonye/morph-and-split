@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename, send_file
 import os
 from app.utils import directory_store
@@ -10,10 +10,16 @@ AUGMENTED_DIR = directory_store.augmented
 
 @file_download.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
-    zip_path = os.path.join(AUGMENTED_DIR, secure_filename(filename))
-    print(f"zip path: {zip_path} ")
-    if os.path.exists(zip_path):
-        return send_file(zip_path, as_attachment=True,)
+    filename = secure_filename(filename)
+
+    # check if file exist in the directory
+    if os.path.exists(os.path.join(AUGMENTED_DIR, filename)):
+        try:
+            return send_from_directory(AUGMENTED_DIR, filename, as_attachment=True)
+        except Exception as e:
+            print(f"Error will sending file: {e}")
+            return jsonify({'success': False, 'error': 'Error while sending file.'}), 500
     else:
-        return jsonify({"error": "File not found"}), 404
+        # File not found
+        return jsonify({'error': 'File not found'}), 404
 
