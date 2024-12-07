@@ -86,3 +86,5 @@ fabric.properties
 /visual_attributes/*
 practice.ipynb
 /app-old.py
+/resized_images/*
+/resized_masks/*
