@@ -1,58 +1,62 @@
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaPlay } from "react-icons/fa6";
+import BackendResponse from "../entities/BackendResponse";
+import useBackendResponse from "../hooks/useBackendResponse";
 import APIClient from "../services/api-client";
 import useAugConfigStore from "../store/augConfigStore";
-import useAugResponseStore, {
-  AugmentedResponse,
-} from "../store/augResponseStore";
 import BoundingBox from "./BoundingBox";
 import DownloadButton from "./DownloadButton";
 import IconHeadingDescriptionCombo from "./IconHeadingDescriptionCombo";
 
 const Augment = () => {
-  const AugmentationAPI = new APIClient<AugmentedResponse>("/augment");
+  const AugmentationAPI = new APIClient<BackendResponse>("/augment");
   const DownloadAPI = new APIClient<Blob>("/download");
 
   const { augConfig } = useAugConfigStore();
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
-  const { augmentedResponse, setAugmentedResponse } = useAugResponseStore(
-    (store) => ({
-      setAugmentedResponse: store.setAugmentedResponse,
-      augmentedResponse: store.augmentedResponse,
-    })
-  );
+  const { augmentationIsComplete, setBackedResponseLog } = useBackendResponse();
 
   const handleAugment = async () => {
     setIsLoading(true);
+    setBackedResponseLog("augmentationIsComplete", false);
 
     // Prepare FormData
     const formData = new FormData();
-    augConfig.images?.forEach((image) => {
-      formData.append("images", image.file);
-    });
-    augConfig.masks?.forEach((mask) => {
-      formData.append("masks", mask.file);
-    });
-
     if (augConfig.visualAttributesJSONFile?.file)
       formData.append(
         "visualAttributesJSONFile",
         augConfig.visualAttributesJSONFile.file
       );
-    // Exclude images and masks form config and add reduced config
-    const { images, masks, visualAttributesJSONFile, ...reducedConfig } =
-      augConfig; // Destruture to exclude
+    // Exclude visual attribute file from config and add reduced config
+    const { visualAttributesJSONFile, ...reducedConfig } = augConfig; // Destruture to exclude
     formData.append("config", JSON.stringify(reducedConfig)); // Add only the reduced
 
     try {
       const response = await AugmentationAPI.uploadFiles(formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setAugmentedResponse(response);
+      setBackedResponseLog("augmentationIsComplete", response.success);
+
+      if (response.success) {
+        toast({
+          title: "Augmentation completed!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.error("Error during augmentation:", error);
+      toast({
+        title: "Failed to complete augmentation.",
+        description: "An unknown error occurred.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +93,7 @@ const Augment = () => {
         </Button>
       </BoundingBox>
 
-      {augmentedResponse && (
+      {augmentationIsComplete && (
         <BoundingBox justify={"center"} transparent={true}>
           <DownloadButton
             filename="augmented_data.zip"
