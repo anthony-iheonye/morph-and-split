@@ -1,21 +1,28 @@
 import os
-import shutil
-import attr
 import re
+import shutil
+
+import attr
 
 
 @attr.s
 class DirectoryStore:
     image_dir = attr.ib(type=str, default='images/')
     mask_dir = attr.ib(type=str, default='masks/')
-    visual_attributes_dir = attr.ib(type=str, default='visual_attributes/')
+    resized_image_dir = attr.ib(type=str, default='resized_images/')
+    resized_mask_dir = attr.ib(type=str, default='resized_masks/')
     augmented = attr.ib(type=str, default='augmented/')
     train_dir = attr.ib(type=str, default='augmented/train/')
     val_dir = attr.ib(type=str, default='augmented/val/')
     test_dir = attr.ib(type=str, default='augmented/test/')
+    visual_attributes_dir = attr.ib(type=str, default='visual_attributes/')
+    resized_augmented = attr.ib(type=str, default='resized_augmented/')
+    resized_train_dir = attr.ib(type=str, default='resized_augmented/train/')
+    resized_val_dir = attr.ib(type=str, default='resized_augmented/val/')
+    resized_test_dir = attr.ib(type=str, default='resized_augmented/test/')
+
 
 directory_store = DirectoryStore()
-
 
 
 def create_directory(dir_name, return_dir=False, overwrite_if_existing=False):
@@ -41,35 +48,88 @@ def create_directory(dir_name, return_dir=False, overwrite_if_existing=False):
             return dir_name
 
 
-def create_project_directories():
+def create_project_directories(return_dir=True, overwrite_if_existing=False):
     """
     Create directory for the uploaded images and masks, for the augmented training, validation and testing datasets.
     :returns: dictionary with keys 'image_dir', 'mask_dir', 'train_dir', 'val_dir' and 'test_dir'.
     """
     # Directory setup
-    image_dir = create_directory(dir_name='images', return_dir=True, overwrite_if_existing=True)
-    mask_dir = create_directory(dir_name='masks', return_dir=True, overwrite_if_existing=True)
-    augmented_dir = create_directory(dir_name='augmented', return_dir=True, overwrite_if_existing=True)
+    image_dir = create_directory(dir_name=directory_store.image_dir,
+                                 return_dir=True,
+                                 overwrite_if_existing=overwrite_if_existing)
+
+    mask_dir = create_directory(dir_name=directory_store.mask_dir,
+                                return_dir=True,
+                                overwrite_if_existing=overwrite_if_existing)
+
+    resized_image_dir = create_directory(dir_name=directory_store.resized_image_dir,
+                                         return_dir=True,
+                                         overwrite_if_existing=overwrite_if_existing)
+
+    resized_mask_dir = create_directory(dir_name=directory_store.resized_mask_dir,
+                                        return_dir=True,
+                                        overwrite_if_existing=overwrite_if_existing)
+
+    augmented_dir = create_directory(dir_name=directory_store.augmented,
+                                     return_dir=True,
+                                     overwrite_if_existing=overwrite_if_existing)
 
     train_dir = create_directory(dir_name=os.path.join(augmented_dir, 'train'),
-                                 return_dir=True, overwrite_if_existing=False)
+                                 return_dir=True,
+                                 overwrite_if_existing=overwrite_if_existing)
 
     val_dir = create_directory(dir_name=os.path.join(augmented_dir, 'val'),
-                                 return_dir=True, overwrite_if_existing=False)
+                               return_dir=True,
+                               overwrite_if_existing=overwrite_if_existing)
 
     test_dir = create_directory(dir_name=os.path.join(augmented_dir, 'test'),
-                                 return_dir=True, overwrite_if_existing=False)
+                                return_dir=True,
+                                overwrite_if_existing=overwrite_if_existing)
 
-    visual_attribute_dir = create_directory(dir_name='visual_attributes',
-                                 return_dir=True, overwrite_if_existing=False)
+    visual_attribute_dir = create_directory(dir_name='visual_attributes', return_dir=True,
+                                            overwrite_if_existing=overwrite_if_existing)
 
-    return {'image_dir': image_dir,
-            'mask_dir': mask_dir,
-            'augmented_dir': augmented_dir,
-            'train_dir': train_dir,
-            'val_dir': val_dir,
-            'test_dir': test_dir,
-            'visual_attribute_dir': visual_attribute_dir}
+    if return_dir:
+        return {'image_dir': image_dir,
+                'mask_dir': mask_dir,
+                'resized_image_dir': resized_image_dir,
+                'resized_mask_dir': resized_mask_dir,
+                'augmented_dir': augmented_dir,
+                'train_dir': train_dir,
+                'val_dir': val_dir,
+                'test_dir': test_dir,
+                'visual_attribute_dir': visual_attribute_dir}
+
+
+def create_resized_augmentation_directories(return_dir=True, overwrite_if_existing=False):
+    """
+    Create directory for resized augmented training, validation and testing datasets.
+    :returns: dictionary with keys 'image_dir', 'mask_dir', 'train_dir', 'val_dir' and 'test_dir'.
+    """
+    # Directory setup
+
+    resized_augmented_dir = create_directory(dir_name=directory_store.augmented,
+                                     return_dir=True,
+                                     overwrite_if_existing=overwrite_if_existing)
+
+    resized_train_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'train'),
+                                 return_dir=True,
+                                 overwrite_if_existing=overwrite_if_existing)
+
+    resized_val_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'val'),
+                               return_dir=True,
+                               overwrite_if_existing=overwrite_if_existing)
+
+    resized_test_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'test'),
+                                return_dir=True,
+                                overwrite_if_existing=overwrite_if_existing)
+
+    if return_dir:
+        return {'resized_augmented_dir': resized_augmented_dir,
+                'resized_train_dir': resized_train_dir,
+                'resized_val_dir': resized_val_dir,
+                'resized_test_dir': resized_test_dir}
+
 
 def current_directory(file_path=None):
     """Returns a files current directory."""
@@ -78,10 +138,12 @@ def current_directory(file_path=None):
     else:
         return os.getcwd()
 
+
 def sort_filenames(file_paths):
         return sorted(file_paths, key=lambda var: [
             int(x) if x.isdigit() else x.lower() for x in re.findall(r'\D+|\d+', var)
         ])
+
 
 def get_sorted_filepaths(images_dir):
     """
@@ -97,6 +159,19 @@ def get_sorted_filepaths(images_dir):
     image_paths = sort_filenames(image_paths)
 
     return image_paths
+
+
+def get_sorted_filenames(images_dir):
+    """
+    Generates the sorted list of path for images within a specified directory.
+
+    :param images_dir: a directory containing images
+    :return: Returns a list containing the file path for the images
+    """
+    image_file_list = os.listdir(path=images_dir)
+
+    # sort the file paths in ascending order
+    return sort_filenames(image_file_list)
 
 
 
