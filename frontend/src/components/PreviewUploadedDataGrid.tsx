@@ -1,16 +1,20 @@
-import { SimpleGrid, Spinner } from "@chakra-ui/react";
+import { SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import useUploadedImageMask from "../hooks/useUploadedImageMask";
 import useAugConfigStore from "../store/augConfigStore";
 import PreviewCard from "./PreviewCard";
 import PreviewContainer from "./PreviewContainer";
 
-const PreviewGrid = () => {
+const PreviewUploadedDataGrid = () => {
   const previewSelection = useAugConfigStore((state) => state.previewSelection);
 
   const { data, error, isLoading } = useUploadedImageMask();
 
   if (!previewSelection) return null;
   if (isLoading) return <Spinner />;
+  if (error)
+    return (
+      <Text color="red.500">Failed to load uploaded images and masks.</Text>
+    );
 
   return (
     <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={6} padding={"10px"}>
@@ -23,4 +27,4 @@ const PreviewGrid = () => {
   );
 };
 
-export default PreviewGrid;
+export default PreviewUploadedDataGrid;
