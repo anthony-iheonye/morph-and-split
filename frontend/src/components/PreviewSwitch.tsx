@@ -2,10 +2,12 @@ import { Switch } from "@chakra-ui/react";
 import useAugConfigStore from "../store/augConfigStore";
 
 const PreviewSwitch = () => {
-  const { setPreviewSelection } = useAugConfigStore((state) => ({
-    setPreviewSelection: state.setPreviewSelection,
-  }));
-  const previewSelection = useAugConfigStore((state) => state.previewSelection);
+  const { previewSelection, setPreviewSelection } = useAugConfigStore(
+    (state) => ({
+      setPreviewSelection: state.setPreviewSelection,
+      previewSelection: state.previewSelection,
+    })
+  );
 
   return (
     <Switch
