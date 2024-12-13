@@ -46,6 +46,7 @@ interface AugConfig {
   contrast?: boolean;
   correlation?: boolean;
   energy?: boolean;
+  previewedSet?: string;
   reset?: boolean;
 }
 
@@ -110,6 +111,7 @@ const initialAugConfig: AugConfig = {
   contrast: false,
   correlation: false,
   energy: false,
+  previewedSet: "train",
   reset: false,
 };
 
