@@ -1,60 +1,57 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
-import { BiSolidImageAdd } from "react-icons/bi";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
-import AugmentedImageSelector from "../components/AugmentedImageSelector";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
 import PreviewAugResultSwitch from "../components/PreviewAugResultSwitch";
-import PreviewAugmentedResultGrid from "../components/PreviewAugmentedResultGrid";
-import AugmentedMaskSelector from "../components/AugmentedMaskSelector";
+import PreviewGridTest from "../components/PreviewGridTest";
+import PreviewGridTrain from "../components/PreviewGridTrain";
+import PreviewGridVal from "../components/PreviewGridVal";
+import SplitSelector from "../components/SplitSelector";
+import useAugConfigStore from "../store/augConfigStore";
 
 const PreviewAugmentedResults = () => {
+  const { previewAugmentedResult, previewedSet } = useAugConfigStore(
+    (state) => ({
+      previewAugmentedResult: state.previewAugmentedResult,
+      previewedSet: state.augConfig.previewedSet,
+    })
+  );
+
   return (
     <>
       <PageTitle title="Preview Result" />
-      <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={BiSolidImageAdd}
-            title="Select Augmented Images"
-            description="Click button to select the augmented images."
-          />
-          <AugmentedImageSelector />
-        </HStack>
-      </BoundingBox>
 
       <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={BiSolidImageAdd}
-            title="Select Augmented Masks"
-            description="Click button to select the augmented masks."
-          />
-          <AugmentedMaskSelector />
-        </HStack>
+        <VStack align="start" spacing={5}>
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={HiViewGrid}
+              title="Preview Augmented Images and Masks"
+              description="Click slider to preview training, validation and test sets."
+            />
+            <PreviewAugResultSwitch />
+          </HStack>
+          {previewAugmentedResult ? <SplitSelector /> : null}
+        </VStack>
       </BoundingBox>
 
-      <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={HiViewGrid}
-            title="Preview Augmented Images and Masks"
-            description="Click slider to preview selected images and their corresponding masks."
-          />
-          <PreviewAugResultSwitch />
-        </HStack>
-      </BoundingBox>
       <BoundingBox overflowY="auto">
         <Text color={"gray.400"} mb={4} fontSize="sm">
           Preview of Selected Images and Masks.
         </Text>
         <Box
           overflowY="auto"
-          maxHeight={{ sm: "320px", md: "500px", lg: "700px" }}
+          maxHeight={{ sm: "320px", md: "500px", lg: "620px" }}
           mt={4}
         >
-          <PreviewAugmentedResultGrid />
+          {previewedSet === "train" ? (
+            <PreviewGridTrain />
+          ) : previewedSet === "val" ? (
+            <PreviewGridVal />
+          ) : (
+            <PreviewGridTest />
+          )}
         </Box>
       </BoundingBox>
     </>
