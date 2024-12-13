@@ -74,6 +74,17 @@ class APIClient<T> {
         console.error("Error resetting session: ", err.messsage);
         return { success: false, error: err.messsage };
       });
+
+  resizeImagesMasks = (
+    requestConfig?: AxiosRequestConfig
+  ): Promise<BackendResponse> =>
+    axiosInstance
+      .post<BackendResponse>(this.endpoint, requestConfig)
+      .then((res) => res.data)
+      .catch((err) => {
+        console.error("Error resetting data: ", err.messsage);
+        return { success: false, error: err.messsage };
+      });
 }
 
 export default APIClient;
