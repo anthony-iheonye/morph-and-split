@@ -56,6 +56,9 @@ const ResetIcon = () => {
         queryClient.invalidateQueries(["image_names"]);
         queryClient.invalidateQueries(["mask_names"]);
         queryClient.invalidateQueries(["metadata"]);
+        queryClient.invalidateQueries(["training_set"]);
+        queryClient.invalidateQueries(["validation_set"]);
+        queryClient.invalidateQueries(["testing_set"]);
       } else {
         throw new Error(response.error || "Unknown error");
       }
