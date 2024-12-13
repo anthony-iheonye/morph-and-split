@@ -7,7 +7,7 @@ const Layout = () => {
     <Grid
       templateAreas={{
         base: `"nav"
-                   "outlet"`,
+              "outlet"`,
         md: `"nav outlet"`,
       }}
       templateColumns={{

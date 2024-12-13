@@ -67,7 +67,10 @@ const VisualAttributes = () => {
         </HStack>
       </BoundingBox>
 
-      <BoundingBox overflowY="auto" maxHeight={{ base: "800px", md: "650px" }}>
+      <BoundingBox
+        overflowY="auto"
+        maxHeight={{ base: "800px", md: "500px", lg: "620px" }}
+      >
         <VStack spacing={8}>
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
