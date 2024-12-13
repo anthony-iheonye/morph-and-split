@@ -1,24 +1,25 @@
 import { Box, IconButton, Tooltip } from "@chakra-ui/react";
-import { IoMdSettings } from "react-icons/io";
+import { FaFileUpload } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import useActiveParent from "../hooks/useActiveParent";
-import useNavIconColor from "../hooks/useNavIconColor";
-import { parentNames } from "../store/navStore";
-import useActiveNavColor from "../hooks/useActiveParentColor";
+import useActiveParent from "../../../hooks/useActiveParent";
+import useNavIconColor from "../../../hooks/useNavIconColor";
+import { parentNames } from "../../../store/navStore";
+import useActiveNavColor from "../../../hooks/useActiveParentColor";
 
-const AugmentationConfigIcon = () => {
+const ImageMaskUploader = () => {
   const backgroundColor = useNavIconColor();
   const { activeParent, setActiveParent } = useActiveParent();
-  const parentName = parentNames.augmentationConfig;
+
+  const parentName = parentNames.uploadImageAndMask;
   const { parentColor } = useActiveNavColor();
 
   return (
     <Box width="auto" alignSelf="center">
-      <Link to={"/settings"} onClick={() => setActiveParent(parentName)}>
-        <Tooltip label="Augmentation settings" placement="top-start">
+      <Link to={"/upload_data"} onClick={() => setActiveParent(parentName)}>
+        <Tooltip label="Upload data" placement="top-start">
           <IconButton
             aria-label="Upload Image and segmentation mask"
-            icon={<IoMdSettings />}
+            icon={<FaFileUpload />}
             variant="ghost"
             size="lg"
             fontSize="1.5rem"
@@ -33,4 +34,4 @@ const AugmentationConfigIcon = () => {
   );
 };
 
-export default AugmentationConfigIcon;
+export default ImageMaskUploader;
