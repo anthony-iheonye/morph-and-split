@@ -1,38 +1,20 @@
-import {
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Text,
-  Tooltip,
-  useBreakpointValue,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { FaCirclePlay } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
 import { MdGridView } from "react-icons/md";
-import useActiveSubParent from "../../../hooks/useActiveSubParent";
-import { subParentNames } from "../../../store/navStore";
-import useActiveNavColor from "../../../hooks/useActiveNavColor";
+import {
+  useBoundingBoxColor,
+  useActiveNavColor,
+  useActiveSubParent,
+  subParentNames,
+} from "../../../hooks";
+import SubNavBarItem from "../subNavItems/SubNavBarItem";
 
 const AugmentBar = () => {
-  const { colorMode } = useColorMode();
   const backgroundColor = useBoundingBoxColor();
-  const { activeSubParent, setActiveSubParent } = useActiveSubParent();
-
   const { subParentColor } = useActiveNavColor();
-  const { startAugmentation, previewResult } = subParentNames;
 
-  // Use breakpoint value to determine the text
-  const startText = useBreakpointValue({
-    base: "Start", // Small screens
-    md: "Start Augmentation", // Medium and larger screens
-  });
-  const previewText = useBreakpointValue({
-    base: "Preview", // Small screens
-    md: "Preview Result", // Medium and larger screens
-  });
+  const activeSubParent = useActiveSubParent();
+  const { startAugmentation, previewResult } = subParentNames;
 
   return (
     <Flex
@@ -47,53 +29,26 @@ const AugmentBar = () => {
         Augment
       </Heading>
 
-      <Link
-        to={"/augment/start_augmentation"}
-        onClick={() => setActiveSubParent(startAugmentation)}
-      >
-        <HStack
-          gap={0}
-          backgroundColor={
-            activeSubParent === startAugmentation
-              ? subParentColor
-              : "transparent"
-          }
-        >
-          <IconButton
-            aria-label="Apply random transformations"
-            icon={<FaCirclePlay />}
-            variant="ghost"
-            size="lg"
-            fontSize="1.5rem"
-            colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-          />
-          <Text>{startText}</Text>
-        </HStack>
-      </Link>
+      <SubNavBarItem
+        icon={<FaCirclePlay />}
+        iconLabel="Apply random transformations to images and their masks."
+        text={{ base: "Start", md: "Start Augmentation" }}
+        to="/augment/start_augmentation"
+        backgroundColor={
+          activeSubParent === startAugmentation ? subParentColor : "transparent"
+        }
+      />
 
-      <Link
-        to={"/augment/preview"}
-        onClick={() => setActiveSubParent(previewResult)}
-      >
-        <Tooltip label="Preveiw augmentation results" placement="top-start">
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === previewResult ? subParentColor : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Preview augmented results"
-              icon={<MdGridView />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>{previewText}</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
+      <SubNavBarItem
+        icon={<MdGridView />}
+        iconLabel="Preview augmented results."
+        text={{ base: "Preview", md: "Preview Result" }}
+        to="/augment/preview"
+        backgroundColor={
+          activeSubParent === previewResult ? subParentColor : "transparent"
+        }
+        tooltipLabel="Preveiw augmentation data"
+      />
     </Flex>
   );
 };
