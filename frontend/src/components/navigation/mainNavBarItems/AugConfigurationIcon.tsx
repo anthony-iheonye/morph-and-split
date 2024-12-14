@@ -1,35 +1,26 @@
-import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import { IoMdSettings } from "react-icons/io";
-import { Link } from "react-router-dom";
-import useActiveParent from "../../../hooks/useActiveParent";
-import useNavIconColor from "../../../hooks/useNavIconColor";
-import { parentNames } from "../../../store/navStore";
-import useActiveNavColor from "../../../hooks/useActiveNavColor";
+import {
+  useActiveParent,
+  parentNames,
+  useActiveNavColor,
+} from "../../../hooks";
+import MainNavBarItem from "./MainNavBarItem";
 
 const AugmentationConfigIcon = () => {
-  const backgroundColor = useNavIconColor();
-  const { activeParent, setActiveParent } = useActiveParent();
-  const parentName = parentNames.augmentationConfig;
+  const activeParent = useActiveParent();
+  const { augmentationConfig } = parentNames;
   const { parentColor } = useActiveNavColor();
 
   return (
-    <Box width="auto" alignSelf="center">
-      <Link to={"/settings"} onClick={() => setActiveParent(parentName)}>
-        <Tooltip label="Augmentation settings" placement="top-start">
-          <IconButton
-            aria-label="Upload Image and segmentation mask"
-            icon={<IoMdSettings />}
-            variant="ghost"
-            size="lg"
-            fontSize="1.5rem"
-            colorScheme={backgroundColor}
-            backgroundColor={
-              activeParent === parentName ? parentColor : "transparent"
-            }
-          />
-        </Tooltip>
-      </Link>
-    </Box>
+    <MainNavBarItem
+      icon={<IoMdSettings />}
+      iconLabel="Input augmentation settings"
+      to="/settings"
+      backgroundColor={
+        activeParent === augmentationConfig ? parentColor : "transparent"
+      }
+      tooltipLabel="Augmentation settings"
+    />
   );
 };
 
