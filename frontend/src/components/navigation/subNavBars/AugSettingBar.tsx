@@ -1,27 +1,20 @@
-import {
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Text,
-  Tooltip,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { FaMagic } from "react-icons/fa";
 import { IoIosColorPalette } from "react-icons/io";
 import { PiCirclesThreeFill, PiResizeBold } from "react-icons/pi";
-import { Link } from "react-router-dom";
-import useActiveNavColor from "../../../hooks/useActiveNavColor";
-import useActiveSubParent from "../../../hooks/useActiveSubParent";
-import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
-import { subParentNames } from "../../../store/navStore";
+import {
+  useBoundingBoxColor,
+  useActiveNavColor,
+  useActiveSubParent,
+  subParentNames,
+} from "../../../hooks";
+import SubNavBarItem from "../subNavItems/SubNavBarItem";
 
 const AugSettingBar = () => {
-  const { colorMode } = useColorMode();
   const backgroundColor = useBoundingBoxColor();
-  const { activeSubParent, setActiveSubParent } = useActiveSubParent();
-
   const { subParentColor } = useActiveNavColor();
+
+  const activeSubParent = useActiveSubParent();
   const { dataSplit, transformation, visualAtttributes, preProcessing } =
     subParentNames;
 
@@ -37,108 +30,50 @@ const AugSettingBar = () => {
       <Heading as="h2" fontWeight={500} padding={2}>
         Settings
       </Heading>
-      <Link
+
+      <SubNavBarItem
+        icon={<PiCirclesThreeFill />}
+        iconLabel="Split data into train, val and test sets."
+        text="Data Split"
         to={"/settings/data_split"}
-        onClick={() => setActiveSubParent(dataSplit)}
-      >
-        <Tooltip
-          label="Split data into train, val & test sets "
-          placement="top-start"
-        >
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === dataSplit ? subParentColor : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Split data into train, val and test sets."
-              icon={<PiCirclesThreeFill />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>Data split</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
+        backgroundColor={
+          activeSubParent === dataSplit ? subParentColor : "transparent"
+        }
+        tooltipLabel="Split data into train, val and test sets"
+      />
 
-      <Link
+      <SubNavBarItem
+        icon={<FaMagic />}
+        iconLabel="Apply random transformations."
+        text="Transformations"
         to={"/settings/select_transformation"}
-        onClick={() => setActiveSubParent(transformation)}
-      >
-        <Tooltip label="Select transformations" placement="top-start">
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === transformation
-                ? subParentColor
-                : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Apply random transformations"
-              icon={<FaMagic />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>Transformations</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
+        backgroundColor={
+          activeSubParent === transformation ? subParentColor : "transparent"
+        }
+        tooltipLabel="Select transformations"
+      />
 
-      <Link
+      <SubNavBarItem
+        icon={<IoIosColorPalette />}
+        iconLabel="Select visual attributes JSON file"
+        text="Visual attributes"
         to={"/settings/visual_attributes"}
-        onClick={() => setActiveSubParent(visualAtttributes)}
-      >
-        <Tooltip label="Select visual attribute file" placement="top-start">
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === visualAtttributes
-                ? subParentColor
-                : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Select visual attributes JSON file"
-              icon={<IoIosColorPalette />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>Visual attributes</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
+        backgroundColor={
+          activeSubParent === visualAtttributes ? subParentColor : "transparent"
+        }
+        tooltipLabel="Select visual attribute file"
+      />
 
-      <Link
+      <SubNavBarItem
+        icon={<PiResizeBold />}
+        iconLabel="Set image and mask preprocessing configuration."
+        text="Pre-processing"
         to={"/settings/pre_processing"}
-        onClick={() => setActiveSubParent(preProcessing)}
-      >
-        <Tooltip label="Apply pre-processing steps" placement="top-start">
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === preProcessing ? subParentColor : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Apply pre-processing values"
-              icon={<PiResizeBold />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>Pre-processing</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
+        backgroundColor={
+          activeSubParent === preProcessing ? subParentColor : "transparent"
+        }
+        tooltipLabel="Apply pre-processing steps"
+      />
     </Flex>
   );
 };
