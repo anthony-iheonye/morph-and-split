@@ -15,3 +15,5 @@ export { default as useUploadedImageMask } from "./useUploadedImageMask";
 export { default as useUploadedImageNames } from "./useUploadedImageNames";
 export { default as useUploadedMaskNames } from "./useUploadedMaskNames";
 export { default as useVisualAttributesFile } from "./useVisualAttributesFile";
+
+export { subParentNames } from "./useActiveSubParent";
