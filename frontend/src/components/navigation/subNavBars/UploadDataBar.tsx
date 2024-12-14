@@ -1,31 +1,17 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { IoImages, IoImagesOutline } from "react-icons/io5";
 import { MdGridView } from "react-icons/md";
-import { useLocation } from "react-router-dom";
+import { subParentNames, useActiveSubParent } from "../../../hooks";
 import useActiveNavColor from "../../../hooks/useActiveNavColor";
 import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
-import { subParentNames } from "../../../store/navStore";
 import SubNavBarItem from "../subNavItems/SubNavBarItem";
 
 const UploadDataBar = () => {
-  const location = useLocation();
-
   const backgroundColor = useBoundingBoxColor();
-
   const { subParentColor } = useActiveNavColor();
-  const { uploadImages, uploadMasks, previewUpload } = subParentNames;
 
-  // Determine active subNavBar item based on current route.
-  const activeSubParent =
-    location.pathname === "/upload_data"
-      ? uploadImages
-      : location.pathname === "/upload_data/images"
-      ? uploadImages
-      : location.pathname === "/upload_data/masks"
-      ? uploadMasks
-      : location.pathname === "/upload_data/preview"
-      ? previewUpload
-      : null;
+  const { uploadImages, uploadMasks, previewUpload } = subParentNames;
+  const activeSubParent = useActiveSubParent();
 
   return (
     <Flex
