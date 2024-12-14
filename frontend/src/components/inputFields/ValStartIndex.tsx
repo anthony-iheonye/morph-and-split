@@ -5,10 +5,10 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import sizes from "../services/size";
+import { useAugConfigAndSetter } from "../../hooks";
+import sizes from "../../services/size";
 
-const TrainStartIndex = () => {
+const ValStartIndex = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
 
@@ -18,8 +18,8 @@ const TrainStartIndex = () => {
       max={100000}
       allowMouseWheel
       maxWidth={width}
-      value={augConfig.initialTrainSaveId}
-      onChange={(value) => setAugConfig("initialTrainSaveId", parseInt(value))}
+      value={augConfig.initialValSaveId}
+      onChange={(value) => setAugConfig("initialValSaveId", parseInt(value))}
     >
       <NumberInputField />
       <NumberInputStepper>
@@ -30,4 +30,4 @@ const TrainStartIndex = () => {
   );
 };
 
-export default TrainStartIndex;
+export default ValStartIndex;

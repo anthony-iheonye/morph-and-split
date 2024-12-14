@@ -1,14 +1,14 @@
 import {
-  NumberDecrementStepper,
-  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import sizes from "../services/size";
+import { useAugConfigAndSetter } from "../../hooks";
+import sizes from "../../services/size";
 
-const TestStartIndex = () => {
+const ResizeWidthInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
 
@@ -18,8 +18,14 @@ const TestStartIndex = () => {
       max={100000}
       allowMouseWheel
       maxWidth={width}
-      value={augConfig.initialTestSaveId}
-      onChange={(value) => setAugConfig("initialTestSaveId", parseInt(value))}
+      value={augConfig.augImageDimension?.width}
+      onChange={(value) =>
+        setAugConfig("augImageDimension", {
+          ...augConfig.augImageDimension,
+          height: augConfig.augImageDimension!.height,
+          width: parseInt(value),
+        })
+      }
     >
       <NumberInputField />
       <NumberInputStepper>
@@ -30,4 +36,4 @@ const TestStartIndex = () => {
   );
 };
 
-export default TestStartIndex;
+export default ResizeWidthInput;

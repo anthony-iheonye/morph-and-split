@@ -1,5 +1,5 @@
 import { HStack } from "@chakra-ui/react";
-import { Metadata } from "../entities/UploadedImageMask";
+import { Metadata } from "../../entities/UploadedImageMask";
 import ImageCard from "./ImageCard";
 
 interface Props {

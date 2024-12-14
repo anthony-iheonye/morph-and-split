@@ -5,10 +5,10 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import sizes from "../services/size";
+import useAugConfigAndSetter from "../../hooks/useAugConfigAndSetter";
+import sizes from "../../services/size";
 
-const ResizeWidthInput = () => {
+const ResizeHeightInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
 
@@ -18,12 +18,12 @@ const ResizeWidthInput = () => {
       max={100000}
       allowMouseWheel
       maxWidth={width}
-      value={augConfig.augImageDimension?.width}
+      value={augConfig.augImageDimension?.height}
       onChange={(value) =>
         setAugConfig("augImageDimension", {
           ...augConfig.augImageDimension,
-          height: augConfig.augImageDimension!.height,
-          width: parseInt(value),
+          height: parseInt(value),
+          width: augConfig.augImageDimension!.width,
         })
       }
     >
@@ -36,4 +36,4 @@ const ResizeWidthInput = () => {
   );
 };
 
-export default ResizeWidthInput;
+export default ResizeHeightInput;

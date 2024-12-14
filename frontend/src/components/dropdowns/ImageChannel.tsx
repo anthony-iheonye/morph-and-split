@@ -1,5 +1,5 @@
 import { InputGroup, Select } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import { useAugConfigAndSetter } from "../../hooks";
 
 const ImageChannel = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

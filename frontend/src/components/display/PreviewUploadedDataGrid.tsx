@@ -1,6 +1,6 @@
 import { SimpleGrid, Spinner, Text } from "@chakra-ui/react";
-import useUploadedImageMask from "../hooks/useUploadedImageMask";
-import useAugConfigStore from "../store/augConfigStore";
+import useUploadedImageMask from "../../hooks/useUploadedImageMask";
+import useAugConfigStore from "../../store/augConfigStore";
 import PreviewCard from "./PreviewCard";
 import PreviewContainer from "./PreviewContainer";
 

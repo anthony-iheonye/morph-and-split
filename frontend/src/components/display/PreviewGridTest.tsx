@@ -1,10 +1,10 @@
 import { SimpleGrid, Spinner, Text } from "@chakra-ui/react";
-import useValidationSet from "../hooks/useValidationSet";
-import useAugConfigStore from "../store/augConfigStore";
+import useTestingSet from "../../hooks/useTestSet";
+import useAugConfigStore from "../../store/augConfigStore";
 import PreviewCard from "./PreviewCard";
 import PreviewContainer from "./PreviewContainer";
 
-const PreviewGridVal = () => {
+const PreviewGridTest = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(
     (state) => ({
       previewAugmentedResult: state.previewAugmentedResult,
@@ -12,11 +12,11 @@ const PreviewGridVal = () => {
     })
   );
 
-  const { data, error, isLoading } = useValidationSet();
+  const { data, error, isLoading } = useTestingSet();
 
-  if (!previewAugmentedResult || previewedSet != "val") return null;
+  if (!previewAugmentedResult || previewedSet != "test") return null;
   if (isLoading) return <Spinner />;
-  if (error) return <Text color="red.500">Failed to load validation set.</Text>;
+  if (error) return <Text color="red.500">Failed to load testing set.</Text>;
 
   return (
     <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={6} padding={"10px"}>
@@ -29,4 +29,4 @@ const PreviewGridVal = () => {
   );
 };
 
-export default PreviewGridVal;
+export default PreviewGridTest;

@@ -5,10 +5,10 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import sizes from "../services/size";
+import { useAugConfigAndSetter } from "../../hooks";
+import sizes from "../../services/size";
 
-const HeightOffsetInput = () => {
+const WidthOffsetInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
 
@@ -18,12 +18,12 @@ const HeightOffsetInput = () => {
       max={100000}
       allowMouseWheel
       maxWidth={width}
-      value={augConfig.cropDimension?.offsetHeight}
+      value={augConfig.cropDimension?.offsetWidth}
       onChange={(value) =>
         setAugConfig("cropDimension", {
           ...augConfig.cropDimension,
-          offsetHeight: parseInt(value),
-          offsetWidth: augConfig.cropDimension!.offsetWidth,
+          offsetHeight: augConfig.cropDimension!.offsetHeight,
+          offsetWidth: parseInt(value),
           targetHeight: augConfig.cropDimension!.targetHeight,
           targetWidth: augConfig.cropDimension!.targetWidth,
         })
@@ -38,4 +38,4 @@ const HeightOffsetInput = () => {
   );
 };
 
-export default HeightOffsetInput;
+export default WidthOffsetInput;

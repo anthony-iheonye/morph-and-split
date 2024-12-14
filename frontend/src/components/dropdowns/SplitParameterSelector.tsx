@@ -1,5 +1,5 @@
 import { Select } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
+import useAugConfigAndSetter from "../../hooks/useAugConfigAndSetter";
 
 const SplitParameterSelector = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

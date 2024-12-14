@@ -11,9 +11,9 @@ import { TbOvalVertical, TbTexture } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
-import VisualAttributeFilePicker from "../components/VisualAttributeFilePicker";
+import VisualAttributeFilePicker from "../components/buttons/VisualAttributeFilePicker";
 import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import SplitParameterSelector from "../components/SplitParameterSelector";
+import SplitParameterSelector from "../components/dropdowns/SplitParameterSelector";
 import { HiOutlineArrowsExpand } from "react-icons/hi";
 
 const VisualAttributes = () => {

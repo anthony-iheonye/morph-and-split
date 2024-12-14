@@ -4,10 +4,10 @@ import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import ImageChannel from "../components/ImageChannel";
-import ImageUploader from "../components/ImageUploader";
 import PageTitle from "../components/PageTitle";
 import useUploadedImageNames from "../hooks/useUploadedImageNames";
+import ImageUploader from "../components/buttons/ImageUploader";
+import ImageChannel from "../components/dropdowns/ImageChannel";
 
 const ImageUpload = () => {
   const { data } = useUploadedImageNames();
@@ -25,6 +25,7 @@ const ImageUpload = () => {
           <ImageUploader />
         </HStack>
       </BoundingBox>
+
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
@@ -35,6 +36,7 @@ const ImageUpload = () => {
           <ImageChannel />
         </HStack>
       </BoundingBox>
+
       <BoundingBox>
         <IconHeadingDescriptionCombo
           icon={TbLayersSelected}

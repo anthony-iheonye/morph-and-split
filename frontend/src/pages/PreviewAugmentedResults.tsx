@@ -3,12 +3,12 @@ import { HiViewGrid } from "react-icons/hi";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
-import PreviewAugResultSwitch from "../components/PreviewAugResultSwitch";
-import PreviewGridTest from "../components/PreviewGridTest";
-import PreviewGridTrain from "../components/PreviewGridTrain";
-import PreviewGridVal from "../components/PreviewGridVal";
+import PreviewGridTest from "../components/display/PreviewGridTest";
+import PreviewGridTrain from "../components/display/PreviewGridTrain";
+import PreviewGridVal from "../components/display/PreviewGridVal";
 import SplitSelector from "../components/SplitSelector";
 import useAugConfigStore from "../store/augConfigStore";
+import PreviewAugResultSwitch from "../components/switches/PreviewAugResultSwitch";
 
 const PreviewAugmentedResults = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(

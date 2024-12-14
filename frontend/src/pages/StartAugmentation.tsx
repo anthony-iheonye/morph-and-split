@@ -1,12 +1,12 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import { TbNumbers } from "react-icons/tb";
-import Augment from "../components/Augment";
+import Augment from "../components/buttons/Augment";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
-import TestStartIndex from "../components/TestStartIndex";
-import TrainStartIndex from "../components/TrainStartIndex";
-import ValStartIndex from "../components/ValStartIndex";
+import TestStartIndex from "../components/inputFields/TestStartIndex";
+import TrainStartIndex from "../components/inputFields/TrainStartIndex";
+import ValStartIndex from "../components/inputFields/ValStartIndex";
 
 const StartAugmentation = () => {
   return (

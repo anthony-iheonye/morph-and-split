@@ -4,8 +4,8 @@ import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import MaskChannel from "../components/MaskChannel";
-import MaskUploader from "../components/MaskUploader";
+import MaskChannel from "../components/dropdowns/MaskChannel";
+import MaskUploader from "../components/buttons/MaskUploader";
 import PageTitle from "../components/PageTitle";
 import useUploadedMaskNames from "../hooks/useUploadedMaskNames";
 
