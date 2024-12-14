@@ -40,7 +40,12 @@ const SubNavBarItem = ({
   return (
     <Link to={to} onClick={onClick}>
       <Tooltip label={tooltipLabel} placement={tooltipPlacement}>
-        <HStack gap={0} backgroundColor={backgroundColor} borderRadius={4}>
+        <HStack
+          gap={0}
+          backgroundColor={backgroundColor}
+          borderRadius={4}
+          transition="background-color 0.3s ease"
+        >
           <IconButton
             aria-label={iconLabel}
             icon={icon}
