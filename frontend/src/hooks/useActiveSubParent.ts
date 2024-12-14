@@ -1,8 +1,5 @@
 import { useLocation } from "react-router-dom";
 
-/**
- * Returns names of the sub
- */
 export const subParentNames = {
   uploadImages: "uploadImages",
   uploadMasks: "uploadMasks",
