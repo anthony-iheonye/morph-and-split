@@ -1,27 +1,31 @@
-import {
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Text,
-  Tooltip,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { IoImages, IoImagesOutline } from "react-icons/io5";
 import { MdGridView } from "react-icons/md";
-import { Link } from "react-router-dom";
-import useActiveNavColor from "../../../hooks/useActiveParentColor";
-import useActiveSubParent from "../../../hooks/useActiveSubParent";
+import { useLocation } from "react-router-dom";
+import useActiveNavColor from "../../../hooks/useActiveNavColor";
 import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
 import { subParentNames } from "../../../store/navStore";
+import SubNavBarItem from "../subNavItems/SubNavBarItem";
 
 const UploadDataBar = () => {
-  const { colorMode } = useColorMode();
+  const location = useLocation();
+
   const backgroundColor = useBoundingBoxColor();
-  const { activeSubParent, setActiveSubParent } = useActiveSubParent();
 
   const { subParentColor } = useActiveNavColor();
   const { uploadImages, uploadMasks, previewUpload } = subParentNames;
+
+  // Determine active subNavBar item based on current route.
+  const activeSubParent =
+    location.pathname === "/upload_data"
+      ? uploadImages
+      : location.pathname === "/upload_data/images"
+      ? uploadImages
+      : location.pathname === "/upload_data/masks"
+      ? uploadMasks
+      : location.pathname === "/upload_data/preview"
+      ? previewUpload
+      : null;
 
   return (
     <Flex
@@ -35,77 +39,39 @@ const UploadDataBar = () => {
       <Heading as="h2" fontWeight={500} padding={2}>
         Dataset
       </Heading>
-      <Link
-        to={"/upload_data/images"}
-        onClick={() => setActiveSubParent(uploadImages)}
-      >
-        <Tooltip label="Select Images" placement="top-start">
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === uploadImages ? subParentColor : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Upload Images."
-              icon={<IoImages />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>Images</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
 
-      <Link
+      <SubNavBarItem
+        icon={<IoImages />}
+        iconLabel="Upload Images"
+        text="Images"
+        to="/upload_data/images"
+        backgroundColor={
+          activeSubParent === uploadImages ? subParentColor : "transparent"
+        }
+        tooltipLabel="Select Images"
+      />
+
+      <SubNavBarItem
+        icon={<IoImagesOutline />}
+        iconLabel="Select segmentation masks"
+        text={{ base: "Masks", md: "Segmentation Masks" }}
         to={"/upload_data/masks"}
-        onClick={() => setActiveSubParent(uploadMasks)}
-      >
-        <Tooltip label="Select segmentation masks" placement="top-start">
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === uploadMasks ? subParentColor : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Upload masks"
-              icon={<IoImagesOutline />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>Segmentation Masks</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
+        backgroundColor={
+          activeSubParent === uploadMasks ? subParentColor : "transparent"
+        }
+        tooltipLabel="Select segmentation masks"
+      />
 
-      <Link
+      <SubNavBarItem
+        icon={<MdGridView />}
+        iconLabel="Preview uploaded images and masks"
+        text="Preview"
         to={"/upload_data/preview"}
-        onClick={() => setActiveSubParent(previewUpload)}
-      >
-        <Tooltip label="Preview images and masks" placement="top-start">
-          <HStack
-            gap={0}
-            backgroundColor={
-              activeSubParent === previewUpload ? subParentColor : "transparent"
-            }
-          >
-            <IconButton
-              aria-label="Preview selected image and masks"
-              icon={<MdGridView />}
-              variant="ghost"
-              size="lg"
-              fontSize="1.5rem"
-              colorScheme={colorMode === "dark" ? "yellow" : "teal"}
-            />
-            <Text>Preview</Text>
-          </HStack>
-        </Tooltip>
-      </Link>
+        backgroundColor={
+          activeSubParent === previewUpload ? subParentColor : "transparent"
+        }
+        tooltipLabel="Preview uploaded images and masks"
+      />
     </Flex>
   );
 };

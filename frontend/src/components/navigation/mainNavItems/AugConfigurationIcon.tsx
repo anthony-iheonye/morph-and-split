@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import useActiveParent from "../../../hooks/useActiveParent";
 import useNavIconColor from "../../../hooks/useNavIconColor";
 import { parentNames } from "../../../store/navStore";
-import useActiveNavColor from "../../../hooks/useActiveParentColor";
+import useActiveNavColor from "../../../hooks/useActiveNavColor";
 
 const AugmentationConfigIcon = () => {
   const backgroundColor = useNavIconColor();

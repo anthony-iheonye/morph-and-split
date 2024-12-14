@@ -14,7 +14,7 @@ import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
 import { MdGridView } from "react-icons/md";
 import useActiveSubParent from "../../../hooks/useActiveSubParent";
 import { subParentNames } from "../../../store/navStore";
-import useActiveNavColor from "../../../hooks/useActiveParentColor";
+import useActiveNavColor from "../../../hooks/useActiveNavColor";
 
 const AugmentBar = () => {
   const { colorMode } = useColorMode();

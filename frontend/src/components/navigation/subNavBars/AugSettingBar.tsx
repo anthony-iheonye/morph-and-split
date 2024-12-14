@@ -11,7 +11,7 @@ import { FaMagic } from "react-icons/fa";
 import { IoIosColorPalette } from "react-icons/io";
 import { PiCirclesThreeFill, PiResizeBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
-import useActiveNavColor from "../../../hooks/useActiveParentColor";
+import useActiveNavColor from "../../../hooks/useActiveNavColor";
 import useActiveSubParent from "../../../hooks/useActiveSubParent";
 import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
 import { subParentNames } from "../../../store/navStore";

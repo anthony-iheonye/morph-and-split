@@ -3,7 +3,7 @@ import { TbTransformFilled } from "react-icons/tb";
 import useNavIconColor from "../../../hooks/useNavIconColor";
 import { Link } from "react-router-dom";
 import useActiveParent from "../../../hooks/useActiveParent";
-import useActiveNavColor from "../../../hooks/useActiveParentColor";
+import useActiveNavColor from "../../../hooks/useActiveNavColor";
 import { parentNames } from "../../../store/navStore";
 
 const AugmentIcon = () => {
