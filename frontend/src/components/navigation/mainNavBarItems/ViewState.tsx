@@ -1,6 +1,6 @@
 import { Switch } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import useNavStore from "../store/navStore";
+import useAugConfigAndSetter from "../../../hooks/useAugConfigAndSetter";
+import useNavStore from "../../../store/navStore";
 
 const ViewState = () => {
   const { augConfig } = useAugConfigAndSetter();
