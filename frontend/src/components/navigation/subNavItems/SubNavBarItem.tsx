@@ -1,37 +1,46 @@
 import {
   HStack,
   IconButton,
+  PlacementWithLogical,
   Text,
   Tooltip,
+  useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
 import { Link, To } from "react-router-dom";
 
 interface Props {
-  text: string;
+  text: string | { base: string; md?: string; lg?: string }; // Support both plain strings and responsive objects
   to: To;
-  onClick: React.MouseEventHandler<HTMLAnchorElement> | undefined;
-  tooltipLabel: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+  tooltipLabel?: string;
   icon: React.ReactElement;
   iconLabel: string;
-  backgroundColor: string;
+  backgroundColor?: string;
+  tooltipPlacement?: PlacementWithLogical;
 }
 
 const SubNavBarItem = ({
   text,
   to,
   onClick,
-  tooltipLabel,
   icon,
   iconLabel,
   backgroundColor,
+  tooltipLabel,
+  tooltipPlacement = "top-start",
 }: Props) => {
   const { colorMode } = useColorMode();
 
+  // Compute responsive text based on breakpoints
+  const responsiveText = useBreakpointValue(
+    typeof text === "string" ? { base: text } : text
+  );
+
   return (
     <Link to={to} onClick={onClick}>
-      <Tooltip label={tooltipLabel} placement="top-start">
-        <HStack gap={0} backgroundColor={backgroundColor}>
+      <Tooltip label={tooltipLabel} placement={tooltipPlacement}>
+        <HStack gap={0} backgroundColor={backgroundColor} borderRadius={4}>
           <IconButton
             aria-label={iconLabel}
             icon={icon}
@@ -40,7 +49,7 @@ const SubNavBarItem = ({
             fontSize="1.5rem"
             colorScheme={colorMode === "dark" ? "yellow" : "teal"}
           />
-          <Text>{text}</Text>
+          <Text>{responsiveText}</Text>
         </HStack>
       </Tooltip>
     </Link>
