@@ -1,9 +1,12 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import { IoImages, IoImagesOutline } from "react-icons/io5";
 import { MdGridView } from "react-icons/md";
-import { subParentNames, useActiveSubParent } from "../../../hooks";
-import useActiveNavColor from "../../../hooks/useActiveNavColor";
-import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
+import {
+  useBoundingBoxColor,
+  useActiveNavColor,
+  subParentNames,
+  useActiveSubParent,
+} from "../../../hooks";
 import SubNavBarItem from "../subNavItems/SubNavBarItem";
 
 const UploadDataBar = () => {
