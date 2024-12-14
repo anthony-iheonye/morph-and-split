@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import AugSettingBar from "../components/bars/AugSettingBar";
+import AugSettingBar from "../components/navigation/subNavBars/AugSettingBar";
 
 const AugmentationSettings = () => {
   return (

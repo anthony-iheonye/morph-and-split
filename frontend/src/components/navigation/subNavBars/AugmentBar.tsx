@@ -10,11 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { FaCirclePlay } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import useBoundingBoxColor from "../../hooks/useBoundingBoxColor";
+import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
 import { MdGridView } from "react-icons/md";
-import useActiveSubParent from "../../hooks/useActiveSubParent";
-import { subParentNames } from "../../store/navStore";
-import useActiveNavColor from "../../hooks/useActiveParentColor";
+import useActiveSubParent from "../../../hooks/useActiveSubParent";
+import { subParentNames } from "../../../store/navStore";
+import useActiveNavColor from "../../../hooks/useActiveParentColor";
 
 const AugmentBar = () => {
   const { colorMode } = useColorMode();

@@ -1,11 +1,11 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import AugmentationConfigIcon from "../navigation/mainNavItems/AugConfigurationIcon";
-import AugmentIcon from "../navigation/mainNavItems/AugmentIcon";
-import ColorModeSwitch from "../navigation/mainNavItems/ColorModeSwitch";
+import AugmentationConfigIcon from "./mainNavItems/AugConfigurationIcon";
+import AugmentIcon from "./mainNavItems/AugmentIcon";
+import ColorModeSwitch from "./mainNavItems/ColorModeSwitch";
 import CompanyLogo from "../CompanyLogo";
-import ImageMaskUploader from "../navigation/mainNavItems/ImageMaskUploader";
-import ResetIcon from "../navigation/mainNavItems/ResetIcon";
+import ImageMaskUploader from "./mainNavItems/ImageMaskUploader";
+import ResetIcon from "./mainNavItems/ResetIcon";
 import ViewState from "../ViewState";
 
 const NavBar = () => {

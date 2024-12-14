@@ -10,10 +10,10 @@ import {
 import { IoImages, IoImagesOutline } from "react-icons/io5";
 import { MdGridView } from "react-icons/md";
 import { Link } from "react-router-dom";
-import useActiveNavColor from "../../hooks/useActiveParentColor";
-import useActiveSubParent from "../../hooks/useActiveSubParent";
-import useBoundingBoxColor from "../../hooks/useBoundingBoxColor";
-import { subParentNames } from "../../store/navStore";
+import useActiveNavColor from "../../../hooks/useActiveParentColor";
+import useActiveSubParent from "../../../hooks/useActiveSubParent";
+import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
+import { subParentNames } from "../../../store/navStore";
 
 const UploadDataBar = () => {
   const { colorMode } = useColorMode();

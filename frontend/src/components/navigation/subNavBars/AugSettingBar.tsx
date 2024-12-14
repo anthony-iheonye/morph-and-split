@@ -11,11 +11,10 @@ import { FaMagic } from "react-icons/fa";
 import { IoIosColorPalette } from "react-icons/io";
 import { PiCirclesThreeFill, PiResizeBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
-import useBoundingBoxColor from "../../hooks/useBoundingBoxColor";
-import useActiveSubParent from "../../hooks/useActiveSubParent";
-import { subParentNames } from "../../store/navStore";
-import useActiveNavColor from "../../hooks/useActiveParentColor";
-import Preview from "../../pages/Preview";
+import useActiveNavColor from "../../../hooks/useActiveParentColor";
+import useActiveSubParent from "../../../hooks/useActiveSubParent";
+import useBoundingBoxColor from "../../../hooks/useBoundingBoxColor";
+import { subParentNames } from "../../../store/navStore";
 
 const AugSettingBar = () => {
   const { colorMode } = useColorMode();
