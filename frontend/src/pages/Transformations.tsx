@@ -52,114 +52,112 @@ const AugTransformationsInput = () => {
           Choose random transformations to apply to the training set, and
           optionally to the validation set, to enhance data variability.
         </Text>
-        <FormControl>
-          <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5, md: 4, lg: 8 }}>
-            {/*random crop*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={RiCropFill}
-                title="Random Crop"
-                description={transforms.randomCrop}
-              />
-              <Switch
-                id="randomCrop"
-                colorScheme="teal"
-                isChecked={augConfig.randomCrop}
-                onChange={() => handleCheckBoxChange("randomCrop")}
-              />
-            </HStack>
+        <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5, md: 4, lg: 8 }}>
+          {/*random crop*/}
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={RiCropFill}
+              title="Random Crop"
+              description={transforms.randomCrop}
+            />
+            <Switch
+              id="randomCrop"
+              colorScheme="teal"
+              isChecked={augConfig.randomCrop}
+              onChange={() => handleCheckBoxChange("randomCrop")}
+            />
+          </HStack>
 
-            {/*flip up down*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={PiFlipHorizontalFill}
-                title="Flip Left-Right"
-                description={transforms.flipLeftRight}
-              />
-              <Switch
-                id="flipLeftRight"
-                colorScheme="teal"
-                isChecked={augConfig.flipLeftRight}
-                onChange={() => handleCheckBoxChange("flipLeftRight")}
-              />
-            </HStack>
+          {/*flip up down*/}
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={PiFlipHorizontalFill}
+              title="Flip Left-Right"
+              description={transforms.flipLeftRight}
+            />
+            <Switch
+              id="flipLeftRight"
+              colorScheme="teal"
+              isChecked={augConfig.flipLeftRight}
+              onChange={() => handleCheckBoxChange("flipLeftRight")}
+            />
+          </HStack>
 
-            {/*flip up-down*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={PiFlipVerticalFill}
-                title="Flip Up-Down"
-                description={transforms.flipUpDown}
-              />
-              <Switch
-                id="flipUpDown"
-                colorScheme="teal"
-                isChecked={augConfig.flipUpDown}
-                onChange={() => handleCheckBoxChange("flipUpDown")}
-              />
-            </HStack>
+          {/*flip up-down*/}
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={PiFlipVerticalFill}
+              title="Flip Up-Down"
+              description={transforms.flipUpDown}
+            />
+            <Switch
+              id="flipUpDown"
+              colorScheme="teal"
+              isChecked={augConfig.flipUpDown}
+              onChange={() => handleCheckBoxChange("flipUpDown")}
+            />
+          </HStack>
 
-            {/*random rotate*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={RxRotateCounterClockwise}
-                title="Random Rotate"
-                description={transforms.randomRotate}
-              />
-              <Switch
-                id="randomRotate"
-                colorScheme="teal"
-                isChecked={augConfig.randomRotate}
-                onChange={() => handleCheckBoxChange("randomRotate")}
-              />
-            </HStack>
+          {/*random rotate*/}
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={RxRotateCounterClockwise}
+              title="Random Rotate"
+              description={transforms.randomRotate}
+            />
+            <Switch
+              id="randomRotate"
+              colorScheme="teal"
+              isChecked={augConfig.randomRotate}
+              onChange={() => handleCheckBoxChange("randomRotate")}
+            />
+          </HStack>
 
-            {/*corrupt brightness*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={TbBrightnessFilled}
-                title="Corrupt Brightness"
-                description={transforms.corruptBrightness}
-              />
-              <Switch
-                id="corruptBrightness"
-                colorScheme="teal"
-                isChecked={augConfig.corruptBrightness}
-                onChange={() => handleCheckBoxChange("corruptBrightness")}
-              />
-            </HStack>
+          {/*corrupt brightness*/}
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={TbBrightnessFilled}
+              title="Corrupt Brightness"
+              description={transforms.corruptBrightness}
+            />
+            <Switch
+              id="corruptBrightness"
+              colorScheme="teal"
+              isChecked={augConfig.corruptBrightness}
+              onChange={() => handleCheckBoxChange("corruptBrightness")}
+            />
+          </HStack>
 
-            {/*Corrupt contrast*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={TbContrast2Filled}
-                title="Corrupt Contrast"
-                description={transforms.corruptContrast}
-              />
-              <Switch
-                id="corruptBrightness"
-                colorScheme="teal"
-                isChecked={augConfig.corruptContrast}
-                onChange={() => handleCheckBoxChange("corruptContrast")}
-              />
-            </HStack>
+          {/*Corrupt contrast*/}
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={TbContrast2Filled}
+              title="Corrupt Contrast"
+              description={transforms.corruptContrast}
+            />
+            <Switch
+              id="corruptBrightness"
+              colorScheme="teal"
+              isChecked={augConfig.corruptContrast}
+              onChange={() => handleCheckBoxChange("corruptContrast")}
+            />
+          </HStack>
 
-            {/*Corrupt saturation*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={RiContrastDropLine}
-                title="Corrupt Saturation"
-                description={transforms.corruptSaturation}
-              />
-              <Switch
-                id="corruptSaturation"
-                colorScheme="teal"
-                isChecked={augConfig.corruptSaturation}
-                onChange={() => handleCheckBoxChange("corruptSaturation")}
-              />
-            </HStack>
-          </SimpleGrid>
-        </FormControl>
+          {/*Corrupt saturation*/}
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={RiContrastDropLine}
+              title="Corrupt Saturation"
+              description={transforms.corruptSaturation}
+            />
+            <Switch
+              id="corruptSaturation"
+              colorScheme="teal"
+              isChecked={augConfig.corruptSaturation}
+              onChange={() => handleCheckBoxChange("corruptSaturation")}
+            />
+          </HStack>
+        </SimpleGrid>
       </BoundingBox>
 
       <BoundingBox>
