@@ -1,12 +1,6 @@
-import {
-  FormControl,
-  HStack,
-  SimpleGrid,
-  Switch,
-  Text,
-} from "@chakra-ui/react";
+import { HStack, SimpleGrid, Switch, Text } from "@chakra-ui/react";
 import { PiFlipHorizontalFill, PiFlipVerticalFill } from "react-icons/pi";
-import { RiCropFill } from "react-icons/ri";
+import { RiContrastDropLine, RiCropFill } from "react-icons/ri";
 import { RxRotateCounterClockwise } from "react-icons/rx";
 import {
   TbBrightnessFilled,
@@ -15,9 +9,8 @@ import {
 } from "react-icons/tb";
 import BoundingBox from "../components/BoundingBox";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import { RiContrastDropLine } from "react-icons/ri";
 import PageTitle from "../components/PageTitle";
+import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
 
 const AugTransformationsInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

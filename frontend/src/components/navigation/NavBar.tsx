@@ -6,7 +6,7 @@ import {
   AugmentationConfigIcon,
   AugmentIcon,
   ResetIcon,
-  ViewState,
+  // ViewState,
   ColorModeSwitch,
 } from "./mainNavBarItems";
 
@@ -31,7 +31,7 @@ const NavBar = () => {
         <AugmentationConfigIcon />
         <AugmentIcon />
         <ResetIcon />
-        <ViewState />
+        {/* <ViewState /> */}
       </Flex>
 
       <Box
