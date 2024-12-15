@@ -7,9 +7,6 @@ import AugMask from "../entities/AugMask";
 import VisualAttributeJSONFile from "../entities/VisualAttributeFile";
 
 interface AugConfig {
-  augmentedImages?: AugImage[];
-  augmentedMasks?: AugMask[];
-  saveDirectory?: string;
   initialTrainSaveId?: number;
   initialValSaveId?: number;
   initialTestSaveId?: number;
@@ -32,7 +29,6 @@ interface AugConfig {
   corruptBrightness?: boolean;
   corruptContrast?: boolean;
   corruptSaturation?: boolean;
-  cacheDirectory?: string;
   totalAugmentedImages?: number;
   eccentricity?: boolean;
   equivalentDiameter?: boolean;
@@ -67,9 +63,6 @@ interface AugConfigStore {
 }
 
 const initialAugConfig: AugConfig = {
-  augmentedImages: [],
-  augmentedMasks: [],
-  saveDirectory: "",
   initialTrainSaveId: 1,
   initialValSaveId: 1,
   initialTestSaveId: 1,
@@ -97,7 +90,6 @@ const initialAugConfig: AugConfig = {
   corruptBrightness: false,
   corruptContrast: false,
   corruptSaturation: false,
-  cacheDirectory: "",
   totalAugmentedImages: 150,
   eccentricity: false,
   equivalentDiameter: false,
