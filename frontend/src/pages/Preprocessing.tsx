@@ -40,7 +40,7 @@ const PreProcessing = () => {
           />
         </HStack>
         {augConfig.crop ? (
-          <BoundingBox maxWidth={"600"}>
+          <BoundingBox maxWidth={"600px"} padding={{ base: "0", md: "6" }}>
             <VStack spacing={{ base: 5, md: 4, lg: 8 }}>
               <HStack justify="space-between" align="start" width="100%">
                 <IconHeadingDescriptionCombo
@@ -95,7 +95,7 @@ const PreProcessing = () => {
           />
         </HStack>
         {augConfig.resizeAugImage ? (
-          <BoundingBox maxWidth={"600"}>
+          <BoundingBox maxWidth={"600px"} padding={{ base: "0", md: "6" }}>
             <VStack spacing={{ base: 5, md: 4, lg: 8 }}>
               <HStack justify="space-between" align="start" width="100%">
                 <IconHeadingDescriptionCombo
