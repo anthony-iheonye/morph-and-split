@@ -26,6 +26,7 @@ const AugSettingBar = () => {
       padding="10px"
       gap={{ md: 7 }}
       bg={backgroundColor}
+      justifyContent={{ base: "space-between", md: "flex-start" }}
     >
       <Heading as="h2" fontWeight={500} padding={2}>
         Settings
@@ -34,7 +35,7 @@ const AugSettingBar = () => {
       <SubNavBarItem
         icon={<PiCirclesThreeFill />}
         iconLabel="Split data into train, val and test sets."
-        text="Data Split"
+        text={{ md: "Data Split" }}
         to={"/settings/data_split"}
         backgroundColor={
           activeSubParent === dataSplit ? subParentColor : "transparent"
@@ -45,7 +46,7 @@ const AugSettingBar = () => {
       <SubNavBarItem
         icon={<FaMagic />}
         iconLabel="Apply random transformations."
-        text="Transformations"
+        text={{ md: "Transformations" }}
         to={"/settings/select_transformation"}
         backgroundColor={
           activeSubParent === transformation ? subParentColor : "transparent"
@@ -56,7 +57,7 @@ const AugSettingBar = () => {
       <SubNavBarItem
         icon={<IoIosColorPalette />}
         iconLabel="Select visual attributes JSON file"
-        text="Visual attributes"
+        text={{ md: "Visual attributes" }}
         to={"/settings/visual_attributes"}
         backgroundColor={
           activeSubParent === visualAtttributes ? subParentColor : "transparent"
@@ -67,7 +68,7 @@ const AugSettingBar = () => {
       <SubNavBarItem
         icon={<PiResizeBold />}
         iconLabel="Set image and mask preprocessing configuration."
-        text="Pre-processing"
+        text={{ md: "Pre-processing" }}
         to={"/settings/pre_processing"}
         backgroundColor={
           activeSubParent === preProcessing ? subParentColor : "transparent"

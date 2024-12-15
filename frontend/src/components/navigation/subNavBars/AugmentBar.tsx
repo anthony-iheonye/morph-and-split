@@ -24,6 +24,7 @@ const AugmentBar = () => {
       padding="10px"
       gap={{ base: 4, md: 8 }}
       bg={backgroundColor}
+      justifyContent={{ base: "space-between", md: "flex-start" }}
     >
       <Heading as="h2" fontWeight={500} padding={2}>
         Augment
@@ -32,7 +33,7 @@ const AugmentBar = () => {
       <SubNavBarItem
         icon={<FaCirclePlay />}
         iconLabel="Apply random transformations to images and their masks."
-        text={{ base: "Start", md: "Start Augmentation" }}
+        text={{ md: "Start Augmentation" }}
         to="/augment/start_augmentation"
         backgroundColor={
           activeSubParent === startAugmentation ? subParentColor : "transparent"
@@ -42,7 +43,7 @@ const AugmentBar = () => {
       <SubNavBarItem
         icon={<MdGridView />}
         iconLabel="Preview augmented results."
-        text={{ base: "Preview", md: "Preview Result" }}
+        text={{ md: "Preview Result" }}
         to="/augment/preview"
         backgroundColor={
           activeSubParent === previewResult ? subParentColor : "transparent"

@@ -10,7 +10,7 @@ import {
 import { Link, To } from "react-router-dom";
 
 interface Props {
-  text: string | { base: string; md?: string; lg?: string }; // Support both plain strings and responsive objects
+  text: string | { base?: string; md?: string; lg?: string }; // Support both plain strings and responsive objects
   to: To;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
   tooltipLabel?: string;
@@ -43,7 +43,7 @@ const SubNavBarItem = ({
         <HStack
           gap={0}
           backgroundColor={backgroundColor}
-          borderRadius={4}
+          borderRadius={6}
           transition="background-color 0.3s ease"
         >
           <IconButton
