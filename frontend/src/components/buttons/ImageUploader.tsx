@@ -13,7 +13,7 @@ const ImageUploader = () => {
     md: "Select Images",
   });
 
-  const { error, isUploading, handleFileChange } = useFileUploader<File>(
+  const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
       const formData = new FormData();
       files.forEach((file) => formData.append("images", file));

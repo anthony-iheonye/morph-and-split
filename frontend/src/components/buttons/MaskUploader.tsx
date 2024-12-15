@@ -10,7 +10,7 @@ const MaskUploader = () => {
   const uploadClient = new APIClient<BackendResponse>("/upload/masks");
   const { setBackedResponseLog } = useBackendResponse();
 
-  const { error, isUploading, handleFileChange } = useFileUploader<File>(
+  const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
       const formData = new FormData();
       files.forEach((file) => formData.append("masks", file));
