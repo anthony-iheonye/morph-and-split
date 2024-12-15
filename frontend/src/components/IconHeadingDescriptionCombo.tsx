@@ -32,9 +32,9 @@ const IconHeadingDescriptionCombo = ({
     <VStack spacing={0} align="start">
       <HStack>
         {icon ? <Icon as={icon} boxSize={8} /> : null}
-        <FormLabel mb={0} fontSize={fontSize}>
+        <Text mb={0} fontSize={fontSize} fontWeight="medium">
           {responsiveTitle}
-        </FormLabel>
+        </Text>
       </HStack>
       <Text
         fontSize="sm"
@@ -43,6 +43,7 @@ const IconHeadingDescriptionCombo = ({
         mt={0.6}
         lineHeight="17px"
         color="gray.400"
+        marginRight={{ base: 2, md: 6 }}
       >
         {responsiveDescription}
       </Text>
