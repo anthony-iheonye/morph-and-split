@@ -15,21 +15,23 @@ const Preview = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={HiViewGrid}
-            title="Preview Images and Masks"
-            description="Click slider to preview selected images and their corresponding masks."
+            title="Preview Upload"
+            description="Click slider to preview uploaded images and their corresponding masks."
           />
           <PreviewSwitch />
         </HStack>
       </BoundingBox>
 
-      <BoundingBox overflowY="auto">
+      <BoundingBox>
         <Text color={"gray.400"} mb={4} fontSize="sm">
           Preview of Selected Images and Masks.
         </Text>
         <Box
           overflowY="auto"
-          maxHeight={{ sm: "320px", md: "550px", lg: "650px" }}
+          // maxHeight={{ sm: "320px", md: "550px", lg: "650px" }}
+          height={{ sm: "100%", md: "550px", lg: "650px" }}
           mt={4}
+          flex="1"
         >
           <PreviewUploadedDataGrid />
         </Box>

@@ -6,10 +6,9 @@ const MaskChannel = () => {
 
   return (
     <Select
-      // size="sm"
+      size={{ base: "sm", md: "md" }}
       width="auto"
-      // borderRadius="10px"
-
+      borderRadius={6}
       value={augConfig.imageMaskChannels?.maskChannels}
       onChange={(e) =>
         setAugConfig("imageMaskChannels", {

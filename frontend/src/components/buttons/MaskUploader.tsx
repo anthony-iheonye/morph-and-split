@@ -1,4 +1,4 @@
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input, useBreakpointValue } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import BackendResponse from "../../entities/BackendResponse";
 import useBackendResponse from "../../hooks/useBackendResponse";
@@ -32,6 +32,11 @@ const MaskUploader = () => {
     }
   );
 
+  const buttonText = useBreakpointValue({
+    base: "Select",
+    md: "Select Mask",
+  });
+
   return (
     <Button
       as="label"
@@ -39,7 +44,7 @@ const MaskUploader = () => {
       cursor="pointer"
       isDisabled={isUploading}
     >
-      {isUploading ? "Uploading" : "Select Masks"}
+      {isUploading ? "Uploading" : buttonText}
       <Input
         type="file"
         multiple

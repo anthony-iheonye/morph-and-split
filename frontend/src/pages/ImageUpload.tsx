@@ -30,8 +30,8 @@ const ImageUpload = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={IoLayers}
-            title="Number of Image Channels"
-            description="Select the number of image channels from the dropdown list."
+            title={{ base: "Channels", md: "Number of Image Channels" }}
+            description="Select the number of image channels."
           />
           <ImageChannel />
         </HStack>

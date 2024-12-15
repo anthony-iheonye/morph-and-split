@@ -1,24 +1,39 @@
-import { FormLabel, HStack, Icon, Text, VStack } from "@chakra-ui/react";
+import {
+  FormLabel,
+  HStack,
+  Icon,
+  Text,
+  useBreakpointValue,
+  VStack,
+} from "@chakra-ui/react";
 import { IconType } from "react-icons";
 
 interface Props {
   icon?: IconType;
-  title?: string;
-  description?: string;
+  title?: string | { base?: string; md?: string; lg?: string };
+  description?: string | { base?: string; md?: string; lg?: string };
   fontSize?: number | string;
 }
 const IconHeadingDescriptionCombo = ({
   icon,
-  title,
-  description,
   fontSize,
+  description = "",
+  title = "",
 }: Props) => {
+  const responsiveTitle = useBreakpointValue(
+    typeof title === "string" ? { base: title } : title
+  );
+
+  const responsiveDescription = useBreakpointValue(
+    typeof description === "string" ? { base: description } : description
+  );
+
   return (
     <VStack spacing={0} align="start">
       <HStack>
         {icon ? <Icon as={icon} boxSize={8} /> : null}
         <FormLabel mb={0} fontSize={fontSize}>
-          {title}
+          {responsiveTitle}
         </FormLabel>
       </HStack>
       <Text
@@ -29,7 +44,7 @@ const IconHeadingDescriptionCombo = ({
         lineHeight="17px"
         color="gray.400"
       >
-        {description}
+        {responsiveDescription}
       </Text>
     </VStack>
   );

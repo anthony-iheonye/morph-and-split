@@ -1,4 +1,4 @@
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input, useBreakpointValue } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import BackendResponse from "../../entities/BackendResponse";
 import { useBackendResponse, useFileUploader } from "../../hooks";
@@ -8,6 +8,10 @@ const ImageUploader = () => {
   const queryClient = useQueryClient();
   const uploadClient = new APIClient<BackendResponse>("/upload/images");
   const { setBackedResponseLog } = useBackendResponse();
+  const buttonText = useBreakpointValue({
+    base: "Select",
+    md: "Select Images",
+  });
 
   const { error, isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
@@ -38,8 +42,9 @@ const ImageUploader = () => {
       variant="outline"
       cursor="pointer"
       isDisabled={isUploading}
+      width="auto"
     >
-      {isUploading ? "Uploading" : "Select Images"}
+      {isUploading ? "Uploading" : buttonText}
       <Input
         type="file"
         multiple

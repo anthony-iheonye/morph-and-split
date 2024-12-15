@@ -24,6 +24,8 @@ const UploadDataBar = () => {
       padding="10px"
       gap={{ md: 8 }}
       bg={backgroundColor}
+      justifyContent={{ base: "space-between", md: "flex-start" }}
+      width={{ base: "100%" }}
     >
       <Heading as="h2" fontWeight={500} padding={2}>
         Dataset
@@ -32,7 +34,7 @@ const UploadDataBar = () => {
       <SubNavBarItem
         icon={<IoImages />}
         iconLabel="Upload Images"
-        text="Images"
+        text={{ md: "Images" }}
         to="/upload_data/images"
         backgroundColor={
           activeSubParent === uploadImages ? subParentColor : "transparent"
@@ -43,7 +45,7 @@ const UploadDataBar = () => {
       <SubNavBarItem
         icon={<IoImagesOutline />}
         iconLabel="Select segmentation masks"
-        text={{ base: "Masks", md: "Segmentation Masks" }}
+        text={{ md: "Segmentation Masks" }}
         to={"/upload_data/masks"}
         backgroundColor={
           activeSubParent === uploadMasks ? subParentColor : "transparent"
@@ -54,7 +56,7 @@ const UploadDataBar = () => {
       <SubNavBarItem
         icon={<MdGridView />}
         iconLabel="Preview uploaded images and masks"
-        text="Preview"
+        text={{ md: "Preview" }}
         to={"/upload_data/preview"}
         backgroundColor={
           activeSubParent === previewUpload ? subParentColor : "transparent"

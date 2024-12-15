@@ -19,7 +19,7 @@ const MaskUpload = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={BiSolidImageAdd}
-            title="Upload Segmentation Masks"
+            title={{ base: "Upload Mask", md: "Upload Segmentation Masks" }}
             description="Click button to select masks for augmentation."
           />
           <MaskUploader />
@@ -29,8 +29,8 @@ const MaskUpload = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={IoLayers}
-            title="Number of Mask Channels"
-            description="Select the number of mask channels from the dropdown list."
+            title={{ base: "Channels", md: "Number of Mask Channels" }}
+            description="Select the number of mask channels."
           />
           <MaskChannel />
         </HStack>
