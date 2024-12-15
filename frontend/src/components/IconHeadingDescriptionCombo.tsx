@@ -28,7 +28,7 @@ const IconHeadingDescriptionCombo = ({
   );
 
   return (
-    <VStack spacing={0} align="start">
+    <VStack spacing={0} align="start" maxWidth={"auto"}>
       <HStack>
         {icon ? <Icon as={icon} boxSize={8} /> : null}
         <Text mb={0} fontSize={fontSize} fontWeight="medium">
