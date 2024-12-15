@@ -28,8 +28,8 @@ const Preview = () => {
         </Text>
         <Box
           overflowY="auto"
-          // maxHeight={{ sm: "320px", md: "550px", lg: "650px" }}
-          height={{ sm: "100%", md: "550px", lg: "650px" }}
+          maxHeight={{ sm: "400px", md: "550px", lg: "650px" }}
+          // height="100%"
           mt={4}
           flex="1"
         >

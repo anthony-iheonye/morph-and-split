@@ -68,7 +68,7 @@ const Augment = () => {
       <BoundingBox
         maxWidth={"fit-content"}
         justify={"center"}
-        padding={3}
+        padding={1}
         borderRadius={8}
       >
         <Button
@@ -82,12 +82,12 @@ const Augment = () => {
         >
           <IconHeadingDescriptionCombo
             icon={FaPlay}
-            fontSize={30}
+            fontSize={25}
             title={isLoading ? "Processing" : "Augment Images"}
             description={
               isLoading
                 ? "Images and Masks are augmenting."
-                : "Augment the selected images and segmentation masks."
+                : "Augment the selected images and masks."
             }
           />
         </Button>
