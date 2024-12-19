@@ -3,16 +3,18 @@ import { GiResize } from "react-icons/gi";
 import { PiResizeFill } from "react-icons/pi";
 import { RiCropFill } from "react-icons/ri";
 import { TbArrowAutofitHeight, TbArrowAutofitWidth } from "react-icons/tb";
-import BoundingBox from "../components/BoundingBox";
+import { BoundingBox } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import { HeightOffsetInput } from "../components/inputFields";
-import ResizeHeightInput from "../components/inputFields/ResizeHeightInput";
-import ResizeWidthInput from "../components/inputFields/ResizeWidthInput";
-import TargetHeightInput from "../components/inputFields/TargetHeightInput";
+import {
+  HeightOffsetInput,
+  WidthOffsetInput,
+  TargetHeightInput,
+  ResizeHeightInput,
+  ResizeWidthInput,
+} from "../components/inputFields";
 import TargetWidthInput from "../components/inputFields/TargetWidthInput";
 import PageTitle from "../components/PageTitle";
 import { useAugConfigAndSetter } from "../hooks";
-import WidthOffsetInput from "../components/inputFields/WidthOffsetInput";
 
 const PreProcessing = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

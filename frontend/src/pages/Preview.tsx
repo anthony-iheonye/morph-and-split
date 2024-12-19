@@ -1,10 +1,9 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { HStack, Box, Text } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
-import BoundingBox from "../components/BoundingBox";
+import { BoundingBox, PreviewUploadedDataGrid } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import PreviewUploadedDataGrid from "../components/display/PreviewUploadedDataGrid";
-import PreviewSwitch from "../components/switches/PreviewSwitch";
 import PageTitle from "../components/PageTitle";
+import PreviewSwitch from "../components/switches/PreviewSwitch";
 
 const Preview = () => {
   return (

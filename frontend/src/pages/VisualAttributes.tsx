@@ -1,20 +1,20 @@
-import { HStack, Switch, VStack } from "@chakra-ui/react";
+import { HStack, VStack, Switch } from "@chakra-ui/react";
 import { BiSolidArea } from "react-icons/bi";
 import { BsFiletypeJson } from "react-icons/bs";
-import { FaCircleNotch } from "react-icons/fa6";
+import { FaCircleNotch } from "react-icons/fa";
 import { GiRollingEnergy } from "react-icons/gi";
 import { GoCircleSlash } from "react-icons/go";
+import { HiOutlineArrowsExpand } from "react-icons/hi";
 import { IoColorPaletteSharp } from "react-icons/io5";
 import { MdOutlineContrast } from "react-icons/md";
 import { RxDimensions } from "react-icons/rx";
-import { TbOvalVertical, TbTexture } from "react-icons/tb";
-import BoundingBox from "../components/BoundingBox";
+import { TbTexture, TbOvalVertical } from "react-icons/tb";
+import { VisualAttributeFilePicker } from "../components/buttons";
+import { BoundingBox } from "../components/display";
+import { SplitParameterSelector } from "../components/dropdowns";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
-import VisualAttributeFilePicker from "../components/buttons/VisualAttributeFilePicker";
-import useAugConfigAndSetter from "../hooks/useAugConfigAndSetter";
-import SplitParameterSelector from "../components/dropdowns/SplitParameterSelector";
-import { HiOutlineArrowsExpand } from "react-icons/hi";
+import { useAugConfigAndSetter } from "../hooks";
 
 const VisualAttributes = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

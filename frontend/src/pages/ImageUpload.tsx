@@ -1,13 +1,13 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { HStack, Box, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
-import BoundingBox from "../components/BoundingBox";
+import { ImageUploader } from "../components/buttons";
+import { BoundingBox } from "../components/display";
+import { ImageChannel } from "../components/dropdowns";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
-import useUploadedImageNames from "../hooks/useUploadedImageNames";
-import ImageUploader from "../components/buttons/ImageUploader";
-import ImageChannel from "../components/dropdowns/ImageChannel";
+import { useUploadedImageNames } from "../hooks";
 
 const ImageUpload = () => {
   const { data } = useUploadedImageNames();

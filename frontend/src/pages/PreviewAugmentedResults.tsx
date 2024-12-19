@@ -1,14 +1,16 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { VStack, HStack, Box, Text } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
-import BoundingBox from "../components/BoundingBox";
+import {
+  BoundingBox,
+  PreviewGridTrain,
+  PreviewGridVal,
+  PreviewGridTest,
+} from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
-import PreviewGridTest from "../components/display/PreviewGridTest";
-import PreviewGridTrain from "../components/display/PreviewGridTrain";
-import PreviewGridVal from "../components/display/PreviewGridVal";
 import SplitSelector from "../components/SplitSelector";
-import useAugConfigStore from "../store/augConfigStore";
 import PreviewAugResultSwitch from "../components/switches/PreviewAugResultSwitch";
+import { useAugConfigStore } from "../store";
 
 const PreviewAugmentedResults = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(

@@ -1,13 +1,13 @@
-import { Button, useToast } from "@chakra-ui/react";
+import { useToast, Button } from "@chakra-ui/react";
 import { useState } from "react";
-import { FaPlay } from "react-icons/fa6";
+import { FaPlay } from "react-icons/fa";
 import BackendResponse from "../../entities/BackendResponse";
-import useBackendResponse from "../../hooks/useBackendResponse";
+import { useBackendResponse } from "../../hooks";
 import APIClient from "../../services/api-client";
-import useAugConfigStore from "../../store/augConfigStore";
-import BoundingBox from "../BoundingBox";
-import DownloadButton from "./DownloadButton";
+import { useAugConfigStore } from "../../store";
+import { BoundingBox } from "../display";
 import IconHeadingDescriptionCombo from "../IconHeadingDescriptionCombo";
+import DownloadButton from "./DownloadButton";
 
 const Augment = () => {
   const AugmentationAPI = new APIClient<BackendResponse>("/augment");

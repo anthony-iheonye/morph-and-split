@@ -1,20 +1,20 @@
 import {
+  VStack,
   FormControl,
   FormLabel,
-  HStack,
   Slider,
+  SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  SliderTrack,
+  HStack,
   Text,
-  VStack,
 } from "@chakra-ui/react";
-import { FaLayerGroup } from "react-icons/fa6";
-import BoundingBox from "../components/BoundingBox";
+import { FaLayerGroup } from "react-icons/fa";
+import { BoundingBox } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import useAugConfigStore from "../store/augConfigStore";
+import { TotalTrainData } from "../components/inputFields";
 import PageTitle from "../components/PageTitle";
-import TotalTrainData from "../components/inputFields/TotalTrainData";
+import { useAugConfigStore } from "../store";
 
 const adjustRatios = (
   train: number,
