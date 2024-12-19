@@ -17,11 +17,14 @@ const Augment = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const { augmentationIsComplete, setBackedResponseLog } = useBackendResponse();
+  const {
+    augmentationIsComplete,
+    setBackedResponseLog: setBackendResponseLog,
+  } = useBackendResponse();
 
   const handleAugment = async () => {
     setIsLoading(true);
-    setBackedResponseLog("augmentationIsComplete", false);
+    setBackendResponseLog("augmentationIsComplete", false);
 
     // Prepare FormData
     const formData = new FormData();
@@ -38,7 +41,7 @@ const Augment = () => {
       const response = await AugmentationAPI.uploadFiles(formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setBackedResponseLog("augmentationIsComplete", response.success);
+      setBackendResponseLog("augmentationIsComplete", response.success);
 
       if (response.success) {
         toast({
