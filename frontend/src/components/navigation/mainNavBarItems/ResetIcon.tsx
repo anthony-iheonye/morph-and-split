@@ -23,7 +23,7 @@ import useBackendResponse from "../../../hooks/useBackendResponse";
 const ResetIcon = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { augConfig, setAugConfig, resetAugConfig } = useAugConfigAndSetter();
-  const { setBackedResponseLog } = useBackendResponse();
+  const { setBackendResponseLog } = useBackendResponse();
 
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -50,7 +50,7 @@ const ResetIcon = () => {
         // Reset local configurations
         resetAugConfig();
         setAugConfig(key, !augConfig[key]);
-        setBackedResponseLog("augmentationIsComplete", false);
+        setBackendResponseLog("augmentationIsComplete", false);
 
         // Reset 'image_names', 'mask_names', and 'metadata' queries.
         queryClient.invalidateQueries(["image_names"]);

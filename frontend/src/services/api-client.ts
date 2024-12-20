@@ -72,7 +72,7 @@ class APIClient<T> {
       .then((res) => res.data)
       .catch((err) => {
         console.error("Error resetting session: ", err.messsage);
-        return { success: false, error: err.messsage };
+        return { success: false, error: err.message };
       });
 
   resizeImagesMasks = (

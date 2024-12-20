@@ -7,7 +7,7 @@ import APIClient from "../../services/api-client";
 const ImageUploader = () => {
   const queryClient = useQueryClient();
   const uploadClient = new APIClient<BackendResponse>("/upload/images");
-  const { setBackedResponseLog } = useBackendResponse();
+  const { setBackendResponseLog } = useBackendResponse();
   const buttonText = useBreakpointValue({
     base: "Select",
     md: "Select Images",
@@ -24,7 +24,7 @@ const ImageUploader = () => {
         });
 
         if (response.success) {
-          setBackedResponseLog("augmentationIsComplete", false);
+          setBackendResponseLog("augmentationIsComplete", false);
           // Invalidate the 'image_names' query to refresh the updated list
           queryClient.invalidateQueries(["image_names"]);
           // invaliate the 'metadata' query to refresh the  image and mask preview grid

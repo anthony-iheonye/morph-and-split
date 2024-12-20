@@ -17,10 +17,8 @@ const Augment = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const {
-    augmentationIsComplete,
-    setBackedResponseLog: setBackendResponseLog,
-  } = useBackendResponse();
+  const { augmentationIsComplete, setBackendResponseLog } =
+    useBackendResponse();
 
   const handleAugment = async () => {
     setIsLoading(true);

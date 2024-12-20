@@ -8,7 +8,7 @@ import APIClient from "../../services/api-client";
 const MaskUploader = () => {
   const queryClient = useQueryClient();
   const uploadClient = new APIClient<BackendResponse>("/upload/masks");
-  const { setBackedResponseLog } = useBackendResponse();
+  const { setBackendResponseLog } = useBackendResponse();
 
   const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
@@ -21,7 +21,7 @@ const MaskUploader = () => {
         });
 
         if (response.success)
-          setBackedResponseLog("augmentationIsComplete", false);
+          setBackendResponseLog("augmentationIsComplete", false);
         // Invalidate the 'image_names' query to refresh the updated list
         queryClient.invalidateQueries(["mask_names"]);
         // Invalidate the 'metadata' query to refresh image-mask preview
