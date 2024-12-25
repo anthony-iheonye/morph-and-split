@@ -2,9 +2,10 @@ import gc
 import os
 
 from flask import Blueprint, request, jsonify
+from tensorflow.keras.backend import clear_session
 from werkzeug.utils import secure_filename
 
-from app.services import resize_image
+from app.services import ImageCropperResizerAndSaver
 from app.utils import directory_store
 
 mask_upload = Blueprint('mask_upload', __name__)
@@ -21,16 +22,16 @@ def upload_masks():
             return jsonify({'message': 'No mask uploaded'}), 400
 
         for mask in masks:
-            print(mask.filename)
             filename = secure_filename(mask.filename)
             filepath = os.path.join(MASK_DIR, filename)
             mask.save(filepath)
 
-            resized_file_path = os.path.join(RESIZED_MASK_DIR, filename)
-
-            resize_image(original_image_path=filepath,
-                         resized_image_path=resized_file_path,
-                         )
+        # resize images
+        resizer = ImageCropperResizerAndSaver(images_directory=MASK_DIR,
+                                              new_images_directory=RESIZED_MASK_DIR,
+                                              image_channels=3,
+                                              final_image_shape=(256, 256))
+        resizer.process_data()
         return jsonify({'success': True}), 200
 
     except Exception as e:
@@ -38,4 +39,5 @@ def upload_masks():
 
     finally:
         del masks
+        clear_session()
         gc.collect()
