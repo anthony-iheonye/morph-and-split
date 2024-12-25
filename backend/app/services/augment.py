@@ -27,9 +27,8 @@ class DataSplitterAugmenterAndSaver:
                  initial_save_id_test: int,
                  visual_attributes_json_path: str = None,
                  image_mask_channels: Union[Tuple[int, int], tuple] = (3, 3),
-                 image_format: str = 'png',
-                 final_image_size: Union[Tuple[int, int], tuple, None] = None,
-                 image_save_format: str = 'png',
+                 final_image_shape: Union[Tuple[int, int], tuple, None] = None,
+                 image_save_format: Union[str, None] = 'png',
                  image_save_prefix: str = 'img',
                  mask_save_prefix: str = 'mask',
                  val_size: float = 0.2,
@@ -92,7 +91,6 @@ class DataSplitterAugmenterAndSaver:
             index used for any of the images within the folder.
         :param image_mask_channels: The number of channels in the image and mask. The first value is the number of
             channels for the image, while the other is for the mask.
-        :param image_format: (str) The format of the image. It can be 'jpg', 'png', or 'bmp'.
         :param val_size: (float): The number of image/mask in percentage that would be assigned to the validation set.
             The number must be between 0 and 1.
         :param test_size: (float): The number of image/mask in percentage that would be assigned to the test set.
@@ -111,8 +109,7 @@ class DataSplitterAugmenterAndSaver:
         :param initial_save_id_test: (int): A number that would be used to save the first image and mask in the
             test_dataset. Eg. if it set to 5, and the image_save_prefix is 'img', the first image would be saved as
             'img_5.jpg'
-        :param resize_images: (bool): If 'True', the images and masks would be resized
-        :param final_image_size: (Tuple): The final height and width after resizing the loaded images and mask. This is
+        :param final_image_shape: (Tuple): The final height and width after resizing the loaded images and mask. This is
             the size of the image and mask that would be loaded to the deep learning model after resizing. If the image
             is not resized, its original size would be retained.
         :param crop_image_and_mask: (bool): If 'True' the all the input masks and images would be cropped before
@@ -121,8 +118,7 @@ class DataSplitterAugmenterAndSaver:
             the region to be for cropped
         :param augmentation_prob: (int): An integer used to determine the probability that a augmentation method would
             be implemented.
-        :param augment_validation_data: (bool): If True, the validation set will be augmented. For the validation data
-            to be augmented, the parameter 'apply_data_augmentation' must also be set to 'True'.
+        :param augment_validation_data: (bool): If True, the validation set will be augmented.
         :param random_crop: (bool): If True, the images and masks in the training set would be randomly cropped during
             augmentation
         :param flip_left_right: (bool): If True, the images and masks in the training set would be randomly flipped
@@ -140,7 +136,7 @@ class DataSplitterAugmenterAndSaver:
         """
 
         apply_data_augmentation = any([random_crop, flip_left_right, flip_up_down, random_rotate,
-                corrupt_brightness, corrupt_contrast, corrupt_saturation])
+                                       corrupt_brightness, corrupt_contrast, corrupt_saturation])
 
         self.images_directory = images_directory
         self.masks_directory = masks_directory
@@ -157,7 +153,7 @@ class DataSplitterAugmenterAndSaver:
             self.after_split_dataframe = None
 
             self.vis_attribute_creator = VisualAttributesDatasetCreator(
-                train_visual_attributes_json_path=self.visual_attributes_json_path,
+                train_visual_attributes_file_path=self.visual_attributes_json_path,
                 visual_properties=self.visual_attributes)
 
             self.vis_attribute_creator.process_data()
@@ -173,8 +169,36 @@ class DataSplitterAugmenterAndSaver:
             self.test_dataframe = pd.DataFrame(data=None, columns=column_names)
 
         self.display_split_histogram = display_split_histogram
-        self.original_image_paths = []
-        self.original_mask_paths = []
+
+        # Generate filepaths to the images and masks
+        self.original_image_paths, self.original_mask_paths = self._get_sorted_filepaths_to_images_and_masks(
+            images_directory, masks_directory)
+
+        # Extract image format and assign save format
+        img_path = self.original_image_paths[0]
+        mask_path = self.original_mask_paths[0]
+        self.image_format = self._get_image_format(image_path=img_path)
+        self.image_save_format = image_save_format
+
+        # Choose the method for decoding images and masks
+        if self.image_format.lower() in ['.jpg', '.jpeg']:
+            self.decode_image = tf.image.decode_jpeg
+        elif self.image_format.lower() == '.png':
+            self.decode_image = tf.image.decode_png
+        elif self.image_format.lower() == '.bmp':
+            self.decode_image = tf.image.decode_bmp
+        else:
+            self.decode_image = tf.image.decode_png
+
+        self.image_mask_channels = image_mask_channels
+        self.image_channels = self.image_mask_channels[0]
+        self.mask_channels = self.image_mask_channels[1]
+
+        # set the initial shape of the images and masks.
+        self.image_shape, self.mask_shape = self._get_image_and_mask_shape(image_path=img_path,
+                                                                           mask_path=mask_path)
+
+        # Create train, val and test directories
         self.train_directory = create_directory(dir_name=train_directory, return_dir=True,
                                                 overwrite_if_existing=False)
 
@@ -195,34 +219,22 @@ class DataSplitterAugmenterAndSaver:
         self.test_subdirectories = {}
         self.image_save_directory = None
         self.mask_save_directory = None
+
         self.training_image_paths = []
         self.training_mask_paths = []
         self.validation_image_paths = []
         self.validation_mask_paths = []
         self.test_image_paths = []
         self.test_mask_paths = []
+
         self.val_size = val_size
         self.test_size = test_size
         self.no_of_train_examples = None
         self.no_of_val_examples = None
         self.no_of_test_examples = None
-        self.image_mask_channels = image_mask_channels
 
-        self.image_format = image_format
-        if self.image_format.lower() in ['jpg', 'jpeg']:
-            self.decode_image = tf.image.decode_jpeg
-        elif self.image_format.lower() == 'png':
-            self.decode_image = tf.image.decode_png
-        elif self.image_format.lower() == 'bmp':
-            self.decode_image = tf.image.decode_bmp
-
-        self.image_save_format = image_save_format
-
-        self.image_channels = self.image_mask_channels[0]
-        self.mask_channels = self.image_mask_channels[1]
         self.image_save_prefix = image_save_prefix
         self.mask_save_prefix = mask_save_prefix
-        self.image_size = None
 
         self.crop_image_and_mask = crop_image_and_mask
         self.crop_dimension = crop_dimension
@@ -265,20 +277,22 @@ class DataSplitterAugmenterAndSaver:
         self._split_paths_into_train_val_test()
         self._create_directories()
 
-        if final_image_size is not None:
-            self.final_image_size = final_image_size + (self.image_channels,)
-            self.new_image_height = tuple(self.final_image_size)[0]
-            self.new_image_width = tuple(self.final_image_size)[1]
+        if final_image_shape is not None:
+            self.final_image_shape = final_image_shape + (self.image_channels,)
+            self.final_mask_shape = final_image_shape + (self.mask_channels,)
+            self.new_image_height = tuple(self.final_image_shape)[0]
+            self.new_image_width = tuple(self.final_image_shape)[1]
 
-            if tuple(self.image_size) != self.final_image_size:
+            if tuple(self.image_shape) != self.final_image_shape:
                 self.resize_images = True
             else:
                 self.resize_images = False
         else:
             self.resize_images = False
-            self.final_image_size = self.image_size
-            self.new_image_height = self.image_size[0]
-            self.new_image_width = self.image_size[1]
+            self.final_image_shape = self.image_shape
+            self.final_mask_shape = self.mask_shape
+            self.new_image_height = self.image_shape[0]
+            self.new_image_width = self.image_shape[1]
 
         if crop_dimension is not None and crop_image_and_mask:
             self.offset_height = crop_dimension[0]
@@ -286,6 +300,9 @@ class DataSplitterAugmenterAndSaver:
             self.target_height = crop_dimension[2]
             self.target_width = crop_dimension[3]
             self.resize_images = True
+            if final_image_shape is None or not isinstance(self.final_image_shape, tuple):
+                raise ValueError(
+                    "Since the image will be cropped, 'final_image_shape' must be a tuple of form (height, width)")
         else:
             self.crop_image_and_mask = False
 
@@ -295,7 +312,7 @@ class DataSplitterAugmenterAndSaver:
             int(x) if x.isdigit() else x.lower() for x in re.findall(r'\D+|\d+', var)
         ])
 
-    def _get_filepaths_for_images_and_masks(self, images_dir, masks_dir):
+    def _get_sorted_filepaths_to_images_and_masks(self, images_dir, masks_dir):
         """
         Generates the list of path for images and masks within specified directories.
 
@@ -310,39 +327,40 @@ class DataSplitterAugmenterAndSaver:
         mask_paths = [os.path.join(masks_dir, filename) for filename in mask_file_list]
 
         # sort the file paths in ascending other
-        # image_paths.sort(key=lambda var: [int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
-        # mask_paths.sort(key=lambda var: [int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
         image_paths = self.sort_filenames(image_paths)
         mask_paths = self.sort_filenames(mask_paths)
 
         return image_paths, mask_paths
 
-    def _read_json_file(self, json_file_path):
-        """Read a json file and fills the blank rows with zeros."""
-        visual_props = pd.read_json(json_file_path)
-        visual_props = visual_props.copy().loc[::, self.visual_properties]
-        # visual_props.drop(columns=['image_id'], inplace=True)
+    @staticmethod
+    def _get_image_format(image_path):
+        return os.path.splitext(image_path)[-1]
 
-        # return a zero value for images with no infocus pea
-        visual_props.fillna(value=0, inplace=True)
-        return visual_props
+    def _get_image_and_mask_shape(self, image_path, mask_path):
+        image = tf.io.read_file(image_path)
+        image = self.decode_image(image, channels=self.image_channels)
+
+        mask = tf.io.read_file(mask_path)
+        mask = self.decode_image(mask, channels=self.mask_channels)
+
+        return image.shape, mask.shape
 
     def _stratified_split(self, dataframe, test_size: float, first_split: bool = None):
         """
-        Splits the dataframe into training and test set, using information contained in a particular column.
+            Splits the dataframe into training and test set, using information contained in a particular column.
 
-        :param dataframe: Dataframe that would be split into training and test set
-        :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
-            include in the test split. If int, represents the absolute number of test samples. If None, the value is
-            set to the complement of the train size. If train_size is also None, it will be set to 0.1
-        :param first_split: (bool) The dataset would be split twice. "first" when creating the validation set from the original
-            dataset, and 'second', when creating the test set from the remaining dataset. set first_slit to True
-            when applying stratified_split for the first time, and False the second time. When set to True, the
-            'before_split_dataframe' attribute is populated with the appropriate data for plotting the histogram of the
-            stratified_split parameter just before the first split was done. on the other hand, when first_split is set to
-             False, the 'after_split_dataframe' is populated with data for plotting the histogram of the stratified_split
-             parameter, just before the second split was done.
-        :return:
+            :param dataframe: Dataframe that would be split into training and test set
+            :param test_size: If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to
+                include in the test split. If int, represents the absolute number of test samples. If None, the value is
+                set to the complement of the train size. If train_size is also None, it will be set to 0.1
+            :param first_split: (bool) The dataset would be split twice. "first" when creating the validation set from the original
+                dataset, and 'second', when creating the test set from the remaining dataset. set first_slit to True
+                when applying stratified_split for the first time, and False the second time. When set to True, the
+                'before_split_dataframe' attribute is populated with the appropriate data for plotting the histogram of the
+                stratified_split parameter just before the first split was done. on the other hand, when first_split is set to
+                 False, the 'after_split_dataframe' is populated with data for plotting the histogram of the stratified_split
+                 parameter, just before the second split was done.
+            :return:
         """
         new_dataframe = dataframe.copy()
         bin_parameter = self.parameter_for_stratified_splitting + "_cut"
@@ -477,17 +495,6 @@ class DataSplitterAugmenterAndSaver:
         """
         Splits the original images and masks file paths into training, validation and test paths
         """
-        # create lists of file paths for the original images and masks
-        image_paths, mask_paths = self._get_filepaths_for_images_and_masks(images_dir=self.images_directory,
-                                                                           masks_dir=self.masks_directory)
-        # assign them to their attributes
-        self.original_image_paths = image_paths
-        self.original_mask_paths = mask_paths
-
-        # get the image shape
-        image = tf.io.read_file(image_paths[0])
-        image = self.decode_image(image, channels=self.image_channels)
-        self.image_size = image.shape
 
         if self.visual_attributes_json_path is None or self.visual_attributes is None:
             self._split_paths_without_visual_attributes()
@@ -526,13 +533,20 @@ class DataSplitterAugmenterAndSaver:
             self.test_subdirectories['masks'] = create_directory(
                 dir_name=os.path.join(self.test_directory, 'masks'), return_dir=True)
 
-    def _set_shape(self, image, mask):
+    def _set_original_shape(self, image, mask):
+        """ Sets width and height information to the image and mask tensors.
+
         """
-        Returns information on the shape of the image and the mask. This function is useful especially when data
-        augmentation is applied. If not model.fit function would return a 'ValueError' when its run.
+        image.set_shape(self.image_shape)
+        mask.set_shape(self.mask_shape)
+        return image, mask
+
+    def _set_final_shape(self, image, mask):
         """
-        image.set_shape([self.new_image_height, self.new_image_width, self.image_channels])
-        mask.set_shape([self.new_image_height, self.new_image_width, self.mask_channels])
+        Sets width and height information to the image and mask tensors.
+        """
+        image.set_shape(self.final_image_shape)
+        mask.set_shape(self.final_mask_shape)
         return image, mask
 
     def _read_and_decode_image_and_mask(self, image_path: str, mask_path: str):
@@ -548,7 +562,7 @@ class DataSplitterAugmenterAndSaver:
 
         image = self.decode_image(contents=image, channels=self.image_channels)
         mask = self.decode_image(contents=mask, channels=self.mask_channels)
-        image, mask = self._set_shape(image, mask)
+        image, mask = self._set_original_shape(image, mask)
         return image, mask
 
     def _crop_image_and_mask(self, image, mask):
@@ -567,31 +581,51 @@ class DataSplitterAugmenterAndSaver:
     def _resize_image_and_mask(self, image, mask):
         """Resize the image and mask to the predefined dimension."""
         if self.resize_images:
+            image = tf.expand_dims(image, axis=-1) if image.ndim == 2 else image
             image = tf.image.resize(images=image, size=(self.new_image_height, self.new_image_width),
                                     method='bilinear')
             image = tf.reshape(tensor=image, shape=(self.new_image_height, self.new_image_width, self.image_channels))
 
-            # mask = tf.expand_dims(mask, axis=-1) if len(mask.shape) == 2 else mask
+            mask = tf.expand_dims(mask, axis=-1) if mask.ndim == 2 else mask
             mask = tf.image.resize(images=mask, size=(self.new_image_height, self.new_image_width),
                                    method='nearest')
             mask = tf.reshape(tensor=mask, shape=(self.new_image_height, self.new_image_width, self.mask_channels))
+
+            # The resize operation returns image & mask in float values (eg. 125.2, 233. 4),
+            # before augmentation, these pixel values need to be normalized to the range [0 - 1],
+            # because the tensorflow.keras augmentation layer only accept values in the normalize range of [0 - 1]. To ensure we correctly normalize , we will first
+            # round up the current float pixel intensities to whole numbers using tf.cast(image, tf.uint8).
+            image, mask = self._cast_image_mask_to_uint8(image, mask)
+
         return image, mask
 
     @staticmethod
-    def _convert_to_float(image, mask):
+    def _cast_image_mask_to_uint8(image, mask):
+        image = tf.cast(image, tf.uint8)
+        mask = tf.cast(mask, tf.uint8)
+        return image, mask
+
+    @staticmethod
+    def _cast_image_mask_to_float(image, mask):
+        image = tf.cast(image, tf.float32)
+        mask = tf.cast(mask, tf.float32)
+        return image, mask
+
+    @staticmethod
+    def _denormalize_image_mask_to_0_255(image, mask):
+        image = tf.image.convert_image_dtype(image, dtype=tf.uint8)
+        mask = tf.image.convert_image_dtype(mask, dtype=tf.uint8)
+        return image, mask
+
+    @staticmethod
+    def _normalize_image_mask_to_0_1(image, mask):
         image = tf.image.convert_image_dtype(image, dtype=tf.float32)
         mask = tf.image.convert_image_dtype(mask, dtype=tf.float32)
         return image, mask
 
     @staticmethod
-    def _convert_image_to_float(image, mask):
+    def _normalize_image_to_0_1(image, mask):
         image = tf.image.convert_image_dtype(image, dtype=tf.float32)
-        return image, mask
-
-    @staticmethod
-    def _convert_to_uint8(image, mask):
-        image = tf.image.convert_image_dtype(image, dtype=tf.uint8)
-        mask = tf.image.convert_image_dtype(mask, dtype=tf.uint8)
         return image, mask
 
     def _step1_read_crop_and_resize(self, image_path: str, mask_path: str):
@@ -611,11 +645,8 @@ class DataSplitterAugmenterAndSaver:
         """
         image, mask = self._read_and_decode_image_and_mask(image_path=image_path, mask_path=mask_path)
         image, mask = self._crop_image_and_mask(image=image, mask=mask)
-        # image, mask = self._convert_image_to_float(image=image, mask=mask)
         image, mask = self._resize_image_and_mask(image=image, mask=mask)
-        # image, mask = self._convert_to_float(image=image, mask=mask) if (
-        #         self.crop_image_and_mask is False and self.resize_images is False) else (image, mask)
-        image, mask = self._convert_to_float(image=image, mask=mask)
+        image, mask = self._normalize_image_mask_to_0_1(image=image, mask=mask)
         return image, mask
 
     def _random_rotate(self, image, mask):
@@ -672,7 +703,7 @@ class DataSplitterAugmenterAndSaver:
                                   lambda: tf.identity(comb_tensor))
 
             image, mask = tf.split(comb_tensor, [self.image_channels, self.mask_channels], axis=-1)
-            image, mask = self._set_shape(image, mask)
+            image, mask = self._set_final_shape(image, mask)
 
         return image, mask
 
@@ -744,7 +775,6 @@ class DataSplitterAugmenterAndSaver:
             image, mask = self._corrupt_saturation(image, mask)
             image, mask = self._flip_left_right(image, mask)
             image, mask = self._flip_up_down(image, mask)
-            # image, mask = self._set_shape(image, mask)
         return image, mask
 
     def _save_data(self, index, image, mask):
@@ -776,7 +806,7 @@ class DataSplitterAugmenterAndSaver:
         training_dataset = training_dataset.repeat(count=self.iterations) if \
             self.apply_data_augmentation else training_dataset.repeat(count=1)
         training_dataset = training_dataset.map(self._augment_image_and_mask, num_parallel_calls=self.tune)
-        training_dataset = training_dataset.map(self._convert_to_uint8, num_parallel_calls=self.tune)
+        training_dataset = training_dataset.map(self._denormalize_image_mask_to_0_255, num_parallel_calls=self.tune)
 
         counter = tf.data.Dataset.counter(start=self.current_train_index)
         training_dataset = tf.data.Dataset.zip((counter, training_dataset))
@@ -789,6 +819,7 @@ class DataSplitterAugmenterAndSaver:
         training_dataset = training_dataset.map(self._tf_save_data, num_parallel_calls=self.tune)
         training_dataset = training_dataset.prefetch(buffer_size=self.tune)
         list(training_dataset.as_numpy_iterator())
+
         print('\n\t1. Training images and masks saved')
         del training_dataset
 
@@ -807,7 +838,7 @@ class DataSplitterAugmenterAndSaver:
             self.augment_validation_data else validation_dataset.repeat(count=1)
         validation_dataset = validation_dataset.map(self._augment_image_and_mask, num_parallel_calls=self.tune) if \
             self.augment_validation_data else validation_dataset
-        validation_dataset = validation_dataset.map(self._convert_to_uint8, num_parallel_calls=self.tune)
+        validation_dataset = validation_dataset.map(self._denormalize_image_mask_to_0_255, num_parallel_calls=self.tune)
 
         counter = tf.data.Dataset.counter(start=self.current_val_index)
         validation_dataset = tf.data.Dataset.zip((counter, validation_dataset))
@@ -820,6 +851,7 @@ class DataSplitterAugmenterAndSaver:
         validation_dataset = validation_dataset.map(self._tf_save_data, num_parallel_calls=self.tune)
         validation_dataset = validation_dataset.prefetch(buffer_size=self.tune)
         list(validation_dataset.as_numpy_iterator())
+
         print('\t2. Validation images and masks saved')
         del validation_dataset
 
@@ -838,7 +870,7 @@ class DataSplitterAugmenterAndSaver:
             self.augment_validation_data else test_dataset.repeat(count=1)
         test_dataset = test_dataset.map(self._augment_image_and_mask, num_parallel_calls=self.tune) if \
             self.augment_validation_data else test_dataset
-        test_dataset = test_dataset.map(self._convert_to_uint8, num_parallel_calls=self.tune)
+        test_dataset = test_dataset.map(self._denormalize_image_mask_to_0_255, num_parallel_calls=self.tune)
 
         counter = tf.data.Dataset.counter(start=self.current_test_index)
         test_dataset = tf.data.Dataset.zip((counter, test_dataset))
@@ -851,6 +883,7 @@ class DataSplitterAugmenterAndSaver:
         test_dataset = test_dataset.map(self._tf_save_data, num_parallel_calls=self.tune)
         test_dataset = test_dataset.prefetch(buffer_size=self.tune)
         list(test_dataset.as_numpy_iterator())
+
         print('\t3. Test images and masks saved')
         del test_dataset
 
@@ -858,11 +891,11 @@ class DataSplitterAugmenterAndSaver:
         self._process_and_save_training_data(image_paths=self.training_image_paths,
                                              mask_paths=self.training_mask_paths)
 
-        if self.val_directory and self.val_size > 0:
+        if self.val_directory:
             self._process_and_save_validation_data(image_paths=self.validation_image_paths,
                                                    mask_paths=self.validation_mask_paths)
 
-        if self.test_directory and self.test_size > 0:
+        if self.test_directory:
             self._process_and_save_test_data(image_paths=self.test_image_paths,
                                              mask_paths=self.test_mask_paths)
 
@@ -871,5 +904,4 @@ class DataSplitterAugmenterAndSaver:
         self._process_images_and_masks()
         print(f'\nProcess completed!!\n')
         gc.collect()
-
 
