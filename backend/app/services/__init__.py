@@ -1,2 +1,3 @@
 from .augment import DataSplitterAugmenterAndSaver
-from .data_preprocessing import resize_image
+from .data_preprocessing import resize_image, resize_images_and_masks, ImageAndMaskCropperResizerAndSaver, ImageCropperResizerAndSaver
+from .resize_augmented_data import resize_augmented_data
