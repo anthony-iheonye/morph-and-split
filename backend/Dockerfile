@@ -1,4 +1,4 @@
-# First Stage: Build stage
+# First Stage: Build Stage
 FROM python:3.10-slim AS builder
 
 # Set environmental variables for Python
@@ -8,29 +8,29 @@ ENV PYTHONUNBUFFERED=1
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirments files first to leverage Docker cache
-COPY requirments.txt .
+# Copy the requirements file first to leverage Docker cache
+COPY requirements.txt .
 
-# Install python dependencies inside the build stage
-RUN pip install --no-cache-dir -r requirments.txt
+# Install Python dependencies inside this stage
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Second stage: Runtime Stage
+# Second Stage: Runtime Stage
 FROM python:3.10-slim
 
 # Set environmental variables for Python
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Set working directory for the Runtime stage
+# Set working directory for the runtime stage
 WORKDIR /app
 
-# Copy the dependencies installed in the builder stage to the Runtime stage
+# Copy the dependencies installed in the builder stage to the runtime image
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 
-# Copy the application code the Runtime image
+# Copy the application code to the runtime image
 COPY . .
 
-# Set Flask environment variable
+# Set Flask environment variables
 ENV FLASK_APP=app
 ENV FLASK_ENV=development
 ENV PYTHONPATH=/app
