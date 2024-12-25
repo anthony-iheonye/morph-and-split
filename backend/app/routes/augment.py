@@ -1,19 +1,41 @@
+import gc
 import json
 import os
 import zipfile
-from tensorflow.keras.backend import clear_session
-import gc
 
 from flask import Blueprint, request, jsonify
+from tensorflow.keras.backend import clear_session
 from werkzeug.utils import secure_filename
 
-from app.services.augment import DataSplitterAugmenterAndSaver
+from app.aug_config import aug_config
+from app.services import DataSplitterAugmenterAndSaver, resize_augmented_data
 from app.utils import directory_store
 
 augment = Blueprint('augment', __name__)
 
 VISUAL_ATTRIBUTES = directory_store.visual_attributes_dir
 AUGMENTED_DIR = directory_store.augmented
+
+channels = aug_config['imageMaskChannels']
+image_channels = channels['imgChannels']
+mask_channels = channels['maskChannels']
+
+
+def save_aug_config(aug_config: dict, target_file: str):
+    """
+    Save the augmentation configuration Dict file as a Python script file.
+
+    :param aug_config: (dict) The configuration dictionary file
+    :param target_file: The file path where the Python script will be saved.
+    """
+
+    # Convert dictionary to a Python script string with correct formatting
+    config_str = "aug_config = " + repr(aug_config).replace('false', 'False').replace('true', 'True')
+
+    # save to the target file
+    with open(target_file, 'w') as file:
+        file.write(config_str + "\n")
+
 
 @augment.route('/augment', methods=['POST'])
 def augment_data():
@@ -25,12 +47,20 @@ def augment_data():
         aug_config: dict = json.loads(config)
 
         if visual_attributes_file:
-            print(visual_attributes_file[0].filename)
             filename = secure_filename(visual_attributes_file[0].filename)
             visual_attributes_filepath = os.path.join(VISUAL_ATTRIBUTES, filename)
             visual_attributes_file[0].save(visual_attributes_filepath)
         else:
             visual_attributes_filepath = None
+
+        # Define the path to the parent 'app' package
+        current_dir = os.path.dirname(__file__)
+        app_dir = os.path.abspath(os.path.join(current_dir, '..'))
+        config_filepath = os.path.join(app_dir, 'config.py')
+
+
+        # Save the aug_config as a python script in the 'app' package
+        save_aug_config(aug_config, config_filepath)
 
         augmenter = DataSplitterAugmenterAndSaver(images_directory=directory_store.image_dir,
                                                   masks_directory=directory_store.mask_dir,
@@ -42,8 +72,7 @@ def augment_data():
                                                   initial_save_id_test=aug_config.get("initialTestSaveId"),
                                                   visual_attributes_json_path=visual_attributes_filepath,
                                                   image_mask_channels=tuple(aug_config.get("imageMaskChannels").values()),
-                                                  image_format='png',
-                                                  final_image_size=tuple(aug_config.get("augImageDimension").values()),
+                                                  final_image_shape=tuple(aug_config.get("augImageDimension").values()),
                                                   image_save_format='png',
                                                   image_save_prefix='img',
                                                   mask_save_prefix='mask',
@@ -77,6 +106,9 @@ def augment_data():
                         file_path = os.path.join(root, file)
                         zipf.write(filename=file_path,
                                    arcname=os.path.relpath(file_path, AUGMENTED_DIR))
+
+        # Store a resized version of the augmented results
+        resize_augmented_data()
 
         return jsonify({'success': True}), 201
 
