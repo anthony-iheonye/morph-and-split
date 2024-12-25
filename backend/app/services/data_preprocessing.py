@@ -440,72 +440,275 @@ class ImageOrMaskDatasetCreator:
 
 
 class ImageCropperResizerAndSaver:
-    def __init__(self, images_directory: str, save_directory: str, initial_save_id: int,
-                 no_of_image_channels: int = 3, crop_dimension: Tuple[int, int, int, int] = None,
-                 final_image_size: Tuple[int, int] = None, image_original_format: str = 'jpg',
-                 image_save_prefix: str = 'img', image_save_format: str = 'png', cache_dir=None):
+    def __init__(self,
+                 images_directory: str,
+                 new_images_directory: str,
+                 initial_save_id: Union[int, None] = None,
+                 image_channels: int = 3,
+                 crop_image: bool = False,
+                 crop_dimension: Tuple[int, int, int, int] = None,
+                 final_image_shape: Tuple[int, int] = (2000, 2000),
+                 resize_method: str = 'bilinear',
+                 image_save_prefix: Union[str, None] = 'img',
+                 image_save_format: str = 'png',
+                 cache_dir: Union[None, str] = None,
+                 assign_dataset=False):
         """
-        This Class contains methods that are used to crop, resize and re-save a collection of images.
-        If the image is cropped, after cropping the result is automatically resized to the
-        'final_image_size', if its given. Else, the image would be saved using the new size, after cropping.
-        if final_image_size is given, the output image would be resized to match the final_image_size .
+        This Class contains methods that are used to crop, resize and re-save a collection of images and their
+        corresponding mask. If the image is cropped, after cropping the result is automatically resized to the
+        'final_image_shape'. Hence, when cropping, it not necessary to set the resize_images parameter to 'True'.
+        However, if 'crop_image' is set to False, but you still resize the image and mask, set 'resize_images'
+        to 'True', and the images and masks would be resized to the 'final_image_shape'.
 
-        :param image_original_format: (str) The original format of the input images. The image formats allowed are BMP, JPEG, JPG or PNG.
-        :param images_directory: (str): Path to directory containing the original images.
-        :param save_directory: (str) path to the directory where the output images would be saved.
-        :param no_of_image_channels: The number of image channels.
+        :param assign_dataset: (bool) if True, the image_dataset will be assigned to
+        the variable `image_dataset`.
+        :param images_directory: (str): Path to directory containing the original images that would later be split into
+            training, validation and test sets.
+        :param masks_directory: (str): Path to directory containing the original masks that would later be split into
+            training, validation and test sets.
+        :param image_channel: The number of channels in the image and mask. The first value is the number of
+            channels for the image, while the other is for the mask.
         :param image_save_prefix: (str): Prefix for saving the images. By default, it is left blank.
+        :param mask_save_prefix: (str): Prefix for saving the mask. By default, it is left blank.
         :param image_save_format: (str): File format for saving the processed images. By default, it is set to 'jpg'
+        :param crop_image: (bool): If 'True' the all the input masks and images would be cropped before
+            resizing them to the required size (image_size)
         :param crop_dimension: (Tuple): A tuple (offset_height, offset_width, target_height, target_width) containing
-            the region to be for cropped. The value for my pea experiment is (0, 450, 2000, 2000). if values for crop_dimension is supplied,
-            the images would be cropped, else, they wouldn't be.
-        :param cache_dir: (str) directory where the images would be cached. if its set to None, the image dataset would be cached in the ram.
+            the region to be for cropped. The value for my pea experiment is (0, 450, 2000, 2000)
+        :param initial_save_id: (None, int) By default it is set to None.This is suffix for the image and names. It is not provided, the new image and mask will be saved with their original names.
+        :param resize_method: (str, Callable) An image.ResizeMethod, or string equivalent. Defaults to bilinear.
+            The other resize_methods in string form are:
 
+                - bilinear: Bilinear interpolation. If antialias is true, becomes a hat/tent filter function
+                with radius 1 when downsampling.
+                - lanczos3: Lanczos kernel with radius 3. High-quality practical filter but may have
+                some ringing, especially on synthetic images.
+                - lanczos5: Lanczos kernel with radius 5. Very-high-quality filter but may have stronger ringing.
+                - bicubic: Cubic interpolant of Keys. Equivalent to Catmull-Rom kernel. Reasonably
+                good quality and faster than Lanczos3Kernel, particularly when upsampling.
+                - gaussian: Gaussian kernel with radius 3, sigma = 1.5 / 3.0.
+                - nearest: Nearest neighbor interpolation. antialias has no effect when used with
+                nearest neighbor interpolation.
+                - area: Anti-aliased resampling with area interpolation. antialias has no effect
+                when used with area interpolation; it always anti-aliases.
+                - mitchellcubic: Mitchell-Netravali Cubic non-interpolating filter. For synthetic
+                images (especially those lacking proper prefiltering), less ringing than Keys cubic kernel but less sharp.
         """
-        self.final_image_size = final_image_size
-        self.auto_tune = tf.data.AUTOTUNE
+        self.assign_dataset = assign_dataset
+        self.create_new_name = initial_save_id is not None
         self.images_directory = images_directory
-        self.save_directory = create_directory(dir_name=save_directory, return_dir=True,
-                                               overwrite_if_existing=False)
-        self.original_image_paths = None
-        self.original_mask_paths = None
+        self.new_images_directory = create_directory(dir_name=new_images_directory, return_dir=True,
+                                                     overwrite_if_existing=False)
 
-        self.no_of_image_channels = no_of_image_channels
-        self.image_channels = self.no_of_image_channels
+        # Generate filepaths to the images and masks
+        self.original_image_paths = self._get_sorted_filepaths_to_images_and_masks(images_directory)
+
+        # Extract image and mask format and assign save format
+        img_path = self.original_image_paths[0]
+        self.image_format = self._get_image_format(image_path=img_path)
+
+        # Choose the method for decoding images and masks
+        if self.image_format.lower() in ['.jpg', '.jpeg']:
+            self.decode_image = tf.image.decode_jpeg
+        elif self.image_format.lower() == '.png':
+            self.decode_image = tf.image.decode_png
+        elif self.image_format.lower() == '.bmp':
+            self.decode_image = tf.image.decode_bmp
+        else:
+            self.decode_image = tf.image.decode_jpeg
+
+        # Image and Mask channels
+        self.image_channels = image_channels
+
         self.image_save_prefix = image_save_prefix
         self.image_save_format = image_save_format
 
-        self.image_original_format = image_original_format
+        # set the initial shape of the images and masks.
+        self.image_shape = self._get_image_and_mask_shape(image_path=img_path)
 
-        # select the appropriate function for decoding the image
-        if self.image_original_format.lower() in ['jpeg', 'jpg']:
-            self.decode_image = tf.image.decode_jpeg
-        elif self.image_original_format.lower() == 'png':
-            self.decode_image = tf.image.decode_png
+        # Compute the final shape of the process image and mask
+        if final_image_shape is not None:
+            self.final_image_shape = final_image_shape + (self.image_channels,)
+            self.new_image_height = tuple(self.final_image_shape)[0]
+            self.new_image_width = tuple(self.final_image_shape)[1]
+
+            if tuple(self.image_shape) != self.final_image_shape:
+                self.resize_images = True
+            else:
+                self.resize_images = False
         else:
-            self.decode_image = tf.image.decode_bmp
+            self.resize_images = False
+            self.final_image_shape = self.image_shape
+            self.new_image_height = self.image_shape[0]
+            self.new_image_width = self.image_shape[1]
 
+        self.resize_method = resize_method
+        self.crop_image = crop_image
         self.crop_dimension = crop_dimension
 
-        # Create an object of the ImageOrMaskDatasetCreator
-        dataset_creator = ImageOrMaskDatasetCreator(image_directory=images_directory,
-                                                    image_format=image_original_format,
-                                                    no_of_channels_in_rgb_image=no_of_image_channels,
-                                                    final_image_size=final_image_size, crop_dimension=crop_dimension)
-        dataset_creator.process_data()
-        self.image_dataset = dataset_creator.image_dataset
-        self.counter_image_dataset = None
-
         self.current_image_index = initial_save_id
+        self.tune = tf.data.AUTOTUNE
+
+        # Crop properties
+        if crop_dimension is not None and crop_image:
+            self.offset_height = crop_dimension[0]
+            self.offset_width = crop_dimension[1]
+            self.target_height = crop_dimension[2]
+            self.target_width = crop_dimension[3]
+            self.resize_images = True
+
+            if final_image_shape is None or not isinstance(self.final_image_shape, tuple):
+                raise ValueError(
+                    "Since the image will be cropped, 'final_image_shape' must be a tuple of form (height, width)")
+        else:
+            self.crop_image = False
 
         if cache_dir is not None:
             self.cache_directory = create_directory(dir_name=cache_dir, return_dir=True, overwrite_if_existing=True)
         else:
             self.cache_directory = ''
 
+        self.image_dataset = None
+
+    @staticmethod
+    def sort_filenames(file_paths):
+        return sorted(file_paths, key=lambda var: [
+            int(x) if x.isdigit() else x.lower() for x in re.findall(r'\D+|\d+', var)
+        ])
+
+    def _get_sorted_filepaths_to_images_and_masks(self, images_dir):
+        """
+        Generates the sorted list of path for images and masks within specified directories.
+
+        :param images_dir: a directory containing images
+        :param masks_dir: a directory containing masks
+        :return: Returns two lists, one containing the file path for the images and other list containing the file
+            paths for the masks
+        """
+        image_file_list = os.listdir(path=images_dir)
+        image_paths = [os.path.join(images_dir, filename) for filename in image_file_list]
+
+        # sort the file paths in ascending other
+        image_paths = self.sort_filenames(image_paths)
+
+        return image_paths
+
+    @staticmethod
+    def _get_image_format(image_path):
+        return os.path.splitext(image_path)[-1]
+
+    def _get_image_and_mask_shape(self, image_path):
+        image = tf.io.read_file(image_path)
+        image = self.decode_image(image, channels=self.image_channels)
+
+        return image.shape
+
+    def _set_original_shape(self, image):
+        """ Sets width and height information to the image tensors.
+
+        """
+        image.set_shape(self.image_shape)
+        return image
+
+    def _set_final_shape(self, image):
+        """
+        Sets width and height information to the image and mask tensors.
+        """
+        image.set_shape(self.final_image_shape)
+        return image
+
+    def _read_and_decode_image_and_mask(self, image_path: str):
+        """
+        Reads and decodes the image
+        :param image_path: (str) The image's filepath
+        :return: (tensors) Image
+        """
+        # Read image and mask
+        image = tf.io.read_file(image_path)
+        image = self.decode_image(image, channels=self.image_channels)
+        image = self._set_original_shape(image)
+        return image
+
+    def _crop_image(self, image):
+        """Crops out a portion of the image and mask."""
+        # crop image
+        if self.crop_image and self.crop_dimension is not None:
+            image = tf.expand_dims(image, axis=-1) if image.ndim == 2 else image
+            image = tf.image.crop_to_bounding_box(image, self.offset_height, self.offset_width,
+                                                  self.target_height, self.target_width)
+
+        return image
+
+    def _resize_image(self, image):
+        """Resize the image to the predefined dimension."""
+        if self.resize_images:
+            image = tf.expand_dims(image, axis=-1) if image.ndim == 2 else image
+            image = tf.image.resize(images=image, size=(self.new_image_height, self.new_image_width),
+                                    method=self.resize_method)
+            image = tf.reshape(tensor=image, shape=(self.new_image_height, self.new_image_width, self.image_channels))
+
+            # The resize operation returns image in float values (eg. 125.2, 233.4.
+            # Before augmentation, these pixel values need to be normalized to the range [0 - 1],
+            # because the tensorflow.keras augmentation layer only accept values in the normalize range of [0 - 1].
+            # To ensure we correctly normalize, we will first
+            # round up the current float pixel intensities to whole numbers using tf.cast(image, tf.uint8).
+            image = self._cast_image_to_uint8(image)
+        return image
+
+    @staticmethod
+    def _cast_image_to_uint8(image):
+        image = tf.cast(image, tf.uint8)
+        return image
+
+    @staticmethod
+    def _cast_image_to_float(image, mask):
+        image = tf.cast(image, tf.float32)
+        return image
+
+    @staticmethod
+    def _normalize_image_to_0_1(image, mask):
+        image = tf.image.convert_image_dtype(image, dtype=tf.float32)
+        return image
+
+    @staticmethod
+    def _denormalize_image_to_0_255(image):
+        """Converts the image and mask to uint8 format."""
+        image = tf.image.convert_image_dtype(image, dtype=tf.uint8)
+        return image
+
+    @staticmethod
+    def get_filename(file_path):
+        return tf.strings.split(file_path, '/')[-1]
+
+    def _step1_read_crop_and_resize(self, image_path: str):
+        """
+        Reads and decodes and image and its corresponding masks.
+        This function also assigns labels to the the background of the image, the pea's outline and its body. The labels
+        are as follows:
+        - background of image:  0
+        - peas body: 1
+        - pea outline:  2
+
+        :param image_path: (str) path to an Image
+        :param mask_path: (str) path to the mask that corresponds to the image
+        :return: (Tensors) Two TF Tensors - one for the rgb image, and the other
+            for the mask, with the pixel locations properly labelled as background (1)
+            pea's body (1), or pea outline (3).
+        """
+        image = self._read_and_decode_image_and_mask(image_path=image_path)
+        image = self._crop_image(image=image)
+        image = self._resize_image(image=image)
+
+        if self.create_new_name:
+            image_name = tf.constant('None', tf.string)
+        else:
+            image_name = self.get_filename(image_path)
+
+        return image, image_name
+
     def _save_image(self, index, image):
-        # saves image
-        io.imsave(fname=f'{self.save_directory}/{self.image_save_prefix}_{index}.{self.image_save_format}',
+        # saves image and mask
+        io.imsave(fname=f'{self.new_images_directory}/{self.image_save_prefix}_{index}.{self.image_save_format}',
                   arr=image, check_contrast=False)
         return index
 
@@ -515,25 +718,446 @@ class ImageCropperResizerAndSaver:
         index_ans.set_shape(index_shape)
         return index_ans
 
-    def _process_and_save_image_mask_dataset(self):
+    def _save_image_with_base_name(self, image, image_name):
+        # saves image and mask
+        image_basename = image_name.numpy().decode('utf-8')
+
+        io.imsave(fname=f'{self.new_images_directory}/{image_basename}',
+                  arr=image, check_contrast=False)
+
+        return tf.constant(1, tf.int64)
+
+    def _tf_save_image_with_basename(self, image, image_name):
+        [index_ans, ] = tf.py_function(func=self._save_image_with_base_name, inp=[image, image_name], Tout=[tf.int64])
+        return index_ans
+
+    def _process_and_save_image_dataset(self, image_paths):
         """
         Prepares shuffled batches of the training set.
 
+        :param image_paths: (list) paths to each image file in the training set
+        :param mask_paths: (list) paths to each mask in the training set
         :return: tf Dataset containing the preprocessed training set
         """
-        # create counter for the image and mask name
-        counter = tf.data.experimental.Counter(start=self.current_image_index)
+        if self.create_new_name:
+            image_dataset = tf.data.Dataset.from_tensor_slices(image_paths)
+            image_dataset = image_dataset.map(self._step1_read_crop_and_resize, num_parallel_calls=self.tune)
+            image_dataset = image_dataset.map(lambda image, image_name: image)
+            image_dataset = image_dataset.cache(filename=self.cache_directory)
 
-        dataset = tf.data.Dataset.zip((counter, self.image_dataset))
-        dataset = dataset.cache(filename=self.cache_directory)
-        dataset = dataset.map(self._tf_save_image, num_parallel_calls=self.auto_tune)
-        dataset = dataset.prefetch(buffer_size=self.auto_tune)
-        return dataset
+            # create counter for the image name
+            counter = tf.data.Dataset.counter(start=self.current_image_index)
+
+            dataset = tf.data.Dataset.zip((counter, image_dataset))
+            dataset = dataset.prefetch(buffer_size=self.tune)
+
+            if self.assign_dataset:
+                self.image_dataset = dataset.map(lambda count, image: image)
+
+            dataset = dataset.map(self._tf_save_image, num_parallel_calls=self.tune)
+
+            list(dataset.as_numpy_iterator())
+            del dataset
+
+        else:
+            image_dataset = tf.data.Dataset.from_tensor_slices((image_paths,))
+            image_dataset = image_dataset.map(self._step1_read_crop_and_resize, num_parallel_calls=self.tune)
+            image_dataset = image_dataset.cache(filename=self.cache_directory)
+            image_dataset = image_dataset.prefetch(buffer_size=self.tune)
+            dataset = image_dataset.map(self._tf_save_image_with_basename, num_parallel_calls=self.tune)
+
+            if self.assign_dataset:
+                self.image_dataset = image_dataset.map(lambda name, image: image)
+
+            list(dataset.as_numpy_iterator())
+            del dataset
 
     def process_data(self):
-        dataset = self._process_and_save_image_mask_dataset()
-        # saves the images and masks
-        list(dataset.as_numpy_iterator())
+        print('\nProcessing started....')
+        self._process_and_save_image_dataset(image_paths=self.original_image_paths)
+        print("\nProcess complete!")
+
+
+class ImageAndMaskCropperResizerAndSaver:
+    def __init__(self,
+                 images_directory: str,
+                 masks_directory: str,
+                 new_images_directory: str,
+                 new_masks_directory: str,
+                 initial_save_id: Union[int, None] = None,
+                 image_mask_channels: Tuple[int, int] = (3, 3),
+                 crop_image_and_mask: bool = False,
+                 crop_dimension: Tuple[int, int, int, int] = None,
+                 final_image_shape: Tuple[int, int] = (2000, 2000),
+                 image_save_prefix: Union[str, None] = 'img',
+                 mask_save_prefix: Union[str, None] = 'mask',
+                 image_save_format: str = 'png',
+                 mask_save_format: str = 'png',
+                 cache_dir: Union[None, str] = None,
+                 assign_dataset=False):
+        """
+        This Class contains methods that are used to crop, resize and re-save a collection of images and their
+        corresponding mask. If the image is cropped, after cropping the result is automatically resized to the
+        'final_image_shape'. Hence, when cropping, it not necessary to set the resize_images parameter to 'True'.
+        However, if 'crop_image_and_mask' is set to False, but you still resize the image and mask, set 'resize_images'
+        to 'True', and the images and masks would be resized to the 'final_image_shape'.
+
+        :param assign_dataset: (bool) if True, the image_mask_dataset will be assigned to
+        the variable `image_mask_dataset`.
+        :param images_directory: (str): Path to directory containing the original images that would later be split into
+            training, validation and test sets.
+        :param masks_directory: (str): Path to directory containing the original masks that would later be split into
+            training, validation and test sets.
+        :param image_mask_channels: The number of channels in the image and mask. The first value is the number of
+            channels for the image, while the other is for the mask.
+        :param image_save_prefix: (str): Prefix for saving the images. By default, it is left blank.
+        :param mask_save_prefix: (str): Prefix for saving the mask. By default, it is left blank.
+        :param image_save_format: (str): File format for saving the processed images. By default, it is set to 'jpg'
+        :param crop_image_and_mask: (bool): If 'True' the all the input masks and images would be cropped before
+            resizing them to the required size (image_size)
+        :param crop_dimension: (Tuple): A tuple (offset_height, offset_width, target_height, target_width) containing
+            the region to be for cropped. The value for my pea experiment is (0, 450, 2000, 2000)
+        :param initial_save_id: (None, int) By default it is set to None.This is suffix for the image and names. It is not provided, the new image and mask will be saved with their original names.
+
+        """
+        self.assign_dataset = assign_dataset
+        self.create_new_name = initial_save_id is not None
+        self.images_directory = images_directory
+        self.masks_directory = masks_directory
+        self.new_images_directory = create_directory(dir_name=new_images_directory, return_dir=True,
+                                                     overwrite_if_existing=False)
+        self.new_masks_directory = create_directory(dir_name=new_masks_directory, return_dir=True,
+                                                    overwrite_if_existing=False)
+
+        # Generate filepaths to the images and masks
+        self.original_image_paths, self.original_mask_paths = self._get_sorted_filepaths_to_images_and_masks(
+            images_directory, masks_directory)
+
+        # Extract image and mask format and assign save format
+        img_path = self.original_image_paths[0]
+        mask_path = self.original_mask_paths[0]
+        self.image_format = self._get_image_format(image_path=img_path)
+        self.mask_format = self._get_image_format(image_path=mask_path)
+
+        # Choose the method for decoding images and masks
+        if self.image_format.lower() in ['.jpg', '.jpeg']:
+            self.decode_image = tf.image.decode_jpeg
+        elif self.image_format.lower() == '.png':
+            self.decode_image = tf.image.decode_png
+        elif self.image_format.lower() == '.bmp':
+            self.decode_image = tf.image.decode_bmp
+        else:
+            self.decode_image = tf.image.decode_jpeg
+
+        if self.mask_format.lower() in ['.jpg', '.jpeg']:
+            self.decode_mask = tf.image.decode_jpeg
+        elif self.mask_format.lower() == '.png':
+            self.decode_mask = tf.image.decode_png
+        elif self.mask_format.lower() == '.bmp':
+            self.decode_mask = tf.image.decode_bmp
+        else:
+            self.decode_mask = tf.image.decode_jpeg
+
+        # Image and Mask channels
+        self.image_mask_channels = image_mask_channels
+        self.image_channels = self.image_mask_channels[0]
+        self.mask_channels = self.image_mask_channels[1]
+
+        self.image_save_prefix = image_save_prefix
+        self.mask_save_prefix = mask_save_prefix
+        self.image_save_format = image_save_format
+        self.mask_save_format = mask_save_format
+
+        # set the initial shape of the images and masks.
+        self.image_shape, self.mask_shape = self._get_image_and_mask_shape(image_path=img_path,
+                                                                           mask_path=mask_path)
+
+        # Compute the final shape of the process image and mask
+        if final_image_shape is not None:
+            self.final_image_shape = final_image_shape + (self.image_channels,)
+            self.final_mask_shape = final_image_shape + (self.mask_channels,)
+            self.new_image_height = tuple(self.final_image_shape)[0]
+            self.new_image_width = tuple(self.final_image_shape)[1]
+
+            if tuple(self.image_shape) != self.final_image_shape:
+                self.resize_images = True
+            else:
+                self.resize_images = False
+        else:
+            self.resize_images = False
+            self.final_image_shape = self.image_shape
+            self.final_mask_shape = self.mask_shape
+            self.new_image_height = self.image_shape[0]
+            self.new_image_width = self.image_shape[1]
+
+        self.crop_image_and_mask = crop_image_and_mask
+        self.crop_dimension = crop_dimension
+
+        self.current_image_index = initial_save_id
+        self.tune = tf.data.AUTOTUNE
+
+        # Crop properties
+        if crop_dimension is not None and crop_image_and_mask:
+            self.offset_height = crop_dimension[0]
+            self.offset_width = crop_dimension[1]
+            self.target_height = crop_dimension[2]
+            self.target_width = crop_dimension[3]
+            self.resize_images = True
+
+            if final_image_shape is None or not isinstance(self.final_image_shape, tuple):
+                raise ValueError(
+                    "Since the image will be cropped, 'final_image_shape' must be a tuple of form (height, width)")
+        else:
+            self.crop_image_and_mask = False
+
+        if cache_dir is not None:
+            self.cache_directory = create_directory(dir_name=cache_dir, return_dir=True, overwrite_if_existing=True)
+        else:
+            self.cache_directory = ''
+
+        self.image_mask_dataset = None
+
+    @staticmethod
+    def sort_filenames(file_paths):
+        return sorted(file_paths, key=lambda var: [
+            int(x) if x.isdigit() else x.lower() for x in re.findall(r'\D+|\d+', var)
+        ])
+
+    def _get_sorted_filepaths_to_images_and_masks(self, images_dir, masks_dir):
+        """
+        Generates the sorted list of path for images and masks within specified directories.
+
+        :param images_dir: a directory containing images
+        :param masks_dir: a directory containing masks
+        :return: Returns two lists, one containing the file path for the images and other list containing the file
+            paths for the masks
+        """
+        image_file_list = os.listdir(path=images_dir)
+        mask_file_list = os.listdir(path=masks_dir)
+        image_paths = [os.path.join(images_dir, filename) for filename in image_file_list]
+        mask_paths = [os.path.join(masks_dir, filename) for filename in mask_file_list]
+
+        # sort the file paths in ascending other
+        image_paths = self.sort_filenames(image_paths)
+        mask_paths = self.sort_filenames(mask_paths)
+
+        return image_paths, mask_paths
+
+    @staticmethod
+    def _get_image_format(image_path):
+        return os.path.splitext(image_path)[-1]
+
+    def _get_image_and_mask_shape(self, image_path, mask_path):
+        image = tf.io.read_file(image_path)
+        image = self.decode_image(image, channels=self.image_channels)
+
+        mask = tf.io.read_file(mask_path)
+        mask = self.decode_image(mask, channels=self.mask_channels)
+
+        return image.shape, mask.shape
+
+    def _set_original_shape(self, image, mask):
+        """ Sets width and height information to the image and mask tensors.
+
+        """
+        image.set_shape(self.image_shape)
+        mask.set_shape(self.mask_shape)
+        return image, mask
+
+    def _set_final_shape(self, image, mask):
+        """
+        Sets width and height information to the image and mask tensors.
+        """
+        image.set_shape(self.final_image_shape)
+        mask.set_shape(self.final_mask_shape)
+        return image, mask
+
+    def _read_and_decode_image_and_mask(self, image_path: str, mask_path: str):
+        """
+        Reads and decodes and image and its corresponding masks.
+        :param image_path: (str) The image's filepath
+        :param mask_path: (str) The mask's filepath
+        :return: (tensors) Image and corresponding mask
+        """
+        # Read image and mask
+        image = tf.io.read_file(image_path)
+        mask = tf.io.read_file(mask_path)
+
+        image = self.decode_image(image, channels=self.image_channels)
+        mask = self.decode_mask(mask, channels=self.mask_channels)
+        image, mask = self._set_original_shape(image, mask)
+        return image, mask
+
+    def _crop_image_and_mask(self, image, mask):
+        """Crops out a portion of the image and mask."""
+        # crop image and mask
+        if self.crop_image_and_mask and self.crop_dimension is not None:
+            image = tf.expand_dims(image, axis=-1) if image.ndim == 2 else image
+            image = tf.image.crop_to_bounding_box(image, self.offset_height, self.offset_width,
+                                                  self.target_height, self.target_width)
+
+            mask = tf.expand_dims(mask, axis=-1) if mask.ndim == 2 else mask
+            mask = tf.image.crop_to_bounding_box(mask, self.offset_height, self.offset_width,
+                                                 self.target_height, self.target_width)
+        return image, mask
+
+    def _resize_image_and_mask(self, image, mask):
+        """Resize the image and mask to the predefined dimension."""
+        if self.resize_images:
+            image = tf.expand_dims(image, axis=-1) if image.ndim == 2 else image
+            image = tf.image.resize(images=image, size=(self.new_image_height, self.new_image_width),
+                                    method='bilinear')
+            image = tf.reshape(tensor=image, shape=(self.new_image_height, self.new_image_width, self.image_channels))
+
+            mask = tf.expand_dims(mask, axis=-1) if mask.ndim == 2 else mask
+            mask = tf.image.resize(images=mask, size=(self.new_image_height, self.new_image_width),
+                                   method='nearest')
+            mask = tf.reshape(tensor=mask, shape=(self.new_image_height, self.new_image_width, self.mask_channels))
+
+            # The resize operation returns image & mask in float values (eg. 125.2, 233. 4),
+            # before augmentation, these pixel values need to be normalized to the range [0 - 1],
+            # because the tensorflow.keras augmentation layer only accept values in the normalize range of [0 - 1]. To ensure we correctly normalize , we will first
+            # round up the current float pixel intensities to whole numbers using tf.cast(image, tf.uint8).
+            image, mask = self._cast_image_mask_to_uint8(image, mask)
+        return image, mask
+
+    @staticmethod
+    def _cast_image_mask_to_uint8(image, mask):
+        image = tf.cast(image, tf.uint8)
+        mask = tf.cast(mask, tf.uint8)
+        return image, mask
+
+    @staticmethod
+    def _cast_image_mask_to_float(image, mask):
+        image = tf.cast(image, tf.float32)
+        mask = tf.cast(mask, tf.float32)
+        return image, mask
+
+    @staticmethod
+    def _normalize_image_mask_to_0_1(image, mask):
+        image = tf.image.convert_image_dtype(image, dtype=tf.float32)
+        mask = tf.image.convert_image_dtype(mask, dtype=tf.float32)
+        return image, mask
+
+    @staticmethod
+    def _denormalize_image_mask_to_0_255(image, mask):
+        """Converts the image and mask to uint8 format."""
+        image = tf.image.convert_image_dtype(image, dtype=tf.uint8)
+        mask = tf.image.convert_image_dtype(mask, dtype=tf.uint8)
+        return image, mask
+
+    @staticmethod
+    def get_filename(file_path):
+        return tf.strings.split(file_path, '/')[-1]
+
+    def _step1_read_crop_and_resize(self, image_path: str, mask_path: str):
+        """
+        Reads and decodes and image and its corresponding masks.
+        This function also assigns labels to the the background of the image, the pea's outline and its body. The labels
+        are as follows:
+        - background of image:  0
+        - peas body: 1
+        - pea outline:  2
+
+        :param image_path: (str) path to an Image
+        :param mask_path: (str) path to the mask that corresponds to the image
+        :return: (Tensors) Two TF Tensors - one for the rgb image, and the other
+            for the mask, with the pixel locations properly labelled as background (1)
+            pea's body (1), or pea outline (3).
+        """
+        image, mask = self._read_and_decode_image_and_mask(image_path=image_path, mask_path=mask_path)
+        image, mask = self._crop_image_and_mask(image=image, mask=mask)
+        image, mask = self._resize_image_and_mask(image=image, mask=mask)
+
+        if self.create_new_name:
+            image_name = tf.constant('None', tf.string)
+            mask_name = tf.constant('None', tf.string)
+        else:
+            image_name = self.get_filename(image_path)
+            mask_name = self.get_filename(mask_path)
+
+        return image, mask, image_name, mask_name
+
+    def _save_image_and_mask(self, index, image, mask):
+        # saves image and mask
+        io.imsave(fname=f'{self.new_images_directory}/{self.image_save_prefix}_{index}.{self.image_save_format}',
+                  arr=image, check_contrast=False)
+        io.imsave(fname=f'{self.new_masks_directory}/{self.mask_save_prefix}_{index}.{self.mask_save_format}',
+                  arr=mask, check_contrast=False)
+        return index
+
+    def _tf_save_image_and_mask(self, index, image, mask):
+        index_shape = index.shape
+        [index_ans, ] = tf.py_function(func=self._save_image_and_mask, inp=[index, image, mask], Tout=[tf.int64])
+        index_ans.set_shape(index_shape)
+        return index_ans
+
+    def _save_image_and_mask_with_base_name(self, image, mask, image_name, mask_name):
+        # saves image and mask
+        image_basename = image_name.numpy().decode('utf-8')
+        mask_basename = mask_name.numpy().decode('utf-8')
+
+        io.imsave(fname=f'{self.new_images_directory}/{image_basename}',
+                  arr=image, check_contrast=False)
+        io.imsave(fname=f'{self.new_masks_directory}/{mask_basename}',
+                  arr=mask, check_contrast=False)
+
+        return tf.constant(1, tf.int64)
+
+    def _tf_save_image_and_mask_with_basename(self, image, mask, image_name, mask_name):
+        [index_ans, ] = tf.py_function(func=self._save_image_and_mask_with_base_name,
+                                       inp=[image, mask, image_name, mask_name], Tout=[tf.int64])
+        # index_ans.set_shape(index_shape)
+        return index_ans
+
+    def _process_and_save_image_mask_dataset(self, image_paths, mask_paths):
+        """
+        Prepares shuffled batches of the training set.
+
+        :param image_paths: (list) paths to each image file in the training set
+        :param mask_paths: (list) paths to each mask in the training set
+        :return: tf Dataset containing the preprocessed training set
+        """
+        if self.create_new_name:
+            image_mask_dataset = tf.data.Dataset.from_tensor_slices((image_paths, mask_paths))
+            image_mask_dataset = image_mask_dataset.map(self._step1_read_crop_and_resize, num_parallel_calls=self.tune)
+            image_mask_dataset = image_mask_dataset.map(lambda a, b, c, d: (a, b))
+            image_mask_dataset = image_mask_dataset.cache(filename=self.cache_directory)
+
+            # create counter for the image and mask name
+            counter = tf.data.Dataset.counter(start=self.current_image_index)
+
+            dataset = tf.data.Dataset.zip((counter, image_mask_dataset))
+            dataset = dataset.map(lambda x, y: (x, y[0], y[1]))
+            dataset = dataset.prefetch(buffer_size=self.tune)
+
+            if self.assign_dataset:
+                self.image_mask_dataset = dataset.map(lambda a, b, c: (b, c))
+
+            dataset = dataset.map(self._tf_save_image_and_mask, num_parallel_calls=self.tune)
+
+            list(dataset.as_numpy_iterator())
+            del dataset
+
+        else:
+            image_mask_dataset = tf.data.Dataset.from_tensor_slices((image_paths, mask_paths))
+            image_mask_dataset = image_mask_dataset.map(self._step1_read_crop_and_resize, num_parallel_calls=self.tune)
+            image_mask_dataset = image_mask_dataset.cache(filename=self.cache_directory)
+            image_mask_dataset = image_mask_dataset.prefetch(buffer_size=self.tune)
+            dataset = image_mask_dataset.map(self._tf_save_image_and_mask_with_basename,
+                                             num_parallel_calls=self.tune)
+
+            if self.assign_dataset:
+                self.image_mask_dataset = image_mask_dataset.map(lambda a, b, c, d: (a, b))
+
+            list(dataset.as_numpy_iterator())
+            del dataset
+
+    def process_data(self):
+        print('\nProcessing started....')
+        self._process_and_save_image_mask_dataset(image_paths=self.original_image_paths,
+                                                  mask_paths=self.original_mask_paths)
+        print("\nProcess complete!")
 
 
 def produce_multiple_crop_dimensions(parent_image_shape: tuple[int, int], new_image_shape: tuple[int, int],
@@ -576,3 +1200,27 @@ def resize_image(original_image_path, resized_image_path, size=(256, 256)):
     with Image.open(original_image_path) as img:
         img = img.resize(size, Image.Resampling.BILINEAR)
         img.save(resized_image_path)
+
+
+def resize_images_and_masks(original_directory: str, new_directory: str, new_size: Tuple[int, int]):
+    for root, dirs, files in os.walk(original_directory):
+        for file in files:
+            if file.endswith((".png", ".jpg", ".jpeg", "bmp")):  # Adjust as needed
+                # Original file path
+                file_path = os.path.join(root, file)
+
+                # Corresponding path in new_directory
+                relative_path = os.path.relpath(file_path, original_directory)
+                resized_file_path = os.path.join(new_directory, relative_path)
+
+                # Create directories in the destination path if they don't exist
+                os.makedirs(os.path.dirname(resized_file_path), exist_ok=True)
+
+                # Open, resize, and save the image
+                try:
+                    with Image.open(file_path) as img:
+                        resized_img = img.resize(new_size, Image.Resampling.BILINEAR)
+                        resized_img.save(resized_file_path)
+                        # print(f"Resized and saved: {resized_file_path}")
+                except Exception as e:
+                    print(f"Failed to process {file_path}: {e}")
