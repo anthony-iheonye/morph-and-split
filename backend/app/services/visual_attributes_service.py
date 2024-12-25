@@ -2,25 +2,31 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from app.utils import create_directory
+import os
+
 
 class VisualAttributesDatasetCreator:
-    def __init__(self, train_visual_attributes_json_path: str, val_visual_attributes_json_path: str = None,
-                 test_visual_attributes_json_path: str = None, save_directory: str = None,
-                 visual_properties: tuple = ('L', 'a', 'b', 'contrast', 'correlation', 'energy', 'entropy',
+    def __init__(self,
+                 train_visual_attributes_file_path: str,
+                 val_visual_attributes_file_path: str = None,
+                 test_visual_attributes_file_path: str = None,
+                 save_directory: str = None,
+                 visual_properties: tuple = ('L', 'a', 'b', 'contrast',
+                                             'correlation', 'energy', 'entropy',
                                              'homogeneity', 'uniformity', 'equivalent_diameter', 'eccentricity',
                                              'feret_diameter_max', 'filled_area', 'perimeter', 'roundness')):
 
         """
         Produces normalized tensorflow dataset of the training, validation and test visual attributes.
 
-        :param train_visual_attributes_json_path: (str) File path to the json file containing the visual attributes for
+        :param train_visual_attributes_file_path: (str) File path to the json or csv file containing the visual attributes for
             each of the images of the training set.
-        :param val_visual_attributes_json_path: (str) File path to the json file containing the visual attributes for
+        :param val_visual_attributes_file_path: (str) File path to the json or csv file containing the visual attributes for
             each of the images of the validation set.
-        :param test_visual_attributes_json_path: (str) File path to the json file containing the visual attributes for
+        :param test_visual_attributes_file_path: (str) File path to the json or csv file containing the visual attributes for
             each of the images of the test set.
-        :param save_directory: (str) path to a the directory where to save a csv file that contains the statistics
-            (mean, standard deviation, median, etc) for of the training set. This file would be used for normalization.
+        :param save_directory: (str) path to the directory where to save a csv file that contains the statistics
+            (mean, standard deviation, median, etc.) for of the training set. This file would be used for normalization.
         :param visual_properties: (tuple) a tuple containing the various visual properties of interest. These are the
             ones that would be extracted from the json and used to form the tensorflow dataset as well as the final
             pandas dataframe.
@@ -36,17 +42,17 @@ class VisualAttributesDatasetCreator:
         # dictionary containing weight for each bin associated with the respective visual attributes
         self.bin_weights_dict = {}
 
-        self.train_visual_props_json_path = train_visual_attributes_json_path
+        self.train_visual_props_file_path = train_visual_attributes_file_path
 
-        if val_visual_attributes_json_path is not None:
-            self.val_visual_props_json_path = val_visual_attributes_json_path
+        if val_visual_attributes_file_path is not None:
+            self.val_visual_props_file_path = val_visual_attributes_file_path
         else:
-            self.val_visual_props_json_path = None
+            self.val_visual_props_file_path = None
 
-        if test_visual_attributes_json_path is not None:
-            self.test_visual_props_json_path = test_visual_attributes_json_path
+        if test_visual_attributes_file_path is not None:
+            self.test_visual_props_file_path = test_visual_attributes_file_path
         else:
-            self.test_visual_props_json_path = None
+            self.test_visual_props_file_path = None
 
         self.train_stats = None
         if save_directory is not None:
@@ -74,9 +80,21 @@ class VisualAttributesDatasetCreator:
         self.mean = None
         self.std = None
 
-    def _read_json_file(self, json_file_path):
+    @staticmethod
+    def _get_file_extension(file_path):
+        """Returns the extension of a file."""
+        return os.path.splitext(file_path)[-1]
+
+    def _read_visual_attribute_file(self, file_path):
         """Read a json file and fills the blank rows with zeros."""
-        visual_props = pd.read_json(json_file_path)
+        extension = self._get_file_extension(file_path)
+
+        if extension == '.json':
+            visual_props = pd.read_json(file_path)
+        elif extension == '.csv':
+            visual_props = pd.read_csv(file_path)
+        else:
+            raise TypeError(f'The visual attribute file must be a JSON or CSV format, got file of {extension} format.')
         visual_props = visual_props.copy().loc[::, self.visual_properties]
         # visual_props.drop(columns=['image_id'], inplace=True)
 
@@ -121,8 +139,6 @@ class VisualAttributesDatasetCreator:
         Produces a dataframe containing sample weights for each of the training example within each column in
         a visual properties dataframe.
 
-        :param visual_props_dataframe: (pandas dataframe) original visual properties dataframe. By default it should
-            be the denormalized training set.
         :return: Pandas dataframe containing sample weight for each visual properties value with the
             'visual_props_dataframe'.
         """
@@ -153,7 +169,7 @@ class VisualAttributesDatasetCreator:
 
     def _save_stats(self):
         """
-        Saves the stats (mean, std, etc) of the visual attributes dataset, for
+        Saves the stats (mean, std, etc.) of the visual attributes dataset, for
         the training, validation and test sets.
         """
         self.train_stats.to_csv(f'{self.save_dir}/training_stats.csv')
@@ -164,9 +180,9 @@ class VisualAttributesDatasetCreator:
         return normalized_data
 
     def _read_json_and_produce_normalized_training_dataframe(self):
-        """read and normalizes a the values within a training dataframe."""
-        self.train_unnorm_visual_props_dataframe = self._read_json_file(
-            json_file_path=self.train_visual_props_json_path)
+        """read and normalizes the values within a training dataframe."""
+        self.train_unnorm_visual_props_dataframe = self._read_visual_attribute_file(
+            file_path=self.train_visual_props_file_path)
 
         self._compute_bin_weights(unnorm_train_dataframe=self.train_unnorm_visual_props_dataframe)
 
@@ -178,28 +194,28 @@ class VisualAttributesDatasetCreator:
             dataframe=self.train_unnorm_visual_props_dataframe)
 
     def _read_json_and_produce_normalized_val_or_test_dataframe(self):
-        """read and normalizes a the values within a validation or test dataframe."""
-        if self.val_visual_props_json_path is not None:
-            self.val_unnorm_visual_props_dataframe = self._read_json_file(
-                json_file_path=self.val_visual_props_json_path)
+        """read and normalizes the values within a validation or test dataframe."""
+        if self.val_visual_props_file_path is not None:
+            self.val_unnorm_visual_props_dataframe = self._read_visual_attribute_file(
+                file_path=self.val_visual_props_file_path)
             self.val_normalized_visual_props_df = self._normalize_dataframe(self.val_unnorm_visual_props_dataframe)
 
-        if self.test_visual_props_json_path is not None:
-            self.test_unnorm_visual_props_dataframe = self._read_json_file(
-                json_file_path=self.test_visual_props_json_path)
+        if self.test_visual_props_file_path is not None:
+            self.test_unnorm_visual_props_dataframe = self._read_visual_attribute_file(
+                file_path=self.test_visual_props_file_path)
             self.test_normalized_visual_props_df = self._normalize_dataframe(self.test_unnorm_visual_props_dataframe)
 
     def _produce_train_val_test_datasets(self):
         """Produces the training, validation and test datasets."""
-        if self.train_visual_props_json_path is not None:
+        if self.train_visual_props_file_path is not None:
             self.train_visual_props_dataset = tf.data.Dataset.from_tensor_slices(
                 tensors=self.train_normalized_visual_props_df.to_dict('list'))
 
-        if self.val_visual_props_json_path is not None:
+        if self.val_visual_props_file_path is not None:
             self.val_visual_props_dataset = tf.data.Dataset.from_tensor_slices(
                 tensors=self.val_normalized_visual_props_df.to_dict('list'))
 
-        if self.test_visual_props_json_path is not None:
+        if self.test_visual_props_file_path is not None:
             self.test_visual_props_dataset = tf.data.Dataset.from_tensor_slices(
                 tensors=self.test_normalized_visual_props_df.to_dict('list'))
 
@@ -215,4 +231,5 @@ class VisualAttributesDatasetCreator:
         self._produce_train_visual_props_weight_dataset()
         if self.save_visual_props_stats:
             self._save_stats()
+
 
