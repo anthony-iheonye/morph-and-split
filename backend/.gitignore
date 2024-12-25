@@ -79,12 +79,9 @@ fabric.properties
 
 # Image and masks folders
 
-/images/*
-/masks/*
-/augmented/*
-/resized/*
-/visual_attributes/*
+
 practice.ipynb
 /app-old.py
-/resized_images/*
-/resized_masks/*
+/app/config.py
+/app/aug_config.py
+/assets
