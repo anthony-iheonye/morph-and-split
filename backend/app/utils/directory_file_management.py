@@ -4,27 +4,70 @@ import shutil
 
 import attr
 
+current_dir = os.path.dirname(__file__)
+base_dir = os.path.abspath(os.path.join(current_dir, '../..'))
 
 @attr.s
 class DirectoryStore:
-    image_dir = attr.ib(type=str, default='images/')
-    mask_dir = attr.ib(type=str, default='masks/')
-    resized_image_dir = attr.ib(type=str, default='resized_images/')
-    resized_mask_dir = attr.ib(type=str, default='resized_masks/')
-    augmented = attr.ib(type=str, default='augmented/')
-    train_dir = attr.ib(type=str, default='augmented/train/')
-    val_dir = attr.ib(type=str, default='augmented/val/')
-    test_dir = attr.ib(type=str, default='augmented/test/')
-    visual_attributes_dir = attr.ib(type=str, default='visual_attributes/')
-    resized_augmented = attr.ib(type=str, default='resized_augmented/')
-    resized_train_image_dir = attr.ib(type=str, default='resized_augmented/train/image')
-    resized_train_mask_dir = attr.ib(type=str, default='resized_augmented/train/mask')
-    resized_val_image_dir = attr.ib(type=str, default='resized_augmented/val/image')
-    resized_val_mask_dir = attr.ib(type=str, default='resized_augmented/val/mask')
-    resized_test_image_dir = attr.ib(type=str, default='resized_augmented/test/image')
-    resized_test_mask_dir = attr.ib(type=str, default='resized_augmented/test/mask')
+    asset_dir = attr.ib(type=str, default=os.path.join(base_dir, 'assets'))
+    image_dir = attr.ib(type=str, init=False)
+    mask_dir = attr.ib(type=str, init=False)
+
+    resized_image_dir = attr.ib(type=str, init=False)
+    resized_mask_dir = attr.ib(type=str, init=False)
+
+    augmented = attr.ib(type=str, init=False)
+    train_dir = attr.ib(type=str, init=False)
+    train_image_dir = attr.ib(type=str, init=False)
+    train_mask_dir = attr.ib(type=str, init=False)
+    val_dir = attr.ib(type=str, init=False)
+    val_image_dir = attr.ib(type=str, init=False)
+    val_mask_dir = attr.ib(type=str, init=False)
+    test_dir = attr.ib(type=str, init=False)
+    test_image_dir = attr.ib(type=str, init=False)
+    test_mask_dir = attr.ib(type=str, init=False)
+
+    resized_augmented = attr.ib(type=str, init=False)
+    resized_train_image_dir = attr.ib(type=str, init=False)
+    resized_train_mask_dir = attr.ib(type=str, init=False)
+    resized_val_image_dir = attr.ib(type=str, init=False)
+    resized_val_mask_dir = attr.ib(type=str, init=False)
+    resized_test_image_dir = attr.ib(type=str, init=False)
+    resized_test_mask_dir = attr.ib(type=str, init=False)
+
+    visual_attributes_dir = attr.ib(type=str, init=False)
+
+    def __attrs_post_init__(self):
+        # Set the paths that depend on other attributes
+        self.image_dir = os.path.join(self.asset_dir, 'images')
+        self.mask_dir = os.path.join(self.asset_dir, 'masks')
+
+        self.resized_image_dir = os.path.join(self.asset_dir, 'resized_images')
+        self.resized_mask_dir = os.path.join(self.asset_dir, 'resized_masks')
+
+        self.augmented = os.path.join(self.asset_dir, 'augmented')
+        self.train_dir = os.path.join(self.augmented, 'train')
+        self.train_image_dir = os.path.join(self.train_dir, 'images')
+        self.train_mask_dir = os.path.join(self.train_dir, 'masks')
+        self.val_dir = os.path.join(self.augmented, 'val')
+        self.val_image_dir = os.path.join(self.val_dir, 'images')
+        self.val_mask_dir = os.path.join(self.val_dir, 'masks')
+        self.test_dir = os.path.join(self.augmented, 'test')
+        self.test_image_dir = os.path.join(self.test_dir, 'images')
+        self.test_mask_dir = os.path.join(self.test_dir, 'masks')
+
+        self.resized_augmented = os.path.join(self.asset_dir, 'resized_augmented')
+        self.resized_train_image_dir = os.path.join(self.resized_augmented, 'train', 'images')
+        self.resized_train_mask_dir = os.path.join(self.resized_augmented, 'train', 'masks')
+        self.resized_val_image_dir = os.path.join(self.resized_augmented, 'val', 'images')
+        self.resized_val_mask_dir = os.path.join(self.resized_augmented, 'val', 'masks')
+        self.resized_test_image_dir = os.path.join(self.resized_augmented, 'test', 'images')
+        self.resized_test_mask_dir = os.path.join(self.resized_augmented, 'test', 'masks')
+
+        self.visual_attributes_dir = os.path.join(self.asset_dir, 'visual_attributes')
 
 
+# Initialize DirectoryStore instance
 directory_store = DirectoryStore()
 
 
@@ -77,19 +120,19 @@ def create_project_directories(return_dir=True, overwrite_if_existing=False):
                                      return_dir=True,
                                      overwrite_if_existing=overwrite_if_existing)
 
-    train_dir = create_directory(dir_name=os.path.join(augmented_dir, 'train'),
+    train_dir = create_directory(dir_name=directory_store.train_dir,
                                  return_dir=True,
                                  overwrite_if_existing=overwrite_if_existing)
 
-    val_dir = create_directory(dir_name=os.path.join(augmented_dir, 'val'),
+    val_dir = create_directory(dir_name=directory_store.val_dir,
                                return_dir=True,
                                overwrite_if_existing=overwrite_if_existing)
 
-    test_dir = create_directory(dir_name=os.path.join(augmented_dir, 'test'),
+    test_dir = create_directory(dir_name=directory_store.test_dir,
                                 return_dir=True,
                                 overwrite_if_existing=overwrite_if_existing)
 
-    visual_attribute_dir = create_directory(dir_name='visual_attributes', return_dir=True,
+    visual_attribute_dir = create_directory(dir_name=directory_store.visual_attributes_dir, return_dir=True,
                                             overwrite_if_existing=overwrite_if_existing)
 
     if return_dir:
@@ -111,33 +154,26 @@ def create_resized_augmentation_directories(return_dir=True, overwrite_if_existi
     """
     # Directory setup
 
-    resized_augmented_dir = create_directory(dir_name=directory_store.augmented,
-                                     return_dir=True,
-                                     overwrite_if_existing=overwrite_if_existing)
+    resized_augmented_dir = create_directory(dir_name=directory_store.augmented, return_dir=True,
+                                             overwrite_if_existing=overwrite_if_existing)
 
-    resized_train_image_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'train', 'images'),
-                                 return_dir=True,
-                                 overwrite_if_existing=overwrite_if_existing)
+    resized_train_image_dir = create_directory(dir_name=directory_store.resized_train_image_dir, return_dir=True,
+                                               overwrite_if_existing=overwrite_if_existing)
 
-    resized_train_mask_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'train', 'masks'),
-                                 return_dir=True,
-                                 overwrite_if_existing=overwrite_if_existing)
+    resized_train_mask_dir = create_directory(dir_name=directory_store.resized_train_mask_dir, return_dir=True,
+                                              overwrite_if_existing=overwrite_if_existing)
 
-    resized_val_image_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'val', 'images'),
-                               return_dir=True,
-                               overwrite_if_existing=overwrite_if_existing)
+    resized_val_image_dir = create_directory(dir_name=directory_store.resized_val_image_dir, return_dir=True,
+                                             overwrite_if_existing=overwrite_if_existing)
 
-    resized_val_mask_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'val', 'masks'),
-                               return_dir=True,
-                               overwrite_if_existing=overwrite_if_existing)
+    resized_val_mask_dir = create_directory(dir_name=directory_store.resized_val_mask_dir, return_dir=True,
+                                            overwrite_if_existing=overwrite_if_existing)
 
-    resized_test_image_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'test', 'images'),
-                                return_dir=True,
-                                overwrite_if_existing=overwrite_if_existing)
+    resized_test_image_dir = create_directory(dir_name=directory_store.resized_test_image_dir, return_dir=True,
+                                              overwrite_if_existing=overwrite_if_existing)
 
-    resized_test_mask_dir = create_directory(dir_name=os.path.join(resized_augmented_dir, 'test', 'masks'),
-                                return_dir=True,
-                                overwrite_if_existing=overwrite_if_existing)
+    resized_test_mask_dir = create_directory(dir_name=directory_store.resized_test_mask_dir, return_dir=True,
+                                             overwrite_if_existing=overwrite_if_existing)
 
     if return_dir:
         return {'resized_augmented_dir': resized_augmented_dir,
@@ -190,8 +226,3 @@ def get_sorted_filenames(images_dir):
 
     # sort the file paths in ascending order
     return sort_filenames(image_file_list)
-
-
-
-
-
