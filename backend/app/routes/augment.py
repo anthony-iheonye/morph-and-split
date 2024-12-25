@@ -56,7 +56,7 @@ def augment_data():
         # Define the path to the parent 'app' package
         current_dir = os.path.dirname(__file__)
         app_dir = os.path.abspath(os.path.join(current_dir, '..'))
-        config_filepath = os.path.join(app_dir, 'config.py')
+        config_filepath = os.path.join(app_dir, 'aug_config.py')
 
 
         # Save the aug_config as a python script in the 'app' package

@@ -82,6 +82,5 @@ fabric.properties
 
 practice.ipynb
 /app-old.py
-/app/config.py
 /app/aug_config.py
 /assets
