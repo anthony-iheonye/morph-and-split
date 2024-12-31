@@ -3,6 +3,10 @@ import re
 import shutil
 
 import attr
+from google.cloud import storage
+
+from typing import Optional, Union
+
 
 current_dir = os.path.dirname(__file__)
 base_dir = os.path.abspath(os.path.join(current_dir, '../..'))
@@ -183,6 +187,98 @@ def create_resized_augmentation_directories(return_dir=True, overwrite_if_existi
                 'resized_val_mask_dir': resized_val_mask_dir,
                 'resized_test_image_dir': resized_test_image_dir,
                 'resized_test_mask_dir': resized_test_mask_dir}
+
+
+def create_google_cloud_storage_bucket(bucket_name: str,
+                                       project: str = None,
+                                       location: str = 'us-south1',
+                                       storage_class='STANDARD',
+                                       enable_uniform_bucket_level_access: bool = True,
+                                       ) -> Union[storage.Bucket, Exception, None]:
+    """
+    Create a new Google Cloud Storage (GCS) bucket.
+
+    :param bucket_name: The bucket name
+    :param project: (str) The project under which the bucket is to be created. If not passed, uses the project set on the client.
+    :param location: (str) Location where the bucket is stored
+    :param storage_class: (str) The storage class. Can either be STANDARD (standard storage),
+        `NEARLINE` (nearline storage), `COLDLINE` (coldline storage) or `ARCHIVE` (archive storage). View detailed description of each storage class visit: https://cloud.google.com/storage/docs/storage-classes#descriptions.
+    :param enable_uniform_bucket_level_access:
+    :return: The GCS bucket
+    """
+    # Create storage client
+    storage_client = storage.Client()
+
+    # Instantiate a bucket object to be owned by the 'storage_client'.
+    bucket = storage_client.bucket(bucket_name)
+
+    # Set the storage_class
+    bucket.storage_class = storage_class
+
+    # Set uniform bucket-level access status
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True if enable_uniform_bucket_level_access else False
+
+    # Create the bucket
+    new_bucket = storage_client.create_bucket(bucket_or_name=bucket, location=location, project=project)
+    print(f"Created bucket {new_bucket.name} in {location} with storage class {storage_class}")
+
+    return new_bucket
+
+
+def delete_google_cloud_storage_bucket(bucket_name: str):
+    """
+    Deletes a new bucket in the US region with the STANDARD storage class.
+    """
+    # Create storage client
+    storage_client = storage.Client()
+
+    # Instantiate a bucket object to be owned by the 'storage_client'.
+    bucket = storage_client.bucket(bucket_name)
+
+    # Delete the bucket
+    bucket.delete()
+    print(f"Bucket {bucket.name} deleted.")
+
+
+def create_google_cloud_storage_directories(bucket_name: str, directories: list):
+    """
+    Create directories for within a Google Cloud Storage bucket.
+
+    :param bucket_name: (str) The name of the GCS bucket.
+    :param directories:  A list of directory paths to create within the GCS bucket.
+    :return:
+    """
+    # Create a storage client
+    storage_client = storage.Client()
+
+    # Instantiate a bucket object to be owned by `storage_client`.
+    bucket = storage_client.bucket(bucket_name=bucket_name)
+
+    for directory in directories:
+        blob = bucket.blob(f"{directory}/")
+
+
+def upload_file_to_gcs_bucket(bucket_name:str, source_file_name:str, destination_blob_name:str):
+    """
+    Uploads a file to blob within a Google Cloud Storage bucket.
+
+    :param bucket_name: (str) The name of the GCS bucket.
+    :param source_file_name: (str) Path to the file to be uploaded.
+    :param destination_blob_name: Name of the blob object in the bucket.
+    """
+
+    # Initialize the storage client
+    storage_client = storage.Client()
+
+    # Instantiate bucket object linked to the client
+    bucket = storage_client.bucket(bucket_name=bucket_name)
+
+    # Instantiate existing blob
+    blob = bucket.blob(destination_blob_name)
+
+    # upload file to blob
+    blob.upload_from_filename(source_file_name)
+    print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
 
 def current_directory(file_path=None):
