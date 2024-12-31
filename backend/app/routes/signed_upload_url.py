@@ -1,3 +1,4 @@
+
 import os
 from datetime import timedelta
 
@@ -8,7 +9,7 @@ from google.oauth2 import service_account
 from app.utils.directory_file_management import current_directory
 
 signed_upload_url = Blueprint('signed_upload_url', __name__)
-BUCKET_NAME = 'morph-and-split-assets'
+BUCKET_NAME = os.getenv('BUCKET_NAME')
 service_account_path = os.path.join(current_directory(), 'morph-and-split-d044.json')
 
 @signed_upload_url.route('/generate-signed-upload-url', methods=['POST'])
