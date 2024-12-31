@@ -10,6 +10,6 @@ IMAGE_DIR = directory_store.image_dir
 def get_uploaded_image_names():
     try:
         image_files = get_sorted_filenames(IMAGE_DIR)
-        return jsonify({'count': len(image_files), 'results': image_files})
+        return jsonify({'success': True, 'count': len(image_files), 'results': image_files })
     except Exception as e:
         return jsonify({'error': str(e)})
