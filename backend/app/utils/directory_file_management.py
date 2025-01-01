@@ -253,12 +253,13 @@ def delete_google_cloud_storage_bucket(bucket_name: str):
     # Create storage client
     storage_client = storage.Client()
 
-    # Instantiate a bucket object to be owned by the 'storage_client'.
-    bucket = storage_client.bucket(bucket_name)
-
-    # Delete the bucket
-    bucket.delete()
-    print(f"Bucket {bucket.name} deleted.")
+    try:
+        bucket = storage_client.get_bucket(bucket_name)
+        # Delete the bucket
+        bucket.delete()
+        print(f"Bucket {bucket.name} deleted.")
+    except NotFound:
+        print(f"Bucket {bucket_name} does not exist.")
 
 
 def create_google_cloud_storage_directories(bucket_name: str, directories: list):
