@@ -1,12 +1,11 @@
 import os
 import re
 import shutil
+from typing import Union
 
 import attr
 from google.cloud import storage
-
-from typing import Optional, Union
-
+from google.cloud.exceptions import NotFound
 
 current_dir = os.path.dirname(__file__)
 base_dir = os.path.abspath(os.path.join(current_dir, '../..'))
@@ -194,10 +193,12 @@ def create_google_cloud_storage_bucket(bucket_name: str,
                                        location: str = 'us-south1',
                                        storage_class='STANDARD',
                                        enable_uniform_bucket_level_access: bool = True,
+                                       cors: list = None
                                        ) -> Union[storage.Bucket, Exception, None]:
     """
     Create a new Google Cloud Storage (GCS) bucket.
 
+    :param cors:
     :param bucket_name: The bucket name
     :param project: (str) The project under which the bucket is to be created. If not passed, uses the project set on the client.
     :param location: (str) Location where the bucket is stored
@@ -206,23 +207,43 @@ def create_google_cloud_storage_bucket(bucket_name: str,
     :param enable_uniform_bucket_level_access:
     :return: The GCS bucket
     """
-    # Create storage client
-    storage_client = storage.Client()
 
-    # Instantiate a bucket object to be owned by the 'storage_client'.
-    bucket = storage_client.bucket(bucket_name)
+    try:
+        # Initialize the storage client
+        storage_client = storage.Client()
 
-    # Set the storage_class
-    bucket.storage_class = storage_class
+        # Check if bucket already exists
+        try:
+            bucket = storage_client.get_bucket(bucket_name)
+            print(f"Bucket {bucket_name} already exists. Updating configuration...")
+        except NotFound:
+            print(f"Bucket {bucket_name} does not exist. Creating bucket...")
+            # Instantiate a bucket object to be owned by the 'storage_client'.
+            bucket = storage_client.bucket(bucket_name)
+            bucket = storage_client.create_bucket(bucket, location=location, project=project)
 
-    # Set uniform bucket-level access status
-    bucket.iam_configuration.uniform_bucket_level_access_enabled = True if enable_uniform_bucket_level_access else False
 
-    # Create the bucket
-    new_bucket = storage_client.create_bucket(bucket_or_name=bucket, location=location, project=project)
-    print(f"Created bucket {new_bucket.name} in {location} with storage class {storage_class}")
+        # Update the bucket's storage_class
+        if bucket.storage_class != storage_class:
+            bucket.storage_class = storage_class
 
-    return new_bucket
+        # Update uniform bucket-level access status
+        current_access_setting = bucket.iam_configuration.uniform_bucket_level_access_enabled
+        if current_access_setting != enable_uniform_bucket_level_access:
+            bucket.iam_configuration.uniform_bucket_level_access_enabled = enable_uniform_bucket_level_access
+
+        # Set the CORS
+        bucket.cors = cors
+
+        # Save changes to the bucket
+        bucket.patch()
+        print(f"bucket {bucket_name} is now configured.")
+
+        return bucket
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
 
 
 def delete_google_cloud_storage_bucket(bucket_name: str):
