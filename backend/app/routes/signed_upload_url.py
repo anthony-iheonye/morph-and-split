@@ -21,6 +21,7 @@ def generate_signed_upload_url():
         data = request.json
         filenames = data.get('filenames', [])
         content_types = data.get('content_types', [])
+        folder_path = data.get('folder_path', '')
         signed_urls = []
 
         # Load the service account credentials
@@ -31,7 +32,7 @@ def generate_signed_upload_url():
         bucket = client.bucket(google_cloud_config.bucket_name)
 
         for i, filename in enumerate(filenames):
-            blob = bucket.blob(filename)
+            blob = bucket.blob(f"{folder_path}/{filename}")
 
             # Use corresponding type if provided; default to application/octet-stream
             content_type = content_types[i] if i < len(content_types) else 'application/octet-stream'
