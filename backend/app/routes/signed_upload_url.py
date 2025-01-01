@@ -6,11 +6,11 @@ from flask import Blueprint, request, jsonify
 from google.cloud import storage
 from google.oauth2 import service_account
 
-from app.utils.directory_file_management import current_directory
+from app.config import google_cloud_config
+from app.utils import current_directory
 
 signed_upload_url = Blueprint('signed_upload_url', __name__)
-BUCKET_NAME = os.getenv('BUCKET_NAME')
-service_account_path = os.path.join(current_directory(), 'morph-and-split-d044.json')
+service_account_path = os.path.join(current_directory(), 'morph-and-split-key.json')
 
 @signed_upload_url.route('/generate-signed-upload-url', methods=['POST'])
 def generate_signed_upload_url():
@@ -28,7 +28,7 @@ def generate_signed_upload_url():
 
         # Initialize Google Cloud Storage client with service account.
         client = storage.Client(credentials=credentials)
-        bucket = client.bucket(BUCKET_NAME)
+        bucket = client.bucket(google_cloud_config.bucket_name)
 
         for i, filename in enumerate(filenames):
             blob = bucket.blob(filename)
