@@ -17,7 +17,8 @@ def create_app():
     # Create Google Cloud Storage
     create_google_cloud_storage_bucket(bucket_name=google_cloud_config.bucket_name,
                                        project=google_cloud_config.project_name,
-                                       cors=cors)
+                                       cors=cors,
+                                       directories=google_cloud_config.directories)
 
     # Register blueprints
     app.register_blueprint(signed_upload_url)

@@ -193,11 +193,14 @@ def create_google_cloud_storage_bucket(bucket_name: str,
                                        location: str = 'us-south1',
                                        storage_class='STANDARD',
                                        enable_uniform_bucket_level_access: bool = True,
-                                       cors: list = None
+                                       cors: list = None,
+                                       directories: list = None
                                        ) -> Union[storage.Bucket, Exception, None]:
     """
     Create a new Google Cloud Storage (GCS) bucket.
 
+    :param directories:
+    :param subdiretories:
     :param cors:
     :param bucket_name: The bucket name
     :param project: (str) The project under which the bucket is to be created. If not passed, uses the project set on the client.
@@ -222,6 +225,11 @@ def create_google_cloud_storage_bucket(bucket_name: str,
             bucket = storage_client.bucket(bucket_name)
             bucket = storage_client.create_bucket(bucket, location=location, project=project)
 
+            if directories:
+                for directory in directories:
+                    # Add a trailing '/' to signify a folder and create an empty blob
+                    blob = bucket.blob(f"{directory}/")
+                    blob.upload_from_string("")
 
         # Update the bucket's storage_class
         if bucket.storage_class != storage_class:
