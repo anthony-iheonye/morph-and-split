@@ -10,7 +10,7 @@ download_uploaded_masks_from_gcs = Blueprint(name='download_uploaded_masks_from_
                                              import_name=__name__)
 
 
-@download_uploaded_masks_from_gcs.route('/transfer_masks_to_backend', methods=['GET'])
+@download_uploaded_masks_from_gcs.route('/transfer_masks_to_backend', methods=['POST'])
 def get_masks_from_gcs():
     try:
         # Download the uploaded masks from Google Cloud Storage

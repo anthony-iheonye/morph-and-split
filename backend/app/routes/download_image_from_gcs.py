@@ -10,7 +10,7 @@ download_uploaded_images_from_gcs = Blueprint(name='download_uploaded_images_fro
                                               import_name=__name__)
 
 
-@download_uploaded_images_from_gcs.route('/transfer_images_to_backend', methods=['GET'])
+@download_uploaded_images_from_gcs.route('/transfer_images_to_backend', methods=['POST'])
 def get_images_from_gcs():
     try:
         # Download the uploaded images from Google Cloud Storage
