@@ -5,6 +5,8 @@ import SignedUploadUrls from "../entities/SignedUploadUrls";
 export interface FetchResponse<T> {
   success?: Boolean;
   count: number;
+  next: string | null;
+
   results: T[];
 }
 
@@ -161,6 +163,33 @@ class APIClient<T> {
           "Error upoloading files to Google Cloud Bucket",
           error.message
         );
+      throw error;
+    }
+  };
+
+  /**
+   * Request to trigger backend processing.
+   * @param data Optional data to be sent to the backend.
+   * @param requestConfig Configuration
+   * @returns
+   */
+  processFiles = async (
+    data?: FormData | object,
+    requestConfig?: AxiosRequestConfig
+  ): Promise<T> => {
+    try {
+      const response = await axiosInstance.post<T>(
+        this.endpoint,
+        data || {},
+        requestConfig
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        console.error("Error processing files: ", error.message);
+      else {
+        console.error(error);
+      }
       throw error;
     }
   };
