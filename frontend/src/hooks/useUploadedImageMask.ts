@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import ms from "ms";
 import UploadedImageMask from "../entities/UploadedImageMask";
 import APIClient, { FetchResponse } from "../services/api-client";
@@ -38,11 +38,18 @@ const apiClient = new APIClient<UploadedImageMask>("/metadata/image_mask");
  * - `isError`: A boolean indicating if an error occurred during the fetch.
  * - Other properties from `useQuery` (e.g., `refetch`, `isFetching`).
  */
+
 const useUploadedImageMask = () =>
-  useQuery<FetchResponse<UploadedImageMask>, Error>({
+  useInfiniteQuery<FetchResponse<UploadedImageMask>, Error>({
     queryKey: ["metadata"],
-    queryFn: apiClient.getAll,
-    staleTime: ms("30min"), // Cache the data for 10 minutes
+    queryFn: ({ pageParam = 1 }) =>
+      apiClient.getAll({
+        params: { page: pageParam, page_size: 10 },
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages.length + 1 : undefined;
+    },
+    staleTime: ms("24h"), //2 hours
   });
 
 export default useUploadedImageMask;

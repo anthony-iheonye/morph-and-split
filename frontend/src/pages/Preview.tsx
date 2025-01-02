@@ -23,7 +23,7 @@ const Preview = () => {
 
       <BoundingBox>
         <Text color={"gray.400"} mb={4} fontSize="sm">
-          Preview of Selected Images and Masks.
+          Preview of uploaded Images and Masks.
         </Text>
         <Box
           overflowY="auto"
