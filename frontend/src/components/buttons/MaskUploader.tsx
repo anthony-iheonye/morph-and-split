@@ -28,6 +28,13 @@ const MaskUploader = () => {
           files,
           bucketFolders.masks
         );
+        const maskDownloadClient = new APIClient<BackendResponse>(
+          "/transfer_masks_to_backend"
+        );
+
+        const resizeClient = new APIClient<BackendResponse>(
+          "/resize-uploaded-masks"
+        );
 
         if (response.success) {
           setBackendResponseLog("augmentationIsComplete", false);
@@ -35,6 +42,19 @@ const MaskUploader = () => {
           queryClient.invalidateQueries(["mask_names"]);
           // invaliate the 'metadata' query to refresh the  image and mask preview grid
           queryClient.invalidateQueries(["metadata"]);
+
+          // transfer uploaded images from GCS to backend
+          try {
+            const downloaded = await maskDownloadClient.processFiles();
+            console.log(`download response:`, downloaded);
+
+            if (downloaded.success) {
+              // produce resized version of uploaded masks
+              await resizeClient.processFiles();
+            }
+          } catch (error) {
+            console.error(`Error `);
+          }
         }
       } catch (error) {
         console.error("Error uploading images to Google Cloud storage");
