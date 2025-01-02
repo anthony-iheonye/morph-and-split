@@ -1,13 +1,18 @@
 import { Button, Input, useBreakpointValue } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import BackendResponse from "../../entities/BackendResponse";
 import { useBackendResponse, useFileUploader } from "../../hooks";
 import APIClient from "../../services/api-client";
+import bucketFolders from "../../store/googleCloudStore";
+import SignedUploadUrls from "../../entities/SignedUploadUrls";
 
 const ImageUploader = () => {
   const queryClient = useQueryClient();
-  const uploadClient = new APIClient<BackendResponse>("/upload/images");
+  const uploadClient = new APIClient<SignedUploadUrls>(
+    "/generate-signed-upload-url"
+  );
+
   const { setBackendResponseLog } = useBackendResponse();
+
   const buttonText = useBreakpointValue({
     base: "Select",
     md: "Select Images",
@@ -15,13 +20,12 @@ const ImageUploader = () => {
 
   const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
-      const formData = new FormData();
-      files.forEach((file) => formData.append("images", file));
-
       try {
-        const response = await uploadClient.uploadFiles(formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        // Trigger the upload process
+        const response = await uploadClient.uploadToGoogleCloudBucket(
+          files,
+          bucketFolders.images
+        );
 
         if (response.success) {
           setBackendResponseLog("augmentationIsComplete", false);
@@ -30,8 +34,8 @@ const ImageUploader = () => {
           // invaliate the 'metadata' query to refresh the  image and mask preview grid
           queryClient.invalidateQueries(["metadata"]);
         }
-      } catch (err) {
-        console.log("Upload failed: ", err);
+      } catch (error) {
+        console.error("Error uploading images to Google Cloud storage");
       }
     }
   );

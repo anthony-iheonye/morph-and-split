@@ -1,6 +1,24 @@
 import { useState } from "react";
 import sortByName from "../services/sortByName";
 
+/**
+ * A custom hook to handle file uploads with validation and state management.
+ *
+ * This hook provides a utility for validating file types, managing the upload state,
+ * and handling file selection errors. It delegates the actual upload or processing
+ * logic to a provided callback function, allowing for flexibility and reusability.
+ *
+ * @template T - The type of files being uploaded. Must extend `File`.
+ * @param setFilePaths - A callback function that handles the valid files after validation.
+ *                       The function should accept an array of files and return a Promise.
+ *                       Typically used to perform file uploads or other file-related operations.
+ *
+ * @returns {object} - An object containing:
+ *   - `error` (string | null): The current error message, if any.
+ *   - `isUploading` (boolean): Indicates whether an upload operation is in progress.
+ *   - `handleFileChange` (function): The event handler for file input changes. It validates
+ *     the selected files and invokes the `setFilePaths` callback with the valid files.
+ */
 const useFileUploader = <T extends File>(
   setFilePaths: (files: T[]) => Promise<void>
 ) => {
