@@ -8,7 +8,7 @@ const useUploadedMaskNames = () =>
   useQuery<FetchResponse<string[]>, Error>({
     queryKey: ["mask_names"],
     queryFn: apiClient.getAll,
-    staleTime: ms("30min"),
+    staleTime: ms("60min"),
   });
 
 export default useUploadedMaskNames;

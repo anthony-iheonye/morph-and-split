@@ -28,7 +28,7 @@ const useUploadedImageNames = () =>
   useQuery<FetchResponse<string[]>, Error>({
     queryKey: ["image_names"],
     queryFn: apiClient.getAll,
-    staleTime: ms("30min"),
+    staleTime: ms("60min"),
   });
 
 export default useUploadedImageNames;
