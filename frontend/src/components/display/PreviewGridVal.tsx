@@ -1,9 +1,10 @@
-import { Button, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import { Box, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
+import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import useValidationSet from "../../hooks/useValidationSet";
 import useAugConfigStore from "../../store/augConfigStore";
 import PreviewCard from "./PreviewCard";
 import PreviewContainer from "./PreviewContainer";
-import React from "react";
 
 const PreviewGridVal = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(
@@ -13,41 +14,46 @@ const PreviewGridVal = () => {
     })
   );
 
-  const {
-    data,
-    error,
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  } = useValidationSet();
+  const { data, error, hasNextPage, fetchNextPage } = useValidationSet();
 
   if (!previewAugmentedResult || previewedSet != "val") return null;
-  if (isLoading) return <Spinner />;
   if (error) return <Text color="red.500">Failed to load validation set.</Text>;
+
+  const fetchedImageMaskCount =
+    data?.pages.reduce((total, page) => total + page.results.length, 0) || 0;
 
   return (
     <>
-      <SimpleGrid
-        columns={{ sm: 1, md: 2, lg: 3 }}
-        spacing={6}
-        padding={"10px"}
+      <Box
+        id="valSetBox"
+        overflowY="auto"
+        maxHeight={{ sm: "400px", md: "480px" }}
+        mt={4}
       >
-        {data?.pages.map((page, index) => (
-          <React.Fragment key={index}>
-            {page.results.map(({ image, mask }) => (
-              <PreviewContainer key={image.name}>
-                <PreviewCard image={image} mask={mask} />
-              </PreviewContainer>
+        <InfiniteScroll
+          dataLength={fetchedImageMaskCount}
+          hasMore={!!hasNextPage}
+          next={() => fetchNextPage()}
+          loader={<Spinner />}
+          scrollableTarget="valSetBox"
+        >
+          <SimpleGrid
+            columns={{ sm: 1, md: 2, lg: 3 }}
+            spacing={6}
+            padding={"10px"}
+          >
+            {data?.pages.map((page, index) => (
+              <React.Fragment key={index}>
+                {page.results.map(({ image, mask }) => (
+                  <PreviewContainer key={image.name}>
+                    <PreviewCard image={image} mask={mask} />
+                  </PreviewContainer>
+                ))}
+              </React.Fragment>
             ))}
-          </React.Fragment>
-        ))}
-      </SimpleGrid>
-      {hasNextPage && (
-        <Button onClick={() => fetchNextPage()}>
-          {isFetchingNextPage ? "Loading..." : "Load More"}
-        </Button>
-      )}
+          </SimpleGrid>
+        </InfiniteScroll>
+      </Box>
     </>
   );
 };

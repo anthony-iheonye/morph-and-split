@@ -42,19 +42,13 @@ const PreviewAugmentedResults = () => {
         <Text color={"gray.400"} mb={4} fontSize="sm">
           Preview of Selected Images and Masks.
         </Text>
-        <Box
-          overflowY="auto"
-          maxHeight={{ sm: "320px", md: "500px", lg: "620px" }}
-          mt={4}
-        >
-          {previewedSet === "train" ? (
-            <PreviewGridTrain />
-          ) : previewedSet === "val" ? (
-            <PreviewGridVal />
-          ) : (
-            <PreviewGridTest />
-          )}
-        </Box>
+        {previewedSet === "train" ? (
+          <PreviewGridTrain />
+        ) : previewedSet === "val" ? (
+          <PreviewGridVal />
+        ) : (
+          <PreviewGridTest />
+        )}
       </BoundingBox>
     </>
   );
