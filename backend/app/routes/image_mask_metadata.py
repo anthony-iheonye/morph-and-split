@@ -65,16 +65,26 @@ def get_image_mask_metadata():
         # Detect the scheme (http or https) dynamically
         scheme = request.scheme
 
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
         # Get sorted filenames for images and masks
         image_files = get_sorted_filenames(IMAGE_DIR)
         mask_files = get_sorted_filenames(MASK_DIR)
 
         # Ensure the number of images and mask align
         if len(image_files) != len(mask_files):
-            return jsonify({'error': "Mismatch between number of images and masks."}), 400
+            return jsonify({'error': "Mismatch between number of original images and masks."}), 400
+
+        # Paginate the data
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_images = image_files[start:end]
+        paginated_masks = mask_files[start:end]
 
         metadata = []
-        for image_name, mask_name in zip(image_files, mask_files):
+        for image_name, mask_name in zip(paginated_images, paginated_masks):
             image_path = url_for('image_mask_metadata.serve_image',
                                  filename=image_name, _external=True, _scheme=scheme)
             mask_path = url_for('image_mask_metadata.serve_mask',
@@ -84,16 +94,22 @@ def get_image_mask_metadata():
                              'mask': {'name': mask_name, 'url': mask_path}
                              })
 
-        return jsonify({'count': len(metadata), 'results': metadata}), 200
+        return jsonify({'count': len(metadata),
+                        'next': False if end >= len(image_files) else True,
+                        'results': metadata}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
 @image_mask_metadata.route('/metadata/train_images_masks', methods=['GET'])
-def serve_train_images_masks():
+def get_train_images_masks():
     try:
         # Detect the scheme (http or https) dynamically
         scheme = request.scheme
+
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
 
         # Get sorted filenames for images and masks
         image_files = get_sorted_filenames(RESIZED_TRAIN_IMAGE_DIR)
@@ -103,8 +119,14 @@ def serve_train_images_masks():
         if len(image_files) != len(mask_files):
             return jsonify({'error': "Mismatch between number of images and masks."}), 400
 
+        # Paginate the data
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_images = image_files[start:end]
+        paginated_masks = mask_files[start:end]
+
         metadata = []
-        for image_name, mask_name in zip(image_files, mask_files):
+        for image_name, mask_name in zip(paginated_images, paginated_masks):
             image_path = url_for('image_mask_metadata.serve_train_image',
                                  filename=image_name, _external=True, _scheme=scheme)
             mask_path = url_for('image_mask_metadata.serve_train_mask',
@@ -114,7 +136,9 @@ def serve_train_images_masks():
                              'mask': {'name': mask_name, 'url': mask_path}
                              })
 
-        return jsonify({'count': len(metadata), 'results': metadata}), 200
+        return jsonify({'count': len(metadata),
+                        'next': False if end >= len(image_files) else True,
+                        'results': metadata}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -125,6 +149,10 @@ def get_val_images_masks():
         # Detect the scheme (http or https) dynamically
         scheme = request.scheme
 
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
         # Get sorted filenames for images and masks
         image_files = get_sorted_filenames(RESIZED_VAL_IMAGE_DIR)
         mask_files = get_sorted_filenames(RESIZED_VAL_MASK_DIR)
@@ -133,8 +161,14 @@ def get_val_images_masks():
         if len(image_files) != len(mask_files):
             return jsonify({'error': "Mismatch between number of images and masks."}), 400
 
+        # Paginate the data
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_images = image_files[start:end]
+        paginated_masks = mask_files[start:end]
+
         metadata = []
-        for image_name, mask_name in zip(image_files, mask_files):
+        for image_name, mask_name in zip(paginated_images, paginated_masks):
             image_path = url_for(
                 'image_mask_metadata.serve_val_image', filename=image_name, _external=True, _scheme=scheme)
             mask_path = url_for(
@@ -144,7 +178,9 @@ def get_val_images_masks():
                              'mask': {'name': mask_name, 'url': mask_path}
                              })
 
-        return jsonify({'count': len(metadata), 'results': metadata}), 200
+        return jsonify({'count': len(metadata),
+                        'next': False if end >= len(image_files) else True,
+                        'results': metadata}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -155,16 +191,26 @@ def get_test_images_masks():
         # Detect the scheme (http or https) dynamically
         scheme = request.scheme
 
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
         # Get sorted filenames for images and masks
         image_files = get_sorted_filenames(RESIZED_TEST_IMAGE_DIR)
         mask_files = get_sorted_filenames(RESIZED_TEST_MASK_DIR)
 
         # Ensure the number of images and mask align
         if len(image_files) != len(mask_files):
-            return jsonify({'error': "Mismatch between number of images and masks."}), 400
+            return jsonify({'error': "Mismatch between number of test set images and masks."}), 400
+
+        # Paginate the data
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_images = image_files[start:end]
+        paginated_masks = mask_files[start:end]
 
         metadata = []
-        for image_name, mask_name in zip(image_files, mask_files):
+        for image_name, mask_name in zip(paginated_images, paginated_masks):
             image_path = url_for('image_mask_metadata.serve_test_image',
                                  filename=image_name, _external=True, _scheme=scheme)
             mask_path = url_for('image_mask_metadata.serve_test_mask',
@@ -174,6 +220,8 @@ def get_test_images_masks():
                              'mask': {'name': mask_name, 'url': mask_path}
                              })
 
-        return jsonify({'count': len(metadata), 'results': metadata}), 200
+        return jsonify({'count': len(metadata),
+                        'next': False if end >= len(image_files) else True,
+                        'results': metadata}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
