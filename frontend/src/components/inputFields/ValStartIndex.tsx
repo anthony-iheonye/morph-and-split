@@ -19,7 +19,13 @@ const ValStartIndex = () => {
       allowMouseWheel
       maxWidth={width}
       value={augConfig.initialValSaveId}
-      onChange={(value) => setAugConfig("initialValSaveId", parseInt(value))}
+      onChange={(valueString) => {
+        const value = parseInt(valueString);
+        setAugConfig(
+          "initialValSaveId",
+          isNaN(value) ? augConfig.initialValSaveId : value
+        );
+      }}
     >
       <NumberInputField />
       <NumberInputStepper>

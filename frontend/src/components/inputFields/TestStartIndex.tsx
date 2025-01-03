@@ -19,7 +19,13 @@ const TestStartIndex = () => {
       allowMouseWheel
       maxWidth={width}
       value={augConfig.initialTestSaveId}
-      onChange={(value) => setAugConfig("initialTestSaveId", parseInt(value))}
+      onChange={(valueString) => {
+        const value = parseInt(valueString);
+        setAugConfig(
+          "initialTestSaveId",
+          isNaN(value) ? augConfig.initialTestSaveId : value
+        );
+      }}
     >
       <NumberInputField />
       <NumberInputStepper>

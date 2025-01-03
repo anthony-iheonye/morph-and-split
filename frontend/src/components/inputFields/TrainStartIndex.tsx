@@ -19,7 +19,13 @@ const TrainStartIndex = () => {
       allowMouseWheel
       maxWidth={width}
       value={augConfig.initialTrainSaveId}
-      onChange={(value) => setAugConfig("initialTrainSaveId", parseInt(value))}
+      onChange={(valueString) => {
+        const value = parseInt(valueString);
+        setAugConfig(
+          "initialTrainSaveId",
+          isNaN(value) ? augConfig.initialTrainSaveId : value
+        );
+      }}
     >
       <NumberInputField />
       <NumberInputStepper>
