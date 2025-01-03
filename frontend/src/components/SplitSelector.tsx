@@ -1,4 +1,4 @@
-import { Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import { Radio, RadioGroup, Stack, useBreakpointValue } from "@chakra-ui/react";
 import useAugConfigStore from "../store/augConfigStore";
 
 const SplitSelector = () => {
@@ -7,6 +7,10 @@ const SplitSelector = () => {
     setAugConfig: state.setAugConfig,
   }));
 
+  const trainText = useBreakpointValue({ base: "Train", md: "Training" });
+  const valText = useBreakpointValue({ base: "Val", md: "Validation" });
+  const testText = useBreakpointValue({ base: "Test", md: "Testing" });
+
   return (
     <RadioGroup
       onChange={(value) => setAugConfig("previewedSet", value)}
@@ -14,13 +18,13 @@ const SplitSelector = () => {
     >
       <Stack direction="row" spacing={6}>
         <Radio colorScheme="teal" value="train">
-          Training
+          {trainText}
         </Radio>
         <Radio colorScheme="teal" value="val">
-          Validation
+          {valText}
         </Radio>
         <Radio colorScheme="teal" value="test">
-          Testing
+          {testText}
         </Radio>
       </Stack>
     </RadioGroup>
