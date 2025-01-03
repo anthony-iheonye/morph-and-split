@@ -1,12 +1,13 @@
 import os
 import re
 import shutil
+import subprocess
 from typing import Union
 
 import attr
+from google.api_core.exceptions import NotFound
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
-import subprocess
 
 current_dir = os.path.dirname(__file__)
 base_dir = os.path.abspath(os.path.join(current_dir, '../..'))
@@ -324,16 +325,45 @@ def delete_google_cloud_storage_bucket(bucket_name: str):
     """
     Deletes a new bucket in the US region with the STANDARD storage class.
     """
-    # Create storage client
-    storage_client = storage.Client()
 
     try:
-        bucket = storage_client.get_bucket(bucket_name)
-        # Delete the bucket
-        bucket.delete()
-        print(f"Bucket {bucket.name} deleted.")
+        if bucket_exists(bucket_name):
+            gcloud_command = ["gcloud",
+                              "storage",
+                              "rm",
+                              "-r",
+                              f"gs://{bucket_name}"]
+            subprocess.run(gcloud_command, check=True, capture_output=True)
+            print(f"Successfully deleted bucket {bucket_name}.")
     except NotFound:
         print(f"Bucket {bucket_name} does not exist.")
+
+
+def bucket_exists(bucket_name: str) -> bool:
+    """
+    Checks if a Google Cloud Storage bucket exists.
+
+    :param bucket_name: The name of the bucket to check.
+    :return: True if the bucket exists, False otherwise.
+    """
+    try:
+        # Initialize the Google Cloud Storage client
+        storage_client = storage.Client()
+
+        # Attempt to get the bucket
+        bucket = storage_client.get_bucket(bucket_name)
+
+        # If no exception is raised, the bucket exists
+        print(f"Bucket '{bucket_name}' exists.")
+        return True
+    except NotFound:
+        # If the bucket is not found, return False
+        print(f"Bucket '{bucket_name}' does not exist.")
+        return False
+    except Exception as e:
+        # Handle other unexpected errors
+        print(f"An error occurred: {e}")
+        return False
 
 
 def list_files_in_bucket_directory(bucket_name: str, directory_path:str) -> list:
