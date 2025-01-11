@@ -9,6 +9,8 @@ import {
   TestStartIndex,
 } from "../components/inputFields";
 import PageTitle from "../components/PageTitle";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 
 const StartAugmentation = () => {
   return (
@@ -61,7 +63,13 @@ const StartAugmentation = () => {
         </VStack>
       </BoundingBox>
 
-      <Augment />
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn to="/settings/pre_processing" />
+          <Augment />
+          <ContinueBtn to="/augment/preview" label="Preview result" />
+        </HStack>
+      </BoundingBox>
     </>
   );
 };

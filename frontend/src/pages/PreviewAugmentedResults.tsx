@@ -1,10 +1,12 @@
-import { VStack, HStack, Box, Text } from "@chakra-ui/react";
+import { HStack, Text, VStack } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
+import EndSession from "../components/buttons/EndSession";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 import {
   BoundingBox,
+  PreviewGridTest,
   PreviewGridTrain,
   PreviewGridVal,
-  PreviewGridTest,
 } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
@@ -49,6 +51,13 @@ const PreviewAugmentedResults = () => {
         ) : (
           <PreviewGridTest />
         )}
+      </BoundingBox>
+
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn to="/augment/start_augmentation" />
+          <EndSession />
+        </HStack>
       </BoundingBox>
     </>
   );
