@@ -5,6 +5,7 @@ import { useBoundingBoxColor } from "../../hooks";
 interface Props {
   children: ReactNode;
   maxHeight?: string | { base?: string; md?: string; lg?: string };
+  minHeight?: string | { base?: string; md?: string; lg?: string };
   flex?: string;
   justify?: string | { base?: string; md?: string; lg?: string };
   borderRadius?: number | string | { base?: string; md?: string; lg?: string };
@@ -20,14 +21,17 @@ interface Props {
   width?: string | { base?: string; md?: string; lg?: string };
   maxWidth?: string | { base?: string; md?: string; lg?: string };
   transparent?: boolean;
+  display?: string | { base?: string; md?: string; lg?: string };
 }
 
 const BoundingBox = ({
   children,
   width,
   maxWidth,
+  minHeight,
   flex,
   justify,
+  display,
   padding = 5,
   maxHeight = "none",
   overflowY = undefined,
@@ -43,11 +47,13 @@ const BoundingBox = ({
       borderRadius={borderRadius}
       backgroundColor={transparent ? "transparent" : backgroundColor}
       maxHeight={maxHeight}
+      minHeight={minHeight}
       overflow={overflowY}
       flex={flex}
       width={width}
       maxWidth={maxWidth}
       justifySelf={justify}
+      display={display}
     >
       {children}
     </Box>
