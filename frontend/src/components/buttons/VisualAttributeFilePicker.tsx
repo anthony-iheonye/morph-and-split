@@ -1,5 +1,4 @@
-import { Button, Icon, Input, Text, VStack } from "@chakra-ui/react";
-import { BsFiletypeJson } from "react-icons/bs";
+import { Button, Input, Text, VStack } from "@chakra-ui/react";
 import useVisualAttributesFile from "../../hooks/useVisualAttributesFile";
 
 const VisualAttributeFilePicker = () => {
@@ -11,7 +10,7 @@ const VisualAttributeFilePicker = () => {
       <Button
         as="label"
         cursor="pointer"
-        leftIcon={<Icon as={BsFiletypeJson} />}
+        // leftIcon={<Icon as={BsFiletypeJson} />}
       >
         Select file
         <Input
@@ -19,7 +18,7 @@ const VisualAttributeFilePicker = () => {
           variant="outline"
           padding="0"
           display="None"
-          accept=".json"
+          accept=".csv"
           onChange={handleFileChange}
         />
       </Button>

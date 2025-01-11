@@ -10,7 +10,7 @@ const useVisualAttributesFile = () => {
     const curFiles = event.target.files;
     const previousFile = augConfig.visualAttributesJSONFile?.name || "";
 
-    if (curFiles && getFileExt(curFiles[0]) !== "json") {
+    if (curFiles && getFileExt(curFiles[0]) !== "csv") {
       setError(`Files most be in JSON format. Selected ${curFiles[0].name}`);
       return;
     }
