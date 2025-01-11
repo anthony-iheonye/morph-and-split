@@ -1,28 +1,18 @@
-import { HStack, Box, Text } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
+import ContinueBtn from "../components/buttons/ContinueBtn";
 import MaskUploader from "../components/buttons/MaskUploader";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 import { BoundingBox } from "../components/display";
 import { MaskChannel } from "../components/dropdowns";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
 import { useUploadedMaskNames } from "../hooks";
-import ContinueBtn from "../components/buttons/ContinueBtn";
-import PreviousBtn from "../components/buttons/PreviousBtn";
-import { useNavigate } from "react-router-dom";
 
 const MaskUpload = () => {
   const { data } = useUploadedMaskNames();
-  const navigate = useNavigate();
-
-  const handleContinue = () => {
-    navigate("/upload_data/preview");
-  };
-
-  const handlePrevious = () => {
-    navigate("/upload_data/images");
-  };
 
   return (
     <>
@@ -72,8 +62,8 @@ const MaskUpload = () => {
 
       <BoundingBox transparent padding={0}>
         <HStack>
-          <PreviousBtn label="Previous" setPrevious={handlePrevious} />
-          <ContinueBtn label="Continue" setContinue={handleContinue} />
+          <PreviousBtn to="/upload_data/images" />
+          <ContinueBtn to="/upload_data/preview" />
         </HStack>
       </BoundingBox>
     </>

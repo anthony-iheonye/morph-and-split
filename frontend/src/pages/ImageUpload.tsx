@@ -2,7 +2,6 @@ import { Box, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
 import { ImageUploader } from "../components/buttons";
 import ContinueBtn from "../components/buttons/ContinueBtn";
 import { BoundingBox } from "../components/display";
@@ -13,11 +12,6 @@ import { useUploadedImageNames } from "../hooks";
 
 const ImageUpload = () => {
   const { data } = useUploadedImageNames();
-  const navigate = useNavigate();
-
-  const handleContinue = () => {
-    navigate("/upload_data/masks");
-  };
 
   return (
     <>
@@ -71,7 +65,7 @@ const ImageUpload = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <ContinueBtn label="Continue" setContinue={handleContinue} />
+        <ContinueBtn to="/upload_data/masks" />
       </BoundingBox>
     </>
   );

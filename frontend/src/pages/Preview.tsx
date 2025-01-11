@@ -1,24 +1,13 @@
 import { HStack, Text } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 import { BoundingBox, PreviewUploadedDataGrid } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
 import PreviewSwitch from "../components/switches/PreviewSwitch";
-import ContinueBtn from "../components/buttons/ContinueBtn";
-import PreviousBtn from "../components/buttons/PreviousBtn";
-import { useNavigate } from "react-router-dom";
 
 const Preview = () => {
-  const navigate = useNavigate();
-
-  const handlePrevious = () => {
-    navigate("/upload_data/masks");
-  };
-
-  const handleContinue = () => {
-    navigate("/settings");
-  };
-
   return (
     <>
       <PageTitle title="Preview" />
@@ -45,8 +34,8 @@ const Preview = () => {
 
       <BoundingBox transparent padding={0}>
         <HStack>
-          <PreviousBtn label="Previous" setPrevious={handlePrevious} />
-          <ContinueBtn label="Continue" setContinue={handleContinue} />
+          <PreviousBtn to="/upload_data/masks" />
+          <ContinueBtn to="/settings/data_split" />
         </HStack>
       </BoundingBox>
     </>
