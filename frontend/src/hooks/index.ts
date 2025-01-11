@@ -6,13 +6,16 @@ export { default as useBackendResponse } from "./useBackendResponse";
 export { default as useBoundingBoxColor } from "./useBoundingBoxColor";
 export { default as useFileSelector } from "./useFileSelector";
 export { default as useFileUploader } from "./useFileUploader";
+export { default as useLockedSet } from "./useLockedSet";
 export { default as useNavIconColor } from "./useNavIconColor";
-export { default as useTrainingSet } from "./useTrainingSet";
+export { default as useSplitRatio } from "./useSplitRatio";
 export { default as useTestSet } from "./useTestSet";
+export { default as useTrainingSet } from "./useTrainingSet";
 export { default as useUploadedImageMask } from "./useUploadedImageMask";
 export { default as useUploadedImageNames } from "./useUploadedImageNames";
 export { default as useUploadedMaskNames } from "./useUploadedMaskNames";
+export { default as useValidationSet } from "./useValidationSet";
 export { default as useVisualAttributesFile } from "./useVisualAttributesFile";
 
-export { subParentNames } from "./useActiveSubParent";
 export { parentNames } from "./useActiveParent";
+export { subParentNames } from "./useActiveSubParent";

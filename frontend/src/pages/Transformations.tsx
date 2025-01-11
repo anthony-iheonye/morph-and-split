@@ -11,6 +11,8 @@ import { BoundingBox } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
 import { useAugConfigAndSetter } from "../hooks";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 
 const AugTransformationsInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -169,6 +171,13 @@ const AugTransformationsInput = () => {
             isChecked={augConfig.augmentValData}
             onChange={() => handleCheckBoxChange("augmentValData")}
           />
+        </HStack>
+      </BoundingBox>
+
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn to="/settings/data_split" />
+          <ContinueBtn to="/settings/visual_attributes" />
         </HStack>
       </BoundingBox>
     </>

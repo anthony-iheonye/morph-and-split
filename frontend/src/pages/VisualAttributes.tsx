@@ -15,6 +15,8 @@ import { SplitParameterSelector } from "../components/dropdowns";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
 import { useAugConfigAndSetter } from "../hooks";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 
 const VisualAttributes = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -71,7 +73,7 @@ const VisualAttributes = () => {
         </HStack>
       </BoundingBox>
 
-      <BoundingBox overflowY="auto" maxHeight={{ base: "300px", md: "65vh" }}>
+      <BoundingBox overflowY="auto" maxHeight={{ base: "300px", md: "57vh" }}>
         <VStack spacing={8}>
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
@@ -227,6 +229,13 @@ const VisualAttributes = () => {
             />
           </HStack>
         </VStack>
+      </BoundingBox>
+
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn to="/settings/select_transformation" />
+          <ContinueBtn to="/settings/pre_processing" />
+        </HStack>
       </BoundingBox>
     </>
   );

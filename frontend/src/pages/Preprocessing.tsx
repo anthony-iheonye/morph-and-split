@@ -15,6 +15,8 @@ import {
 import TargetWidthInput from "../components/inputFields/TargetWidthInput";
 import PageTitle from "../components/PageTitle";
 import { useAugConfigAndSetter } from "../hooks";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 
 const PreProcessing = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -29,9 +31,11 @@ const PreProcessing = () => {
       {/*Crop data */}
       <BoundingBox
         transparent={true}
-        padding={0}
+        padding="0"
         overflowY="auto"
-        maxHeight={{ base: "70vh", md: "87vh" }}
+        maxHeight={{ base: "70vh", md: "80vh" }}
+        marginLeft={0}
+        marginRight={0}
       >
         <BoundingBox>
           <HStack justify="space-between" align="start" width="100%">
@@ -125,6 +129,13 @@ const PreProcessing = () => {
             </BoundingBox>
           ) : null}
         </BoundingBox>
+      </BoundingBox>
+
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn to="/settings/visual_attributes" />
+          <ContinueBtn to="/augment/start_augmentation" />
+        </HStack>
       </BoundingBox>
     </>
   );

@@ -1,15 +1,19 @@
-import { Button } from "@chakra-ui/react";
+import { Button, useBreakpointValue } from "@chakra-ui/react";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-  label?: string;
+  label?: string | { base?: string; md?: string; lg?: string };
   to: string;
   disable?: boolean;
 }
 
 const PreviousBtn = ({ to, label = "Previous", disable = false }: Props) => {
   const navigate = useNavigate();
+
+  const responsiveLabel = useBreakpointValue(
+    typeof label === "string" ? { base: label } : label
+  );
 
   return (
     <Button
@@ -20,7 +24,7 @@ const PreviousBtn = ({ to, label = "Previous", disable = false }: Props) => {
       leftIcon={<IoIosArrowBack />}
       isDisabled={disable}
     >
-      {label}
+      {responsiveLabel}
     </Button>
   );
 };

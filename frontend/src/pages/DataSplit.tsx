@@ -10,6 +10,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FaLayerGroup } from "react-icons/fa";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
 import { BoundingBox } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import { TotalTrainData } from "../components/inputFields";
@@ -124,7 +126,6 @@ const adjustRatios = (
 
 const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
   const { trainRatio, valRatio, testRatio, setRatios } = useSplitRatio();
-
   const { trainRatioLocked, valRatioLocked, testRatioLocked } =
     useLockedRatio();
 
@@ -234,6 +235,13 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
             description="Specifies the desired number of training images post-augmentation."
           />
           <TotalTrainData />
+        </HStack>
+      </BoundingBox>
+
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn to="/upload_data/preview" />
+          <ContinueBtn to="/settings/select_transformation" />
         </HStack>
       </BoundingBox>
     </>

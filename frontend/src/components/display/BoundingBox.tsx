@@ -22,6 +22,8 @@ interface Props {
   maxWidth?: string | { base?: string; md?: string; lg?: string };
   transparent?: boolean;
   display?: string | { base?: string; md?: string; lg?: string };
+  marginLeft?: number | { base?: number; md?: number; lg?: number };
+  marginRight?: number | { base?: number; md?: number; lg?: number };
 }
 
 const BoundingBox = ({
@@ -32,6 +34,8 @@ const BoundingBox = ({
   flex,
   justify,
   display,
+  marginLeft,
+  marginRight,
   padding = 5,
   maxHeight = "none",
   overflowY = undefined,
@@ -54,6 +58,8 @@ const BoundingBox = ({
       maxWidth={maxWidth}
       justifySelf={justify}
       display={display}
+      marginLeft={marginLeft}
+      marginRight={marginRight}
     >
       {children}
     </Box>
