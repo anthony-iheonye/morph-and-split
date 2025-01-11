@@ -29,7 +29,7 @@ const PreviewAugmentedResults = () => {
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
               icon={HiViewGrid}
-              title="Preview Augmented Images and Masks"
+              title={{ base: "Preview Augmented Images and Masks" }}
               description="Click slider to preview training, validation and test sets."
             />
             <PreviewAugResultSwitch />
@@ -40,7 +40,7 @@ const PreviewAugmentedResults = () => {
 
       <BoundingBox overflowY="auto">
         <Text color={"gray.400"} mb={4} fontSize="sm">
-          Preview of Selected Images and Masks.
+          Preview of augmented result.
         </Text>
         {previewedSet === "train" ? (
           <PreviewGridTrain />

@@ -1,6 +1,6 @@
-import { HStack, VStack, Switch } from "@chakra-ui/react";
+import { HStack, Switch, VStack } from "@chakra-ui/react";
 import { BiSolidArea } from "react-icons/bi";
-import { BsFiletypeJson } from "react-icons/bs";
+import { BsFiletypeCsv } from "react-icons/bs";
 import { FaCircleNotch } from "react-icons/fa";
 import { GiRollingEnergy } from "react-icons/gi";
 import { GoCircleSlash } from "react-icons/go";
@@ -8,7 +8,7 @@ import { HiOutlineArrowsExpand } from "react-icons/hi";
 import { IoColorPaletteSharp } from "react-icons/io5";
 import { MdOutlineContrast } from "react-icons/md";
 import { RxDimensions } from "react-icons/rx";
-import { TbTexture, TbOvalVertical } from "react-icons/tb";
+import { TbOvalVertical, TbTexture } from "react-icons/tb";
 import { VisualAttributeFilePicker } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
@@ -50,7 +50,9 @@ const VisualAttributes = () => {
           <IconHeadingDescriptionCombo
             icon={HiOutlineArrowsExpand}
             title="Stratified Split Parameter"
-            description="Select the split parameter to ensure consistent class distribution across training, validation, and test datasets."
+            description={{
+              md: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
+            }}
           />
           <SplitParameterSelector />
         </HStack>
@@ -59,18 +61,17 @@ const VisualAttributes = () => {
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
-            icon={BsFiletypeJson}
+            icon={BsFiletypeCsv}
             title="Upload Visual Attribute Data"
-            description="Select the JSON file containing the visual attributes of the food in the image."
+            description={{
+              md: "Select the CSV file containing the visual attributes of the food in the image.",
+            }}
           />
           <VisualAttributeFilePicker />
         </HStack>
       </BoundingBox>
 
-      <BoundingBox
-        overflowY="auto"
-        maxHeight={{ base: "800px", md: "500px", lg: "620px" }}
-      >
+      <BoundingBox overflowY="auto" maxHeight={{ base: "300px", md: "65vh" }}>
         <VStack spacing={8}>
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo

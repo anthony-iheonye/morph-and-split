@@ -17,7 +17,7 @@ const MaskUploader = () => {
 
   const buttonText = useBreakpointValue({
     base: "Select",
-    md: "Select Images",
+    md: "Select Masks",
   });
 
   const { isUploading, handleFileChange } = useFileUploader<File>(

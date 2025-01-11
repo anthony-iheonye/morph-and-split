@@ -84,7 +84,7 @@ const Augment = () => {
           <IconHeadingDescriptionCombo
             icon={FaPlay}
             fontSize={25}
-            title={isLoading ? "Processing" : "Augment Images"}
+            title={isLoading ? "Processing" : "Augment Data"}
             description={
               isLoading
                 ? "Images and Masks are augmenting."

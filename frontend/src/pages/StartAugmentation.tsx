@@ -15,17 +15,22 @@ const StartAugmentation = () => {
     <>
       <PageTitle title="Start Augmentation" />
       <BoundingBox>
-        <Text color={"gray.400"} mb={4} fontSize="md">
-          Enter a numerical suffix to name the augmented training, validation,
-          and test sets.
+        <Text color={"gray.400"} mb={4} fontSize="sm">
+          Enter numerical suffices for naming the first augmented training,
+          validaiton, and test data (eg. img-1.jpg, mask-1.jpg).
         </Text>
 
         <VStack spacing={{ base: 5, md: 4, lg: 8 }}>
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
               icon={TbNumbers}
-              title="Training Set Initial Save Index"
-              description="A number to append to the file name of first augmented training image. (eg. img-1.jpg, mask-1.jpg)"
+              title={{
+                base: "Train save suffix",
+                md: "Training Set Initial Save Suffix",
+              }}
+              description={{
+                base: "Number to append to the file name of first augmented training data. (eg. img-1.jpg, mask-1.jpg)",
+              }}
             />
             <TrainStartIndex />
           </HStack>
@@ -33,8 +38,11 @@ const StartAugmentation = () => {
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
               icon={TbNumbers}
-              title="Validation Set Initial Save Index"
-              description="A number to append to the file name of first augmented training image. (eg. img-1.jpg, mask-1.jpg)"
+              title={{
+                base: "Val save suffix",
+                md: "Validation Set Initial Save Suffix",
+              }}
+              description="Number to append to the file name of the first augmented validation data. (eg. img-1.jpg, mask-1.jpg)"
             />
             <ValStartIndex />
           </HStack>
@@ -42,15 +50,17 @@ const StartAugmentation = () => {
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
               icon={TbNumbers}
-              title="Test Set Initial Save Index"
-              description="A number to append to the file name of first augmented training image. (eg. img-1.jpg, mask-1.jpg)"
+              title={{
+                base: "Test save suffix",
+                md: "Test Set Initial Save Suffix",
+              }}
+              description="A number to append to the file name of first augmented test data. (eg. img-1.jpg, mask-1.jpg)"
             />
             <TestStartIndex />
           </HStack>
         </VStack>
       </BoundingBox>
 
-      {/*Start Augmentation */}
       <Augment />
     </>
   );
