@@ -18,6 +18,9 @@ interface AugConfig {
   trainRatio: number;
   valRatio: number;
   testRatio: number;
+  trainRatioLocked: boolean;
+  valRatioLocked: boolean;
+  testRatioLocked: boolean;
   seed?: number;
   crop?: boolean;
   cropDimension?: CropDimension;
@@ -74,6 +77,9 @@ const initialAugConfig: AugConfig = {
   trainRatio: 0.6,
   valRatio: 0.2,
   testRatio: 0.2,
+  trainRatioLocked: false,
+  valRatioLocked: false,
+  testRatioLocked: false,
   seed: 42,
   crop: false,
   cropDimension: {
@@ -130,7 +136,12 @@ const useAugConfigStore = create<AugConfigStore>((set) => ({
         testRatio: test,
       },
     })),
-  resetAugConfig: () => set(() => ({ augConfig: initialAugConfig })),
+  resetAugConfig: () =>
+    set(() => ({
+      augConfig: initialAugConfig,
+      previewAugmentedResult: false,
+      previewSelection: false,
+    })),
 }));
 
 export default useAugConfigStore;
