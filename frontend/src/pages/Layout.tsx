@@ -4,27 +4,36 @@ import NavBar from "../components/navigation/NavBar";
 
 const Layout = () => {
   return (
-    <Grid
-      templateAreas={{
-        base: `"nav"
-              "outlet"`,
-        md: `"nav outlet"`,
-      }}
-      templateColumns={{
-        base: "1fr",
-        md: "65px 1fr",
-      }}
+    <Box
+      display="flex"
+      maxHeight="100vh"
+      flexDirection="column"
+      maxWidth="2560px"
+      margin="0 auto"
+      width="100%"
     >
-      <GridItem area="nav">
-        <NavBar />
-      </GridItem>
+      <Grid
+        templateAreas={{
+          base: `"nav"
+              "outlet"`,
+          md: `"nav outlet"`,
+        }}
+        templateColumns={{
+          base: "1fr",
+          md: "65px 1fr",
+        }}
+      >
+        <GridItem area="nav">
+          <NavBar />
+        </GridItem>
 
-      <GridItem area="outlet">
-        <Box height="100vh">
-          <Outlet />
-        </Box>
-      </GridItem>
-    </Grid>
+        <GridItem area="outlet">
+          <Box>
+            <Outlet />
+          </Box>
+        </GridItem>
+      </Grid>
+    </Box>
   );
 };
 

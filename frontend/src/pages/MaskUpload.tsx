@@ -8,9 +8,21 @@ import { MaskChannel } from "../components/dropdowns";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
 import { useUploadedMaskNames } from "../hooks";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
+import { useNavigate } from "react-router-dom";
 
 const MaskUpload = () => {
   const { data } = useUploadedMaskNames();
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    navigate("/upload_data/preview");
+  };
+
+  const handlePrevious = () => {
+    navigate("/upload_data/images");
+  };
 
   return (
     <>
@@ -19,8 +31,11 @@ const MaskUpload = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={BiSolidImageAdd}
-            title={{ base: "Upload Mask", md: "Upload Segmentation Masks" }}
-            description="Click button to select masks for augmentation."
+            title={{ base: "Upload Masks", md: "Upload Segmentation Masks" }}
+            description={{
+              base: "Select masks",
+              md: "Click button to upload segmentation masks",
+            }}
           />
           <MaskUploader />
         </HStack>
@@ -29,8 +44,8 @@ const MaskUpload = () => {
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
             icon={IoLayers}
-            title={{ base: "Channels", md: "Number of Mask Channels" }}
-            description="Select the number of mask channels."
+            title={{ base: "Mask Channels", md: "Number of Mask Channels" }}
+            description={{ md: "Select the number of mask channels." }}
           />
           <MaskChannel />
         </HStack>
@@ -40,7 +55,7 @@ const MaskUpload = () => {
           icon={TbLayersSelected}
           title="Selected Masks"
         />
-        <Box overflowY="auto" maxHeight="400px" mt={4}>
+        <Box overflowY="auto" maxHeight={{ base: "28vh", md: "55vh" }} mt={4}>
           {data?.results && data?.results.length > 0 ? (
             data?.results.map((name, index) => (
               <Text fontWeight="thin" fontSize="md" key={index}>
@@ -53,6 +68,13 @@ const MaskUpload = () => {
             </Text>
           )}
         </Box>
+      </BoundingBox>
+
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn label="Previous" setPrevious={handlePrevious} />
+          <ContinueBtn label="Continue" setContinue={handleContinue} />
+        </HStack>
       </BoundingBox>
     </>
   );

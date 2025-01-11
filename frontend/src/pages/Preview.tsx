@@ -4,8 +4,21 @@ import { BoundingBox, PreviewUploadedDataGrid } from "../components/display";
 import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import PageTitle from "../components/PageTitle";
 import PreviewSwitch from "../components/switches/PreviewSwitch";
+import ContinueBtn from "../components/buttons/ContinueBtn";
+import PreviousBtn from "../components/buttons/PreviousBtn";
+import { useNavigate } from "react-router-dom";
 
 const Preview = () => {
+  const navigate = useNavigate();
+
+  const handlePrevious = () => {
+    navigate("/upload_data/masks");
+  };
+
+  const handleContinue = () => {
+    navigate("/settings");
+  };
+
   return (
     <>
       <PageTitle title="Preview" />
@@ -15,7 +28,9 @@ const Preview = () => {
           <IconHeadingDescriptionCombo
             icon={HiViewGrid}
             title="Preview Upload"
-            description="Click slider to preview uploaded images and their corresponding masks."
+            description={{
+              md: "Click slider to preview uploaded images and their corresponding masks.",
+            }}
           />
           <PreviewSwitch />
         </HStack>
@@ -26,6 +41,13 @@ const Preview = () => {
           Preview of uploaded Images and Masks.
         </Text>
         <PreviewUploadedDataGrid />
+      </BoundingBox>
+
+      <BoundingBox transparent padding={0}>
+        <HStack>
+          <PreviousBtn label="Previous" setPrevious={handlePrevious} />
+          <ContinueBtn label="Continue" setContinue={handleContinue} />
+        </HStack>
       </BoundingBox>
     </>
   );
