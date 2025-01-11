@@ -1,12 +1,11 @@
-import { useToast, Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import { FaPlay } from "react-icons/fa";
+import { TbTransform } from "react-icons/tb";
 import BackendResponse from "../../entities/BackendResponse";
 import { useBackendResponse } from "../../hooks";
 import APIClient from "../../services/api-client";
 import { useAugConfigStore } from "../../store";
 import { BoundingBox } from "../display";
-import IconHeadingDescriptionCombo from "../IconHeadingDescriptionCombo";
 import DownloadButton from "./DownloadButton";
 
 const Augment = () => {
@@ -66,34 +65,19 @@ const Augment = () => {
   return (
     <>
       {/* Start Augmentation */}
-      <BoundingBox
-        maxWidth={"fit-content"}
-        justify={"center"}
-        padding={1}
-        borderRadius={8}
+      <Button
+        type="submit"
+        colorScheme="teal"
+        size="sm"
+        borderRadius={20}
+        justifySelf="center"
+        _hover={{ bg: "teal" }}
+        onClick={handleAugment}
+        disabled={isLoading}
+        leftIcon={<TbTransform />}
       >
-        <Button
-          type="submit"
-          height="auto"
-          padding="4"
-          justifySelf="center"
-          _hover={{ bg: "teal" }}
-          onClick={handleAugment}
-          disabled={isLoading}
-        >
-          <IconHeadingDescriptionCombo
-            icon={FaPlay}
-            fontSize={25}
-            title={isLoading ? "Processing" : "Augment Data"}
-            description={
-              isLoading
-                ? "Images and Masks are augmenting."
-                : "Augment the selected images and masks."
-            }
-          />
-        </Button>
-      </BoundingBox>
-
+        {isLoading ? "Processing" : "Augment Data"}
+      </Button>
       {augmentationIsComplete && (
         <BoundingBox justify={"center"} transparent={true}>
           <DownloadButton
