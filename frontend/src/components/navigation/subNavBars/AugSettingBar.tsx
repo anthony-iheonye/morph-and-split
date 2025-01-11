@@ -3,12 +3,12 @@ import { FaMagic } from "react-icons/fa";
 import { IoIosColorPalette } from "react-icons/io";
 import { PiCirclesThreeFill, PiResizeBold } from "react-icons/pi";
 import {
-  useBoundingBoxColor,
+  subParentNames,
   useActiveNavColor,
   useActiveSubParent,
-  subParentNames,
+  useBoundingBoxColor,
 } from "../../../hooks";
-import SubNavBarItem from "../subNavItems/SubNavBarItem";
+import { SubNavBarItem } from "../subNavItems";
 
 const AugSettingBar = () => {
   const backgroundColor = useBoundingBoxColor();

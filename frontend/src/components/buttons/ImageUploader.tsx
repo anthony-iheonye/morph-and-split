@@ -1,10 +1,9 @@
 import { Button, Input, useBreakpointValue } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { BackendResponse, SignedUploadUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
-import APIClient from "../../services/api-client";
-import bucketFolders from "../../store/googleCloudStore";
-import SignedUploadUrls from "../../entities/SignedUploadUrls";
-import BackendResponse from "../../entities/BackendResponse";
+import { APIClient } from "../../services";
+import { bucketFolders } from "../../store";
 
 const ImageUploader = () => {
   const queryClient = useQueryClient();

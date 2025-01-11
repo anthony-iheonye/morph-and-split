@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ms from "ms";
-import UploadedImageMask from "../entities/UploadedImageMask";
-import APIClient, { FetchResponse } from "../services/api-client";
+import { FetchResponse, UploadedImageMask } from "../entities";
+import { APIClient } from "../services";
 
 const apiClient = new APIClient<UploadedImageMask>(
   "/metadata/val_images_masks"

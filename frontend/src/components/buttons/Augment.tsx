@@ -1,9 +1,9 @@
 import { Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { TbTransform } from "react-icons/tb";
-import BackendResponse from "../../entities/BackendResponse";
+import { BackendResponse } from "../../entities";
 import { useBackendResponse } from "../../hooks";
-import APIClient from "../../services/api-client";
+import { APIClient } from "../../services";
 import { useAugConfigStore } from "../../store";
 import { BoundingBox } from "../display";
 import DownloadButton from "./DownloadButton";

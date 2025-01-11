@@ -1,5 +1,5 @@
 import { Switch } from "@chakra-ui/react";
-import useAugConfigAndSetter from "../../../hooks/useAugConfigAndSetter";
+import { useAugConfigAndSetter } from "../../../hooks";
 
 const ViewState = () => {
   const { augConfig } = useAugConfigAndSetter();

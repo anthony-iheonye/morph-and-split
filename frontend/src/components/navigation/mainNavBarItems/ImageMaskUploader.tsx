@@ -1,6 +1,9 @@
 import { FaFileUpload } from "react-icons/fa";
-import useActiveNavColor from "../../../hooks/useActiveNavColor";
-import useActiveParent, { parentNames } from "../../../hooks/useActiveParent";
+import {
+  parentNames,
+  useActiveNavColor,
+  useActiveParent,
+} from "../../../hooks";
 import MainNavBarItem from "./MainNavBarItem";
 
 const ImageMaskUploader = () => {

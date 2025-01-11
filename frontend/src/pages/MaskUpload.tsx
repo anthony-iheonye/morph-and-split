@@ -2,13 +2,13 @@ import { Box, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
-import ContinueBtn from "../components/buttons/ContinueBtn";
-import MaskUploader from "../components/buttons/MaskUploader";
-import PreviousBtn from "../components/buttons/PreviousBtn";
+import { ContinueBtn, MaskUploader, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { MaskChannel } from "../components/dropdowns";
-import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import PageTitle from "../components/PageTitle";
+import {
+  IconHeadingDescriptionCombo,
+  PageTitle,
+} from "../components/miscellaneous";
 import { useUploadedMaskNames } from "../hooks";
 
 const MaskUpload = () => {

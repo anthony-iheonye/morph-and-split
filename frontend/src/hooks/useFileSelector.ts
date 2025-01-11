@@ -1,7 +1,6 @@
 import { useState } from "react";
-import AugImage from "../entities/AugImage";
-import AugMask from "../entities/AugMask";
-import sortByName from "../services/sortByName";
+import { AugImage, AugMask } from "../entities";
+import { sortByName } from "../services";
 
 const useFileSelector = <T extends AugImage | AugMask>(
   setFilePaths: (files: T[]) => void,

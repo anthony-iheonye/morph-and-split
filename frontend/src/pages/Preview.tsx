@@ -3,8 +3,8 @@ import { HiViewGrid } from "react-icons/hi";
 import ContinueBtn from "../components/buttons/ContinueBtn";
 import PreviousBtn from "../components/buttons/PreviousBtn";
 import { BoundingBox, PreviewUploadedDataGrid } from "../components/display";
-import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import PageTitle from "../components/PageTitle";
+import IconHeadingDescriptionCombo from "../components/miscellaneous/IconHeadingDescriptionCombo";
+import PageTitle from "../components/miscellaneous/PageTitle";
 import PreviewSwitch from "../components/switches/PreviewSwitch";
 
 const Preview = () => {

@@ -15,10 +15,12 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
-import useAugConfigAndSetter from "../../../hooks/useAugConfigAndSetter";
-import useNavIconColor from "../../../hooks/useNavIconColor";
-import APIClient from "../../../services/api-client";
-import useBackendResponse from "../../../hooks/useBackendResponse";
+import {
+  useAugConfigAndSetter,
+  useBackendResponse,
+  useNavIconColor,
+} from "../../../hooks";
+import { APIClient } from "../../../services";
 
 const ResetIcon = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

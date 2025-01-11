@@ -1,10 +1,10 @@
 import { TbTransformFilled } from "react-icons/tb";
+import { MainNavBarItem } from ".";
 import {
-  useActiveParent,
   parentNames,
   useActiveNavColor,
+  useActiveParent,
 } from "../../../hooks";
-import MainNavBarItem from "./MainNavBarItem";
 
 const AugmentIcon = () => {
   const activeParent = useActiveParent();

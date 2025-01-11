@@ -1,8 +1,8 @@
 import { IoMdSettings } from "react-icons/io";
 import {
-  useActiveParent,
   parentNames,
   useActiveNavColor,
+  useActiveParent,
 } from "../../../hooks";
 import MainNavBarItem from "./MainNavBarItem";
 

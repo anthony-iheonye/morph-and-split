@@ -1,4 +1,4 @@
-import useBackendResponseStore from "../store/backendResponseStore";
+import { useBackendResponseStore } from "../store";
 
 const useBackendResponse = () => {
   const { augmentationIsComplete, setBackendResponseLog } =

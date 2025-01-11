@@ -1,5 +1,5 @@
 import { useState } from "react";
-import sortByName from "../services/sortByName";
+import { sortByName } from "../services";
 
 /**
  * A custom hook to handle file uploads with validation and state management.

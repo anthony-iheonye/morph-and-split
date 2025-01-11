@@ -1,18 +1,19 @@
-import { SimpleGrid, HStack, Switch, Text, Box } from "@chakra-ui/react";
+import { Box, HStack, SimpleGrid, Switch, Text } from "@chakra-ui/react";
 import { PiFlipHorizontalFill, PiFlipVerticalFill } from "react-icons/pi";
-import { RiCropFill, RiContrastDropLine } from "react-icons/ri";
+import { RiContrastDropLine, RiCropFill } from "react-icons/ri";
 import { RxRotateCounterClockwise } from "react-icons/rx";
 import {
   TbBrightnessFilled,
   TbContrast2Filled,
   TbTransformFilled,
 } from "react-icons/tb";
+import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
-import PageTitle from "../components/PageTitle";
+import {
+  IconHeadingDescriptionCombo,
+  PageTitle,
+} from "../components/miscellaneous";
 import { useAugConfigAndSetter } from "../hooks";
-import ContinueBtn from "../components/buttons/ContinueBtn";
-import PreviousBtn from "../components/buttons/PreviousBtn";
 
 const AugTransformationsInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

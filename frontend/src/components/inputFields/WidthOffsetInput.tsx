@@ -6,7 +6,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { useAugConfigAndSetter } from "../../hooks";
-import sizes from "../../services/size";
+import { sizes } from "../../services";
 
 const WidthOffsetInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

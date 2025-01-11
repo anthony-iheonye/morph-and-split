@@ -1,16 +1,16 @@
-import { VStack, HStack, Text } from "@chakra-ui/react";
+import { HStack, Text, VStack } from "@chakra-ui/react";
 import { TbNumbers } from "react-icons/tb";
-import { Augment } from "../components/buttons";
+import { Augment, ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import {
+  TestStartIndex,
   TrainStartIndex,
   ValStartIndex,
-  TestStartIndex,
 } from "../components/inputFields";
-import PageTitle from "../components/PageTitle";
-import ContinueBtn from "../components/buttons/ContinueBtn";
-import PreviousBtn from "../components/buttons/PreviousBtn";
+import {
+  IconHeadingDescriptionCombo,
+  PageTitle,
+} from "../components/miscellaneous";
 
 const StartAugmentation = () => {
   return (

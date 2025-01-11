@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { getFileExt } from "../fileUtils";
+import { getFileExt } from "../services";
 import useAugConfigAndSetter from "./useAugConfigAndSetter";
 
 const useVisualAttributesFile = () => {

@@ -1,7 +1,7 @@
 import { Box, IconButton, Tooltip, useColorMode } from "@chakra-ui/react";
-import { FaMoon } from "react-icons/fa6";
+import { FaMoon } from "react-icons/fa";
 import { GoSun } from "react-icons/go";
-import useNavIconColor from "../../../hooks/useNavIconColor";
+import { useNavIconColor } from "../../../hooks";
 
 const ColorModeSwitch = () => {
   const { colorMode, toggleColorMode } = useColorMode();

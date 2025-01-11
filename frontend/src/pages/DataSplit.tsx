@@ -9,18 +9,21 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FaLayerGroup } from "react-icons/fa";
-import ContinueBtn from "../components/buttons/ContinueBtn";
-import PreviousBtn from "../components/buttons/PreviousBtn";
+import { FaLayerGroup } from "react-icons/fa6";
+import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import IconHeadingDescriptionCombo from "../components/IconHeadingDescriptionCombo";
 import { TotalTrainData } from "../components/inputFields";
-import PageTitle from "../components/PageTitle";
-import TestRatioLock from "../components/switches/TestRatioLock";
-import TrainRatioLock from "../components/switches/TrainRatioLock";
-import ValRatioLock from "../components/switches/ValRatioLock";
+import {
+  IconHeadingDescriptionCombo,
+  PageTitle,
+} from "../components/miscellaneous";
+import {
+  TestRatioLock,
+  TrainRatioLock,
+  ValRatioLock,
+} from "../components/switches";
+import { useSplitRatio } from "../hooks";
 import useLockedRatio from "../hooks/useLockedSet";
-import useSplitRatio from "../hooks/useSplitRatio";
 
 const clampValue = (value: number, min: number, max: number) => {
   return Math.max(min, Math.min(value, max));

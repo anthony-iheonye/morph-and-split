@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import APIClient, { FetchResponse } from "../services/api-client";
 import ms from "ms";
+import { FetchResponse } from "../entities";
+import { APIClient } from "../services";
 
 const apiClient = new APIClient<string[]>("/upload/mask_names");
 

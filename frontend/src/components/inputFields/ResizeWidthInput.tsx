@@ -1,12 +1,12 @@
 import {
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { useAugConfigAndSetter } from "../../hooks";
-import sizes from "../../services/size";
+import { sizes } from "../../services";
 
 const ResizeWidthInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();

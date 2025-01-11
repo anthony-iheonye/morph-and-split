@@ -1,5 +1,5 @@
 import { Radio, RadioGroup, Stack, useBreakpointValue } from "@chakra-ui/react";
-import useAugConfigStore from "../store/augConfigStore";
+import { useAugConfigStore } from "../../store";
 
 const SplitSelector = () => {
   const { previewedSet, setAugConfig } = useAugConfigStore((state) => ({

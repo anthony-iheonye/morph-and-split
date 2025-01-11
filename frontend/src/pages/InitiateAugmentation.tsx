@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import AugmentBar from "../components/navigation/subNavBars/AugmentBar";
+import { AugmentBar } from "../components/navigation/subNavBars";
 
 const InitiateAugmentation = () => {
   return (

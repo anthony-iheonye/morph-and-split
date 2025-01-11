@@ -1,5 +1,5 @@
 import { Card, CardBody, Image, Text } from "@chakra-ui/react";
-import { Metadata } from "../../entities/UploadedImageMask";
+import { Metadata } from "../../entities";
 
 interface Props {
   file: Metadata;

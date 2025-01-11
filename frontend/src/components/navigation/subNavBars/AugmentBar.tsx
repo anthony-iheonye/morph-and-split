@@ -7,7 +7,7 @@ import {
   useActiveSubParent,
   subParentNames,
 } from "../../../hooks";
-import SubNavBarItem from "../subNavItems/SubNavBarItem";
+import { SubNavBarItem } from "../subNavItems";
 
 const AugmentBar = () => {
   const backgroundColor = useBoundingBoxColor();

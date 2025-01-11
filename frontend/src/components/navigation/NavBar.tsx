@@ -1,13 +1,13 @@
-import { Flex, Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import CompanyLogo from "../CompanyLogo";
+import { CompanyLogo } from "../miscellaneous";
 import {
-  ImageMaskUploader,
   AugmentationConfigIcon,
   AugmentIcon,
-  ResetIcon,
-  // ViewState,
   ColorModeSwitch,
+  ImageMaskUploader,
+  ResetIcon,
+  ViewState,
 } from "./mainNavBarItems";
 
 const NavBar = () => {
@@ -31,7 +31,7 @@ const NavBar = () => {
         <AugmentationConfigIcon />
         <AugmentIcon />
         <ResetIcon />
-        {/* <ViewState /> */}
+        <ViewState />
       </Flex>
 
       <Box
