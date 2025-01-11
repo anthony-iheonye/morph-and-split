@@ -25,7 +25,7 @@ const PreviewUploadedDataGrid = () => {
       <Box
         id="uploadedDataBox"
         overflowY="auto"
-        maxHeight={{ sm: "400px", md: "530px" }}
+        maxHeight={{ base: "75vh", md: "70vh" }}
         // height="100%"
         mt={4}
         flex="1"

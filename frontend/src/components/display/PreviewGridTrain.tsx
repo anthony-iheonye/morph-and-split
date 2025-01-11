@@ -27,7 +27,7 @@ const PreviewGridTrain = () => {
       <Box
         id="trainSetBox"
         overflowY="auto"
-        maxHeight={{ sm: "400px", md: "480px" }}
+        maxHeight={{ base: "70vh", md: "65vh" }}
         mt={4}
       >
         <InfiniteScroll
