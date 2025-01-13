@@ -1,4 +1,4 @@
-import { Box, HStack, SimpleGrid, Switch, Text } from "@chakra-ui/react";
+import { Box, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import { PiFlipHorizontalFill, PiFlipVerticalFill } from "react-icons/pi";
 import { RiContrastDropLine, RiCropFill } from "react-icons/ri";
 import { RxRotateCounterClockwise } from "react-icons/rx";
@@ -9,37 +9,11 @@ import {
 } from "react-icons/tb";
 import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import {
-  IconHeadingDescriptionCombo,
-  PageTitle,
-} from "../components/miscellaneous";
-import { useAugConfigAndSetter } from "../hooks";
+import { PageTitle } from "../components/miscellaneous";
+import { RandomTransformation } from "../components/switches";
+import ComboPlusSwitch from "../components/switches/ComboPlusSwitch";
 
 const AugTransformationsInput = () => {
-  const { augConfig, setAugConfig } = useAugConfigAndSetter();
-
-  const handleCheckBoxChange = (key: keyof typeof augConfig) => {
-    setAugConfig(key, !augConfig[key]);
-  };
-
-  const transforms = {
-    randomCrop:
-      "Randomly selects a portion of the image to crop, resizing it to the original dimensions.",
-    flipUpDown:
-      "Flips the image vertically, creating a mirrored version along the horizontal axis.",
-    flipLeftRight:
-      "Flips the image horizontally, creating a mirrored version along the vertical axis.",
-    randomRotate:
-      "Rotates the image by a random angle to introduce rotation variance.",
-    corruptBrightness:
-      "Adjusts the brightness level randomly to simulate varying lighting conditions.",
-    corruptContrast:
-      "Modifies the contrast of the image to enhance or reduce color distinctions.",
-    corruptSaturation:
-      "Alters the intensity of colors to simulate different saturation levels.",
-    augmentValData:
-      "Apply the selected random transformations to the validation set.",
-  };
   return (
     <>
       <PageTitle title="Transformations" />
@@ -48,131 +22,63 @@ const AugTransformationsInput = () => {
           Choose random transformations to apply to the training set, and
           optionally to the validation set, to enhance data variability.
         </Text>
-        <Box maxHeight={{ base: "300px", md: "90vh" }}>
+        <BoundingBox
+          maxHeight={{ base: "38vh", md: "90vh" }}
+          overflowY="auto"
+          padding={"1 0 4"}
+        >
           <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5, md: 4, lg: 8 }}>
-            {/*random crop*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={RiCropFill}
-                title="Random Crop"
-                description={transforms.randomCrop}
-              />
-              <Switch
-                id="randomCrop"
-                colorScheme="teal"
-                isChecked={augConfig.randomCrop}
-                onChange={() => handleCheckBoxChange("randomCrop")}
-              />
-            </HStack>
+            <RandomTransformation
+              header={"Random Crop"}
+              transformName={"randomCrop"}
+              icon={RiCropFill}
+            />
 
-            {/*flip up down*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={PiFlipHorizontalFill}
-                title="Flip Left-Right"
-                description={transforms.flipLeftRight}
-              />
-              <Switch
-                id="flipLeftRight"
-                colorScheme="teal"
-                isChecked={augConfig.flipLeftRight}
-                onChange={() => handleCheckBoxChange("flipLeftRight")}
-              />
-            </HStack>
+            <RandomTransformation
+              header={"Flip Left-Right"}
+              transformName={"flipLeftRight"}
+              icon={PiFlipHorizontalFill}
+            />
 
-            {/*flip up-down*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={PiFlipVerticalFill}
-                title="Flip Up-Down"
-                description={transforms.flipUpDown}
-              />
-              <Switch
-                id="flipUpDown"
-                colorScheme="teal"
-                isChecked={augConfig.flipUpDown}
-                onChange={() => handleCheckBoxChange("flipUpDown")}
-              />
-            </HStack>
+            <RandomTransformation
+              header={"Flip Up-Down"}
+              transformName={"flipUpDown"}
+              icon={PiFlipVerticalFill}
+            />
 
-            {/*random rotate*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={RxRotateCounterClockwise}
-                title="Random Rotate"
-                description={transforms.randomRotate}
-              />
-              <Switch
-                id="randomRotate"
-                colorScheme="teal"
-                isChecked={augConfig.randomRotate}
-                onChange={() => handleCheckBoxChange("randomRotate")}
-              />
-            </HStack>
+            <RandomTransformation
+              header={"Random Rotate"}
+              transformName={"randomRotate"}
+              icon={RxRotateCounterClockwise}
+            />
 
-            {/*corrupt brightness*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={TbBrightnessFilled}
-                title="Corrupt Brightness"
-                description={transforms.corruptBrightness}
-              />
-              <Switch
-                id="corruptBrightness"
-                colorScheme="teal"
-                isChecked={augConfig.corruptBrightness}
-                onChange={() => handleCheckBoxChange("corruptBrightness")}
-              />
-            </HStack>
+            <RandomTransformation
+              header={"Corrupt Brightness"}
+              transformName={"corruptBrightness"}
+              icon={TbBrightnessFilled}
+            />
 
-            {/*Corrupt contrast*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={TbContrast2Filled}
-                title="Corrupt Contrast"
-                description={transforms.corruptContrast}
-              />
-              <Switch
-                id="corruptBrightness"
-                colorScheme="teal"
-                isChecked={augConfig.corruptContrast}
-                onChange={() => handleCheckBoxChange("corruptContrast")}
-              />
-            </HStack>
+            <RandomTransformation
+              header={"Corrupt Contrast"}
+              transformName={"corruptContrast"}
+              icon={TbContrast2Filled}
+            />
 
-            {/*Corrupt saturation*/}
-            <HStack justify="space-between" align="start" width="100%">
-              <IconHeadingDescriptionCombo
-                icon={RiContrastDropLine}
-                title="Corrupt Saturation"
-                description={transforms.corruptSaturation}
-              />
-              <Switch
-                id="corruptSaturation"
-                colorScheme="teal"
-                isChecked={augConfig.corruptSaturation}
-                onChange={() => handleCheckBoxChange("corruptSaturation")}
-              />
-            </HStack>
+            <RandomTransformation
+              header={"Corrupt Saturation"}
+              transformName={"corruptSaturation"}
+              icon={RiContrastDropLine}
+            />
           </SimpleGrid>
-        </Box>
+        </BoundingBox>
       </BoundingBox>
 
       <BoundingBox>
-        {/*Corrupt saturation*/}
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={TbTransformFilled}
-            title="Augment Validation Set"
-            description={transforms.augmentValData}
-          />
-          <Switch
-            id="augmentValSet"
-            colorScheme="teal"
-            isChecked={augConfig.augmentValData}
-            onChange={() => handleCheckBoxChange("augmentValData")}
-          />
-        </HStack>
+        <RandomTransformation
+          header={"Augment Validation Set"}
+          transformName={"augmentValData"}
+          icon={TbTransformFilled}
+        />
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
