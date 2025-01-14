@@ -1,29 +1,10 @@
-import { Box } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useBoundingBoxColor } from "../../hooks";
 
-interface Props {
+interface Props extends BoxProps {
   children: ReactNode;
-  maxHeight?: string | { base?: string; md?: string; lg?: string };
-  minHeight?: string | { base?: string; md?: string; lg?: string };
-  flex?: string;
-  justify?: string | { base?: string; md?: string; lg?: string };
-  borderRadius?: number | string | { base?: string; md?: string; lg?: string };
-  padding?: number | string | { base?: string; md?: string; lg?: string };
-  overflowY?:
-    | "auto"
-    | "clip"
-    | "hidden"
-    | "scroll"
-    | "unset"
-    | "visible"
-    | { base?: string; md?: string; lg?: string };
-  width?: string | { base?: string; md?: string; lg?: string };
-  maxWidth?: string | { base?: string; md?: string; lg?: string };
   transparent?: boolean;
-  display?: string | { base?: string; md?: string; lg?: string };
-  marginLeft?: number | { base?: number; md?: number; lg?: number };
-  marginRight?: number | { base?: number; md?: number; lg?: number };
 }
 
 const BoundingBox = ({
@@ -32,7 +13,7 @@ const BoundingBox = ({
   maxWidth,
   minHeight,
   flex,
-  justify,
+  justifySelf,
   display,
   marginLeft,
   marginRight,
@@ -41,6 +22,7 @@ const BoundingBox = ({
   overflowY = undefined,
   borderRadius = 4,
   transparent = false,
+  ...rest
 }: Props) => {
   const backgroundColor = useBoundingBoxColor();
 
@@ -56,10 +38,11 @@ const BoundingBox = ({
       flex={flex}
       width={width}
       maxWidth={maxWidth}
-      justifySelf={justify}
+      justifySelf={justifySelf}
       display={display}
       marginLeft={marginLeft}
       marginRight={marginRight}
+      {...rest}
     >
       {children}
     </Box>
