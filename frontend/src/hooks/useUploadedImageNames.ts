@@ -27,7 +27,7 @@ const apiClient = new APIClient<string[]>("/upload/image_names");
  */
 const useUploadedImageNames = () =>
   useQuery<FetchResponse<string[]>, Error>({
-    queryKey: ["image_names"],
+    queryKey: ["imageNames"],
     queryFn: apiClient.getAll,
     staleTime: ms("24h"),
   });

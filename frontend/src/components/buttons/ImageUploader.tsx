@@ -1,24 +1,20 @@
 import { Button, Input, Spinner, useBreakpointValue } from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
 import { BackendResponse, SignedUploadUrls } from "../../entities";
-import { useBackendResponse, useFileUploader } from "../../hooks";
+import { useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
+import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
 
 const ImageUploader = () => {
-  const queryClient = useQueryClient();
   const uploadClient = new APIClient<SignedUploadUrls>(
     "/generate-signed-upload-url"
   );
   const imageTransferClient = new APIClient<BackendResponse>(
     "/transfer_images_to_backend"
   );
-
   const resizeClient = new APIClient<BackendResponse>(
     "/resize-uploaded-images"
   );
-
-  const { setBackendResponseLog } = useBackendResponse();
 
   const buttonText = useBreakpointValue({
     base: "Select",
@@ -35,8 +31,6 @@ const ImageUploader = () => {
         );
 
         if (response.success) {
-          setBackendResponseLog("augmentationIsComplete", false);
-
           try {
             const imagesTransfered = await imageTransferClient.processFiles();
             console.log(`download response:`, imagesTransfered);
@@ -46,10 +40,12 @@ const ImageUploader = () => {
               const resized = await resizeClient.processFiles();
 
               if (resized) {
-                // Invalidate the 'image_names' query to refresh the updated list
-                queryClient.invalidateQueries(["image_names"]);
-                // invaliate the 'metadata' query to refresh the  image and mask preview grid
-                queryClient.invalidateQueries(["metadata"]);
+                // Invalidate the 'image_names' query to refresh the updated list, and 'metadata' query to refresh the  image and mask preview grid
+                invalidateQueries([
+                  "imageNames",
+                  "metadata",
+                  "imageUploadStatus",
+                ]);
               }
             }
           } catch (error) {
