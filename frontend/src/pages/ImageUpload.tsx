@@ -9,10 +9,12 @@ import {
   IconHeadingDescriptionCombo,
   PageTitle,
 } from "../components/miscellaneous";
-import { useUploadedImageNames } from "../hooks";
+import { useImageUploadStatus, useUploadedImageNames } from "../hooks";
 
 const ImageUpload = () => {
   const { data } = useUploadedImageNames();
+  const { data: uploadStatus } = useImageUploadStatus();
+  console.log(uploadStatus?.success);
 
   return (
     <>
@@ -37,7 +39,7 @@ const ImageUpload = () => {
             icon={IoLayers}
             title={{ base: "Image Channels", md: "Number of Image Channels" }}
             description={{
-              // base: "Image channels",
+              base: "Image channels",
               md: "Select the number of image channels.",
             }}
           />
@@ -50,7 +52,7 @@ const ImageUpload = () => {
           icon={TbLayersSelected}
           title="Selected Images"
         />
-        <Box overflowY="auto" maxHeight={{ base: "28vh", md: "55vh" }} mt={4}>
+        <Box overflowY="auto" maxHeight={{ base: "28vh", md: "48vh" }} mt={4}>
           {data?.results && data?.results.length > 0 ? (
             data?.results.map((name, index) => (
               <Text fontWeight="thin" fontSize="md" key={index}>
@@ -66,7 +68,7 @@ const ImageUpload = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <ContinueBtn to="/upload_data/masks" />
+        <ContinueBtn to="/upload_data/masks" disable={!uploadStatus?.success} />
       </BoundingBox>
     </>
   );

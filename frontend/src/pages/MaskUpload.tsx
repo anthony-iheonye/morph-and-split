@@ -9,10 +9,11 @@ import {
   IconHeadingDescriptionCombo,
   PageTitle,
 } from "../components/miscellaneous";
-import { useUploadedMaskNames } from "../hooks";
+import { useMaskUploadStatus, useUploadedMaskNames } from "../hooks";
 
 const MaskUpload = () => {
-  const { data } = useUploadedMaskNames();
+  const { data: maskData } = useUploadedMaskNames();
+  const { data: uploadStatus } = useMaskUploadStatus();
 
   return (
     <>
@@ -45,9 +46,9 @@ const MaskUpload = () => {
           icon={TbLayersSelected}
           title="Selected Masks"
         />
-        <Box overflowY="auto" maxHeight={{ base: "28vh", md: "55vh" }} mt={4}>
-          {data?.results && data?.results.length > 0 ? (
-            data?.results.map((name, index) => (
+        <Box overflowY="auto" maxHeight={{ base: "28vh", md: "48vh" }} mt={4}>
+          {maskData?.results && maskData?.results.length > 0 ? (
+            maskData?.results.map((name, index) => (
               <Text fontWeight="thin" fontSize="md" key={index}>
                 {name}
               </Text>
@@ -63,7 +64,10 @@ const MaskUpload = () => {
       <BoundingBox transparent padding={0}>
         <HStack>
           <PreviousBtn to="/upload_data/images" />
-          <ContinueBtn to="/upload_data/preview" />
+          <ContinueBtn
+            to="/upload_data/preview"
+            disable={!uploadStatus?.success}
+          />
         </HStack>
       </BoundingBox>
     </>
