@@ -2,25 +2,18 @@ import { Button, Spinner, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { TbTransform } from "react-icons/tb";
 import { BackendResponse } from "../../entities";
-import { useBackendResponse } from "../../hooks";
 import { APIClient } from "../../services";
 import { useAugConfigStore } from "../../store";
-import DownloadButton from "./DownloadButton";
 
 const Augment = () => {
   const AugmentationAPI = new APIClient<BackendResponse>("/augment");
-  const DownloadAPI = new APIClient<Blob>("/download");
 
   const { augConfig } = useAugConfigStore();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  const { augmentationIsComplete, setBackendResponseLog } =
-    useBackendResponse();
-
   const handleAugment = async () => {
     setIsLoading(true);
-    setBackendResponseLog("augmentationIsComplete", false);
 
     // Prepare FormData
     const formData = new FormData();
@@ -37,7 +30,6 @@ const Augment = () => {
       const response = await AugmentationAPI.uploadFiles(formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setBackendResponseLog("augmentationIsComplete", response.success);
 
       if (response.success) {
         toast({
