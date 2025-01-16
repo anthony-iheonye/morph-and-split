@@ -25,3 +25,4 @@ dist-ssr
 src/components/formInputs/inputs
 src/components/Augment2.tsx
 .vercel
+src/pages/Practice.tsx
