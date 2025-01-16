@@ -1,4 +1,4 @@
-import { Button, Input, useBreakpointValue } from "@chakra-ui/react";
+import { Button, Input, Spinner, useBreakpointValue } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { BackendResponse, SignedUploadUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
@@ -10,7 +10,7 @@ const ImageUploader = () => {
   const uploadClient = new APIClient<SignedUploadUrls>(
     "/generate-signed-upload-url"
   );
-  const imageDownloadClient = new APIClient<BackendResponse>(
+  const imageTransferClient = new APIClient<BackendResponse>(
     "/transfer_images_to_backend"
   );
 
@@ -36,19 +36,21 @@ const ImageUploader = () => {
 
         if (response.success) {
           setBackendResponseLog("augmentationIsComplete", false);
-          // Invalidate the 'image_names' query to refresh the updated list
-          queryClient.invalidateQueries(["image_names"]);
-          // invaliate the 'metadata' query to refresh the  image and mask preview grid
-          queryClient.invalidateQueries(["metadata"]);
 
-          // transfer uploaded images from GCS to backend
           try {
-            const downloaded = await imageDownloadClient.processFiles();
-            console.log(`download response:`, downloaded);
+            const imagesTransfered = await imageTransferClient.processFiles();
+            console.log(`download response:`, imagesTransfered);
 
-            if (downloaded.success) {
+            if (imagesTransfered.success) {
               // produce resized version of uploaded images
-              await resizeClient.processFiles();
+              const resized = await resizeClient.processFiles();
+
+              if (resized) {
+                // Invalidate the 'image_names' query to refresh the updated list
+                queryClient.invalidateQueries(["image_names"]);
+                // invaliate the 'metadata' query to refresh the  image and mask preview grid
+                queryClient.invalidateQueries(["metadata"]);
+              }
             }
           } catch (error) {
             console.error(`Error `);
@@ -67,6 +69,7 @@ const ImageUploader = () => {
       cursor="pointer"
       isDisabled={isUploading}
       width="auto"
+      leftIcon={isUploading ? <Spinner size="md" color="white" /> : undefined}
     >
       {isUploading ? "Uploading" : buttonText}
       <Input
