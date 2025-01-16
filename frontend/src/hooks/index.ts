@@ -16,6 +16,8 @@ export { default as useUploadedImageNames } from "./useUploadedImageNames";
 export { default as useUploadedMaskNames } from "./useUploadedMaskNames";
 export { default as useValidationSet } from "./useValidationSet";
 export { default as useVisualAttributesFile } from "./useVisualAttributesFile";
+export { default as useImageUploadStatus } from "./useImageUploadStatus";
+export { default as useMaskUploadStatus } from "./useMaskUploadStatus";
 
 export { parentNames } from "./useActiveParent";
 export { subParentNames } from "./useActiveSubParent";
