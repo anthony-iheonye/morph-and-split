@@ -34,12 +34,12 @@ const ResetIcon = () => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   // Create API client for resetting session
-  const apiClient = new APIClient("/reset_session");
+  const resetClient = new APIClient("/reset_session");
 
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
       // Call reset API
-      const response = await apiClient.resetSession();
+      const response = await resetClient.resetSession();
 
       if (response.success) {
         toast({
