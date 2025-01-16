@@ -1,6 +1,11 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import { TbNumbers } from "react-icons/tb";
-import { Augment, ContinueBtn, PreviousBtn } from "../components/buttons";
+import {
+  Augment,
+  ContinueBtn,
+  DownloadButton,
+  PreviousBtn,
+} from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import {
   TestStartIndex,
@@ -11,8 +16,13 @@ import {
   IconHeadingDescriptionCombo,
   PageTitle,
 } from "../components/miscellaneous";
+import useAugmentationStatus from "../hooks/useAugmentationStatus";
+import { APIClient } from "../services";
 
 const StartAugmentation = () => {
+  const DownloadAPI = new APIClient<Blob>("/download");
+  const { data } = useAugmentationStatus();
+
   return (
     <>
       <PageTitle title="Start Augmentation" />
@@ -67,7 +77,17 @@ const StartAugmentation = () => {
         <HStack>
           <PreviousBtn to="/settings/pre_processing" />
           <Augment />
-          <ContinueBtn to="/augment/preview" label="Preview result" />
+          <ContinueBtn
+            to="/augment/preview"
+            label="Continue"
+            disable={!data?.success}
+          />
+          {data?.success && (
+            <DownloadButton
+              filename="augmented_data.zip"
+              onDownload={DownloadAPI.downloadFile}
+            />
+          )}
         </HStack>
       </BoundingBox>
     </>
