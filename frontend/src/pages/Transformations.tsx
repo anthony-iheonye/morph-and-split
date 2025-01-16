@@ -1,4 +1,4 @@
-import { Box, HStack, SimpleGrid, Text } from "@chakra-ui/react";
+import { HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import { PiFlipHorizontalFill, PiFlipVerticalFill } from "react-icons/pi";
 import { RiContrastDropLine, RiCropFill } from "react-icons/ri";
 import { RxRotateCounterClockwise } from "react-icons/rx";
@@ -11,7 +11,6 @@ import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { PageTitle } from "../components/miscellaneous";
 import { RandomTransformation } from "../components/switches";
-import ComboPlusSwitch from "../components/switches/ComboPlusSwitch";
 
 const AugTransformationsInput = () => {
   return (
@@ -23,9 +22,10 @@ const AugTransformationsInput = () => {
           optionally to the validation set, to enhance data variability.
         </Text>
         <BoundingBox
-          maxHeight={{ base: "38vh", md: "90vh" }}
-          overflowY="auto"
-          padding={"1 0 4"}
+          maxHeight={{ base: "38vh", md: "70vh" }}
+          overflowY={{ base: "auto", md: "hidden" }}
+          padding={"0"}
+          mr={0}
         >
           <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5, md: 4, lg: 8 }}>
             <RandomTransformation
