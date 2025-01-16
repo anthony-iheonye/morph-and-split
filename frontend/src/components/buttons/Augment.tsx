@@ -1,11 +1,10 @@
-import { Button, useToast } from "@chakra-ui/react";
+import { Button, Spinner, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { TbTransform } from "react-icons/tb";
 import { BackendResponse } from "../../entities";
 import { useBackendResponse } from "../../hooks";
 import { APIClient } from "../../services";
 import { useAugConfigStore } from "../../store";
-import { BoundingBox } from "../display";
 import DownloadButton from "./DownloadButton";
 
 const Augment = () => {
@@ -74,19 +73,12 @@ const Augment = () => {
         _hover={{ bg: "teal" }}
         onClick={handleAugment}
         disabled={isLoading}
-        leftIcon={<TbTransform />}
+        leftIcon={
+          isLoading ? <Spinner size="md" color="white" /> : <TbTransform />
+        }
       >
         {isLoading ? "Processing" : "Augment Data"}
       </Button>
-      {augmentationIsComplete && (
-        <BoundingBox justify={"center"} transparent={true}>
-          <DownloadButton
-            filename="augmented_data.zip"
-            label="Download augmented data"
-            onDownload={DownloadAPI.downloadFile}
-          />
-        </BoundingBox>
-      )}
     </>
   );
 };
