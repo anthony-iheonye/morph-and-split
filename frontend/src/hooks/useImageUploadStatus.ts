@@ -6,8 +6,8 @@ import ms from "ms";
 const statusClient = new APIClient<BackendResponse>("/image_upload_status");
 
 const useImageUploadStatus = () => {
-  useQuery<BackendResponse>({
-    queryKey: ["image_upload_status"],
+  return useQuery<BackendResponse, Error>({
+    queryKey: ["imageUploadStatus"],
     queryFn: statusClient.getStatus,
     staleTime: ms("24h"),
   });

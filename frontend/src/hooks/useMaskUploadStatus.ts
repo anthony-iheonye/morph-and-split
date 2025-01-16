@@ -6,8 +6,8 @@ import ms from "ms";
 const statusClient = new APIClient<BackendResponse>("/mask_upload_status");
 
 const useMaskUploadStatus = () => {
-  useQuery<BackendResponse>({
-    queryKey: ["mask_upload_status"],
+  return useQuery<BackendResponse, Error>({
+    queryKey: ["maskUploadStatus"],
     queryFn: statusClient.getStatus,
     staleTime: ms("24h"),
   });
