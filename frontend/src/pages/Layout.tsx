@@ -1,8 +1,13 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { NavBar } from "../components/navigation";
+import { parentNames, useActiveParent } from "../hooks";
+import WelcomePage from "./WelcomePage";
 
 const Layout = () => {
+  const activeParent = useActiveParent();
+  const { home } = parentNames;
+
   return (
     <Box
       display="flex"
@@ -29,6 +34,7 @@ const Layout = () => {
 
         <GridItem area="outlet">
           <Box>
+            {activeParent === home ? <WelcomePage /> : null}
             <Outlet />
           </Box>
         </GridItem>
