@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 
 export const parentNames = {
+  home: "home",
   uploadImageAndMask: "uploadImageAndMask",
   augmentationConfig: "augmentationConfig",
   augment: "augment",
@@ -8,10 +9,12 @@ export const parentNames = {
 
 const useActiveParent = () => {
   const location = useLocation();
-  const { augment, augmentationConfig, uploadImageAndMask } = parentNames;
+  const { augment, augmentationConfig, home, uploadImageAndMask } = parentNames;
 
   const activeParent =
-    location.pathname.startsWith("/upload_data") || location.pathname === ""
+    location.pathname === "/"
+      ? home
+      : location.pathname.startsWith("/upload_data")
       ? uploadImageAndMask
       : location.pathname.startsWith("/settings")
       ? augmentationConfig
