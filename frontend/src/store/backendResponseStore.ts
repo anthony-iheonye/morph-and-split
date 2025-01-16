@@ -1,11 +1,21 @@
 import { create } from "zustand";
 
 interface BackendResponseLog {
-  augmentationIsComplete: Boolean;
+  augmentationIsComplete?: Boolean;
+  imageUploaded?: Boolean;
+  maskUploaded?: Boolean;
+  uploadedImagesCount?: number;
+  uploadedMasksCount?: number;
+  imageMaskCountIsEqual?: Boolean;
 }
 
 const initialBackendResponseLog: BackendResponseLog = {
   augmentationIsComplete: false,
+  imageUploaded: false,
+  maskUploaded: false,
+  uploadedImagesCount: 0,
+  uploadedMasksCount: 0,
+  imageMaskCountIsEqual: false,
 };
 interface BackendResponseStore {
   backendResponseLog: BackendResponseLog;
@@ -13,6 +23,7 @@ interface BackendResponseStore {
     key: K,
     value: BackendResponseLog[K]
   ) => void;
+  resetBackendResponseLog: () => void;
 }
 
 const useBackendResponseStore = create<BackendResponseStore>((set) => ({
@@ -20,6 +31,10 @@ const useBackendResponseStore = create<BackendResponseStore>((set) => ({
   setBackendResponseLog: (key, value) =>
     set((store) => ({
       backendResponseLog: { ...store.backendResponseLog, [key]: value },
+    })),
+  resetBackendResponseLog: () =>
+    set(() => ({
+      backendResponseLog: initialBackendResponseLog,
     })),
 }));
 
