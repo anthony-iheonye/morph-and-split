@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import BackendResponse from "../entities/BackendResponse";
-import SignedUploadUrls from "../entities/SignedUploadUrls";
+import { BackendResponse, SignedUploadUrls } from "../entities";
 
 export interface FetchResponse<T> {
   success?: Boolean;
@@ -69,16 +68,58 @@ class APIClient<T> {
       .get<FetchResponse<T>>(this.endpoint, requestConfig)
       .then((res) => res.data);
 
-  resetSession = (
-    requestConfig?: AxiosRequestConfig
-  ): Promise<BackendResponse> =>
+  getStatus = (requestConfig?: AxiosRequestConfig) =>
     axiosInstance
-      .post<BackendResponse>(this.endpoint, requestConfig)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.error("Error resetting session: ", err.messsage);
+      .get<BackendResponse>(this.endpoint, requestConfig)
+      .then((res) => res.data);
+
+  resetSession = async (
+    requestConfig?: AxiosRequestConfig
+  ): Promise<BackendResponse> => {
+    try {
+      const response = await axiosInstance.post<BackendResponse>(
+        this.endpoint,
+        requestConfig
+      );
+      return response.data;
+    } catch (err: any) {
+      if (axios.isAxiosError(err))
         return { success: false, error: err.message };
-      });
+      else return { success: false, error: "An unexpected error occurred." };
+    }
+  };
+
+  endSession = async (
+    requestConfig?: AxiosRequestConfig
+  ): Promise<BackendResponse> => {
+    try {
+      const response = await axiosInstance.post<BackendResponse>(
+        this.endpoint,
+        requestConfig
+      );
+      return response.data;
+    } catch (err: any) {
+      if (axios.isAxiosError(err))
+        return { success: false, error: err.message };
+      else return { success: false, error: "An unexpected error occured." };
+    }
+  };
+
+  createStorage = async (
+    requestConfig?: AxiosRequestConfig
+  ): Promise<BackendResponse> => {
+    try {
+      const response = await axiosInstance.post<BackendResponse>(
+        this.endpoint,
+        requestConfig
+      );
+      return response.data;
+    } catch (err: any) {
+      if (axios.isAxiosError(err))
+        return { success: false, error: err.message };
+      else return { success: false, error: "An unexpected error occurred." };
+    }
+  };
 
   resizeImagesMasks = (
     requestConfig?: AxiosRequestConfig
