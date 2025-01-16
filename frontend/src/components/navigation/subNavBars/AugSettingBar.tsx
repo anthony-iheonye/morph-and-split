@@ -75,6 +75,17 @@ const AugSettingBar = () => {
         }
         tooltipLabel="Apply pre-processing steps"
       />
+
+      {/* <SubNavBarItem
+        icon={<PiResizeBold />}
+        iconLabel="Practice time."
+        text={{ md: "Practice" }}
+        to={"/settings/practice"}
+        backgroundColor={
+          activeSubParent === preProcessing ? subParentColor : "transparent"
+        }
+        tooltipLabel="My practice round"
+      /> */}
     </Flex>
   );
 };
