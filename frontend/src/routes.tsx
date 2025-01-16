@@ -7,11 +7,11 @@ import Layout from "./pages/Layout";
 import MaskUpload from "./pages/MaskUpload";
 import PreProcessing from "./pages/Preprocessing";
 import Preview from "./pages/Preview";
+import PreviewAugmentedResults from "./pages/PreviewAugmentedResults";
 import StartAugmentation from "./pages/StartAugmentation";
 import AugTransformationsInput from "./pages/Transformations";
 import UploadData from "./pages/UploadData";
 import VisualAttributes from "./pages/VisualAttributes";
-import PreviewAugmentedResults from "./pages/PreviewAugmentedResults";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +55,7 @@ const router = createBrowserRouter([
           },
           { path: "visual_attributes", element: <VisualAttributes /> },
           { path: "pre_processing", element: <PreProcessing /> },
+          // { path: "practice", element: <Practice /> },
         ],
       },
       {

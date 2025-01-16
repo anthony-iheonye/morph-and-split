@@ -18,7 +18,7 @@ const NavBar = () => {
       minHeight={{ md: "100%" }}
       padding="10px"
     >
-      <Link to={"/upload_data"}>
+      <Link to={"/"}>
         <CompanyLogo />
       </Link>
 
