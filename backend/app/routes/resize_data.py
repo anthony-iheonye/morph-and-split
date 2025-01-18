@@ -25,7 +25,7 @@ def resize_original_images():
 
 
 @resize_data.route('/resize-uploaded-masks', methods=['POST'])
-def resize_original_images():
+def resize_original_masks():
     """Resizes uploaded images."""
     try:
         # Resize images

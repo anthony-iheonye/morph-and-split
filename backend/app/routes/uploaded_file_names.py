@@ -18,7 +18,7 @@ def get_uploaded_image_names():
 
 
 @uploaded_file_names.route('/upload/mask_names', methods=['GET'])
-def get_uploaded_image_names():
+def get_uploaded_mask_names():
     try:
         mask_files = list_files_in_bucket_directory(bucket_name=google_cloud_config.bucket_name,
                                                     directory_path=f"{google_cloud_config.mask_dir}/")
