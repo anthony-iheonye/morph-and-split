@@ -3,9 +3,10 @@ import re
 import shutil
 import subprocess
 from typing import Union
+import asyncio
 
 import attr
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import NotFound, GoogleAPIError
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
 
@@ -97,6 +98,26 @@ def create_directory(dir_name, return_dir=False, overwrite_if_existing=False):
             return dir_name + '/'
         else:
             return dir_name
+
+
+def delete_directory(dir_name, return_dir=False):
+    """
+    Deletes a directory. To return the name of the directory path, input True for the 'return_dir'.
+
+    :param dir_name: name of directory
+    :param return_dir: boolean, True to return the name of the directory
+    :return: name of the directory
+    """
+
+    path_name = dir_name if dir_name[-1] == '/' else dir_name + '/'
+
+    # confirm that the path belongs to a directory, then delete it.
+    if os.path.isdir(path_name):
+        shutil.rmtree(path=path_name, ignore_errors=True)
+        if return_dir:
+            return path_name
+    else:
+        print("Directory does not exist!")
 
 
 def create_project_directories(return_dir=True, overwrite_if_existing=False):
@@ -202,7 +223,6 @@ def create_google_cloud_storage_bucket(bucket_name: str,
     Create a new Google Cloud Storage (GCS) bucket.
 
     :param directories:
-    :param subdiretories:
     :param cors:
     :param bucket_name: The bucket name
     :param project: (str) The project under which the bucket is to be created. If not passed, uses the project set on the client.
@@ -327,16 +347,24 @@ def delete_google_cloud_storage_bucket(bucket_name: str):
     """
 
     try:
-        if bucket_exists(bucket_name):
-            gcloud_command = ["gcloud",
-                              "storage",
-                              "rm",
-                              "-r",
-                              f"gs://{bucket_name}"]
-            subprocess.run(gcloud_command, check=True, capture_output=True)
-            print(f"Successfully deleted bucket {bucket_name}.")
-    except NotFound:
-        print(f"Bucket {bucket_name} does not exist.")
+        # Initialize storage client
+        storage_client = storage.Client()
+
+        # Check if the bucket exists
+        bucket = storage_client.lookup_bucket(bucket_name)
+
+        if bucket is None:
+            print(f"Bucket {bucket_name} does not exist.")
+            return False
+
+        # Delete the bucket
+        bucket.delete(force=True)
+        print(f"Successfully deleted bucket {bucket_name}.")
+        return True
+
+    except GoogleAPIError as e:
+        print(f"An error occurred while deleting the bucket: {e}")
+        return False
 
 
 def bucket_exists(bucket_name: str) -> bool:
@@ -351,15 +379,15 @@ def bucket_exists(bucket_name: str) -> bool:
         storage_client = storage.Client()
 
         # Attempt to get the bucket
-        bucket = storage_client.get_bucket(bucket_name)
+        bucket = storage_client.lookup_bucket(bucket_name)
 
-        # If no exception is raised, the bucket exists
-        print(f"Bucket '{bucket_name}' exists.")
-        return True
-    except NotFound:
-        # If the bucket is not found, return False
-        print(f"Bucket '{bucket_name}' does not exist.")
-        return False
+        if bucket is not None:
+            print(f"Bucket {bucket_name} exists.")
+            return True
+        else:
+            print(f"Bucket {bucket_name} does not exist.")
+            return False
+
     except Exception as e:
         # Handle other unexpected errors
         print(f"An error occurred: {e}")

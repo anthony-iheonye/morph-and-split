@@ -11,4 +11,5 @@ from .directory_file_management import (create_project_directories,
                                         create_resized_augmentation_directories,
                                         list_files_in_bucket_directory,
                                         delete_files_in_google_cloud_storage_bucket,
-                                        download_files_from_gcs_folder)
+                                        download_files_from_gcs_folder,
+                                        delete_directory)
