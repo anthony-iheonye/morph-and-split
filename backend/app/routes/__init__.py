@@ -1,6 +1,5 @@
 # import Blueprints
 from .augment import augment
-from .augmentation_status import augmentation_status
 from .directory_management import directory_management
 from .end_session import delete_session
 from .file_download import file_download
@@ -12,5 +11,5 @@ from .mask_upload import mask_upload
 from .reset_session import reset_session
 from .resize_data import resize_data
 from .signed_upload_url import signed_upload_url
-from .upload_status import file_upload_status
+from .status_check import status_checks
 from .uploaded_file_names import uploaded_file_names

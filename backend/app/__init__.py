@@ -3,12 +3,11 @@ from flask_cors import CORS
 
 from app.routes import (
     augment,
-    augmentation_status,
     delete_session,
     directory_management,
     download_data_from_gcs,
     file_download,
-    file_upload_status,
+    status_checks,
     gcs_management,
     image_mask_metadata,
     image_upload,
@@ -38,8 +37,7 @@ def create_app():
     app.register_blueprint(file_download)
     app.register_blueprint(augment)
     app.register_blueprint(delete_session)
-    app.register_blueprint(file_upload_status)
-    app.register_blueprint(augmentation_status)
+    app.register_blueprint(status_checks)
     app.register_blueprint(gcs_management)
 
     return app
