@@ -1,8 +1,7 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 
-const invalidateQueries = (queryNames: string[]) => {
-  const queryClient = useQueryClient();
-  for (const name of queryNames) {
+const invalidateQueries = (queryClient: QueryClient, queryKeys: string[]) => {
+  for (const name of queryKeys) {
     queryClient.invalidateQueries([name]);
   }
 };
