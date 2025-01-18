@@ -13,12 +13,10 @@ from app.routes import (
     image_mask_metadata,
     image_upload,
     mask_upload,
-    resize_uploaded_images,
-    resize_uploaded_masks,
+    resize_data,
     reset_session,
     signed_upload_url,
-    uploaded_image_names,
-    uploaded_mask_names,
+    uploaded_file_names,
 )
 
 
@@ -33,11 +31,9 @@ def create_app():
     app.register_blueprint(image_upload)
     app.register_blueprint(mask_upload)
     app.register_blueprint(download_data_from_gcs)
-    app.register_blueprint(resize_uploaded_images)
-    app.register_blueprint(resize_uploaded_masks)
+    app.register_blueprint(resize_data)
     app.register_blueprint(image_mask_metadata)
-    app.register_blueprint(uploaded_image_names)
-    app.register_blueprint(uploaded_mask_names)
+    app.register_blueprint(uploaded_file_names)
     app.register_blueprint(reset_session)
     app.register_blueprint(file_download)
     app.register_blueprint(augment)
