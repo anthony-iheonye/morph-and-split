@@ -202,6 +202,25 @@ class APIClient<T> {
       throw error;
     }
   };
+
+  deleteDirectory = async (
+    directoryPath?: string,
+    requestConfig?: AxiosRequestConfig
+  ): Promise<BackendResponse> => {
+    try {
+      const endpoint = directoryPath
+        ? `${this.endpoint}/${encodeURIComponent(directoryPath)}`
+        : this.endpoint;
+
+      const response = await axiosInstance.delete<BackendResponse>(
+        endpoint,
+        requestConfig
+      );
+      return response.data;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  };
 }
 
 export default APIClient;
