@@ -4,7 +4,7 @@ import { APIClient } from "../services";
 import ms from "ms";
 
 const statusClient = new APIClient<BackendResponse>(
-  "/augmentation_complete_status"
+  "/status_checks/augmentation_is_complete"
 );
 
 const useAugmentationStatus = () => {

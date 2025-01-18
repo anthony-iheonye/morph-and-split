@@ -3,7 +3,9 @@ import { BackendResponse } from "../entities";
 import { APIClient } from "../services";
 import ms from "ms";
 
-const statusClient = new APIClient<BackendResponse>("/mask_upload_status");
+const statusClient = new APIClient<BackendResponse>(
+  "/status_checks/mask_upload_status"
+);
 
 const useMaskUploadStatus = () => {
   return useQuery<BackendResponse, Error>({

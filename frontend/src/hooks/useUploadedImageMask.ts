@@ -3,7 +3,9 @@ import ms from "ms";
 import UploadedImageMask from "../entities/UploadedImageMask";
 import APIClient, { FetchResponse } from "../services/api-client";
 
-const apiClient = new APIClient<UploadedImageMask>("/metadata/image_mask");
+const apiClient = new APIClient<UploadedImageMask>(
+  "/metadata/uploaded_image_mask"
+);
 
 /**
  * Custom hook to fetch metadata of uploaded images and masks from the backend.
@@ -49,7 +51,7 @@ const useUploadedImageMask = () =>
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next ? allPages.length + 1 : undefined;
     },
-    staleTime: ms("24h"), //2 hours
+    staleTime: ms("24h"), //24 hours
   });
 
 export default useUploadedImageMask;

@@ -20,7 +20,7 @@ import useAugmentationStatus from "../hooks/useAugmentationStatus";
 import { APIClient } from "../services";
 
 const StartAugmentation = () => {
-  const DownloadAPI = new APIClient<Blob>("/download");
+  const DownloadAPI = new APIClient<Blob>("/download/augmentation_results");
   const { data } = useAugmentationStatus();
 
   return (
