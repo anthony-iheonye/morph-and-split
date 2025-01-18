@@ -19,7 +19,7 @@ const EndSession = ({ label = "End session", disable = false }: Props) => {
 
   const handleClick = async () => {
     try {
-      const response = await sessionClient.endSession();
+      const response = await sessionClient.executeAction();
 
       if (response.success) {
         navigate("/");

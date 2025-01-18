@@ -36,7 +36,7 @@ const ResetIcon = () => {
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
       // Call reset API
-      const response = await resetClient.resetSession();
+      const response = await resetClient.executeAction();
 
       if (response.success) {
         toast({

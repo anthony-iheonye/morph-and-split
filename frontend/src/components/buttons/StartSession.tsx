@@ -16,7 +16,7 @@ const StartSession = ({
   disable = false,
 }: Props) => {
   const navigate = useNavigate();
-  const storageClient = new APIClient<BackendResponse>("/create_storage");
+  const storageClient = new APIClient<BackendResponse>("/gcs/create_bucket");
 
   const responsiveLabel = useBreakpointValue(
     typeof label === "string" ? { base: label } : label
@@ -24,7 +24,7 @@ const StartSession = ({
 
   const handleClick = async () => {
     try {
-      const response = await storageClient.createStorage();
+      const response = await storageClient.executeAction();
 
       if (response.success) {
         navigate(to);

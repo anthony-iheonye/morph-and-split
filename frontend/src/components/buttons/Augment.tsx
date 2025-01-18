@@ -27,7 +27,7 @@ const Augment = () => {
     formData.append("config", JSON.stringify(reducedConfig)); // Add only the reduced
 
     try {
-      const response = await AugmentationAPI.uploadFiles(formData, {
+      const response = await AugmentationAPI.postData(formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

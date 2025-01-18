@@ -21,10 +21,23 @@ class APIClient<T> {
     this.endpoint = endpoint;
   }
 
-  uploadFiles = (data: FormData, requestConfig?: AxiosRequestConfig) =>
-    axiosInstance
-      .post<T>(this.endpoint, data, requestConfig)
-      .then((res) => res.data);
+  executeAction = async (
+    data?: Object,
+    requestConfig?: AxiosRequestConfig
+  ): Promise<BackendResponse> => {
+    try {
+      const response = await axiosInstance.post<BackendResponse>(
+        this.endpoint,
+        data || {},
+        requestConfig
+      );
+      return response.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error))
+        return { success: false, error: error.message };
+      else return { success: false, error: "An unexpected error occured." };
+    }
+  };
 
   fetchAugmentedResults = (
     id: string | number,
@@ -38,28 +51,39 @@ class APIClient<T> {
     filename: string,
     requestConfig?: AxiosRequestConfig
   ) => {
-    // send get request download file from server
-    const response = await axiosInstance.get(
-      `${this.endpoint}/${encodeURIComponent(filename)}`,
-      { responseType: "blob", ...requestConfig }
-    );
+    try {
+      // send get request download file from server
+      const response = await axiosInstance.get(
+        `${this.endpoint}/${encodeURIComponent(filename)}`,
+        { responseType: "blob", ...requestConfig }
+      );
+      this.handleDownload(response.data, filename);
+    } catch (error: any) {
+      console.error("Failed to download file: ", error.message);
+    }
+  };
 
-    // handle file download
-    if (response) {
-      // wrap the file content in a Blob, so it is treated as a downloadable file
-      const blob = new Blob([response.data]);
-      // create temporary url pointing to the blob
-      const url = window.URL.createObjectURL(blob);
-      // Create a link element
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+  handleDownload = (data: Blob, filename: string) => {
+    const blob = new Blob([data]);
+    // create temporary url pointing to the blob
+    const url = window.URL.createObjectURL(blob);
+    // Create a link element
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
+  handleError = (error: any) => {
+    if (axios.isAxiosError(error)) {
+      console.error("Axios error: ", error.message);
+      return { success: false, error: error.message };
     } else {
-      console.error("Failed to dowload file.");
+      console.error("Unexpected error: ", error);
+      return { success: false, error: "An unexpected error occurred." };
     }
   };
 
@@ -72,65 +96,6 @@ class APIClient<T> {
     axiosInstance
       .get<BackendResponse>(this.endpoint, requestConfig)
       .then((res) => res.data);
-
-  resetSession = async (
-    requestConfig?: AxiosRequestConfig
-  ): Promise<BackendResponse> => {
-    try {
-      const response = await axiosInstance.post<BackendResponse>(
-        this.endpoint,
-        requestConfig
-      );
-      return response.data;
-    } catch (err: any) {
-      if (axios.isAxiosError(err))
-        return { success: false, error: err.message };
-      else return { success: false, error: "An unexpected error occurred." };
-    }
-  };
-
-  endSession = async (
-    requestConfig?: AxiosRequestConfig
-  ): Promise<BackendResponse> => {
-    try {
-      const response = await axiosInstance.post<BackendResponse>(
-        this.endpoint,
-        requestConfig
-      );
-      return response.data;
-    } catch (err: any) {
-      if (axios.isAxiosError(err))
-        return { success: false, error: err.message };
-      else return { success: false, error: "An unexpected error occured." };
-    }
-  };
-
-  createStorage = async (
-    requestConfig?: AxiosRequestConfig
-  ): Promise<BackendResponse> => {
-    try {
-      const response = await axiosInstance.post<BackendResponse>(
-        this.endpoint,
-        requestConfig
-      );
-      return response.data;
-    } catch (err: any) {
-      if (axios.isAxiosError(err))
-        return { success: false, error: err.message };
-      else return { success: false, error: "An unexpected error occurred." };
-    }
-  };
-
-  resizeImagesMasks = (
-    requestConfig?: AxiosRequestConfig
-  ): Promise<BackendResponse> =>
-    axiosInstance
-      .post<BackendResponse>(this.endpoint, requestConfig)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.error("Error resetting data: ", err.messsage);
-        return { success: false, error: err.messsage };
-      });
 
   getSignedUploadUrls = async <U = T>(
     filenames: string[],
@@ -155,7 +120,7 @@ class APIClient<T> {
   uploadToGoogleCloudBucket = async (
     files: File[],
     folder_path: string = ""
-  ): Promise<{ success: boolean }> => {
+  ): Promise<{ success: boolean; failedFiles: string[] }> => {
     const filenames = files.map((file) => file.name);
     const contentTypes = files.map((file) => file.type);
 
@@ -168,7 +133,9 @@ class APIClient<T> {
           folder_path
         );
 
-      // upload files using signed URLs
+      // upload files using signed URLs in parallel
+      const failedFiles: string[] = [];
+
       const uploadPromises = files.map(async (file) => {
         const signedUrl = signedUrlsObjs.find(
           (urlObj) => urlObj.filename === file.name
@@ -176,20 +143,23 @@ class APIClient<T> {
 
         if (!signedUrl) {
           console.warn(`No Signed URL found for file ${file.name}`);
+          failedFiles.push(file.name); // record missing url
           return; // Skip this file if no signed URL is found
         }
 
         try {
           // Upload file to Google Cloud Storage using the signed URL.
-          const response = await axios.put(signedUrl, file, {
+          await axios.put(signedUrl, file, {
             headers: {
               "Content-Type": file.type || "application/octet-stream",
             },
           });
-          console.log(`Upload successful for ${file.name}`, response.data);
+          console.log(`Upload successful for ${file.name}`);
         } catch (error) {
-          if (error instanceof Error)
+          if (axios.isAxiosError(error)) {
             console.error(`Error uploading file ${file.name}: `, error.message);
+            failedFiles.push(file.name);
+          }
         }
       });
 
@@ -197,9 +167,9 @@ class APIClient<T> {
       await Promise.all(uploadPromises);
 
       console.log("All files uploaded succesfully!");
-      return { success: true };
+      return { success: failedFiles.length === 0, failedFiles };
     } catch (error) {
-      if (error instanceof Error)
+      if (axios.isAxiosError(error))
         console.error(
           "Error upoloading files to Google Cloud Bucket",
           error.message
@@ -214,7 +184,7 @@ class APIClient<T> {
    * @param requestConfig Configuration
    * @returns
    */
-  processFiles = async (
+  postData = async (
     data?: FormData | object,
     requestConfig?: AxiosRequestConfig
   ): Promise<T> => {
@@ -226,10 +196,8 @@ class APIClient<T> {
       );
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error))
-        console.error("Error processing files: ", error.message);
-      else {
-        console.error(error);
+      if (axios.isAxiosError(error)) {
+        console.error("Error posting data: ", error.message);
       }
       throw error;
     }

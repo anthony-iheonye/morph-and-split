@@ -51,7 +51,7 @@ const ImageUploader = () => {
           );
         }
 
-        const imagesTransfered = await imageTransferClient.processFiles();
+        const imagesTransfered = await imageTransferClient.postData();
         if (!imagesTransfered.success) {
           throw new CustomError(
             "Transfer Failed",
@@ -59,7 +59,7 @@ const ImageUploader = () => {
           );
         }
 
-        const resized = await resizeClient.processFiles();
+        const resized = await resizeClient.postData();
         if (!resized.success) {
           throw new CustomError(
             "Resize Failed",

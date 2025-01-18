@@ -49,7 +49,7 @@ const MaskUploader = () => {
           );
         }
 
-        const masksTransfered = await maskTransferClient.processFiles();
+        const masksTransfered = await maskTransferClient.postData();
         if (!masksTransfered.success) {
           throw new CustomError(
             "Transfer Failed",
@@ -57,7 +57,7 @@ const MaskUploader = () => {
           );
         }
 
-        const resized = await resizeClient.processFiles();
+        const resized = await resizeClient.postData();
         if (!resized.success) {
           throw new CustomError(
             "Resize Failed",
