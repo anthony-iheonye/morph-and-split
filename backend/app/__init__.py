@@ -6,7 +6,7 @@ from app.routes import (
     delete_session,
     directory_management,
     download_data_from_gcs,
-    file_download,
+    download_file,
     status_checks,
     gcs_management,
     image_mask_metadata,
@@ -34,7 +34,7 @@ def create_app():
     app.register_blueprint(image_mask_metadata)
     app.register_blueprint(uploaded_file_names)
     app.register_blueprint(reset_session)
-    app.register_blueprint(file_download)
+    app.register_blueprint(download_file)
     app.register_blueprint(augment)
     app.register_blueprint(delete_session)
     app.register_blueprint(status_checks)

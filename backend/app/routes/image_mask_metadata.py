@@ -59,7 +59,7 @@ def serve_test_mask(filename):
     return send_from_directory(RESIZED_TEST_MASK_DIR, filename)
 
 
-@image_mask_metadata.route('/metadata/image_mask', methods=['GET'])
+@image_mask_metadata.route('/metadata/uploaded_image_mask', methods=['GET'])
 def get_image_mask_metadata():
     try:
         # Detect the scheme (http or https) dynamically

@@ -43,7 +43,7 @@ def masks_upload_status():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@status_checks.route('/status_checks/augmentation_complete_status', methods=['GET'])
+@status_checks.route('/status_checks/augmentation_is_complete', methods=['GET'])
 def augmentation_complete():
     """
     Checks if augmentation was completed successfully.

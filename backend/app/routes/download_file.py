@@ -3,13 +3,13 @@ from werkzeug.utils import secure_filename, send_file
 import os
 from app.utils import directory_store
 
-file_download = Blueprint('file_download', __name__)
+download_file = Blueprint('file_download', __name__)
 AUGMENTED_DIR = directory_store.augmented
 
 
 
-@file_download.route('/download/<filename>', methods=['GET'])
-def download_file(filename):
+@download_file.route('/download/augmentation_results/<filename>', methods=['GET'])
+def download_augmentation_result(filename):
     filename = secure_filename(filename)
 
     # check if file exist in the directory
@@ -17,7 +17,7 @@ def download_file(filename):
         try:
             return send_from_directory(AUGMENTED_DIR, filename, as_attachment=True)
         except Exception as e:
-            print(f"Error will sending file: {e}")
+            print(f"Error while sending file: {e}")
             return jsonify({'success': False, 'error': 'Error while sending file.'}), 500
     else:
         # File not found
