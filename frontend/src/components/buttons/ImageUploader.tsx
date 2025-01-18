@@ -1,5 +1,11 @@
-import { Button, Input, Spinner, useBreakpointValue } from "@chakra-ui/react";
-import { BackendResponse, SignedUploadUrls } from "../../entities";
+import {
+  Button,
+  Input,
+  Spinner,
+  useBreakpointValue,
+  useToast,
+} from "@chakra-ui/react";
+import { BackendResponse, CustomError, SignedUploadUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
@@ -11,9 +17,11 @@ const ImageUploader = () => {
   const uploadClient = new APIClient<SignedUploadUrls>(
     "/generate-signed-upload-url"
   );
+
   const imageTransferClient = new APIClient<BackendResponse>(
-    "/transfer_images_to_backend"
+    "/gcs/transfer_images_to_backend"
   );
+
   const resizeClient = new APIClient<BackendResponse>(
     "/resize-uploaded-images"
   );
@@ -25,6 +33,7 @@ const ImageUploader = () => {
 
   const { setBackendResponseLog } = useBackendResponse();
   const queryClient = useQueryClient();
+  const toast = useToast();
 
   const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
@@ -35,30 +44,43 @@ const ImageUploader = () => {
           bucketFolders.images
         );
 
-        if (response.success) {
-          try {
-            const imagesTransfered = await imageTransferClient.processFiles();
-            console.log(`download response:`, imagesTransfered);
-
-            if (imagesTransfered.success) {
-              // produce resized version of uploaded images
-              const resized = await resizeClient.processFiles();
-
-              if (resized) {
-                // Invalidate the 'image_names' query to refresh the updated list, and 'metadata' query to refresh the  image and mask preview grid
-                invalidateQueries(queryClient, [
-                  "imageNames",
-                  "metadata",
-                  "imageUploadStatus",
-                ]);
-              }
-            }
-          } catch (error) {
-            console.error(`Error `);
-          }
+        if (!response.success) {
+          throw new CustomError(
+            "Upload Failed",
+            "Failed to upload images to Google Cloud."
+          );
         }
-      } catch (error) {
-        console.error("Error uploading images to Google Cloud storage");
+
+        const imagesTransfered = await imageTransferClient.processFiles();
+        if (!imagesTransfered.success) {
+          throw new CustomError(
+            "Transfer Failed",
+            "Failed to transfer images to the backend"
+          );
+        }
+
+        const resized = await resizeClient.processFiles();
+        if (!resized.success) {
+          throw new CustomError(
+            "Resize Failed",
+            "Failed to resize uploaded images."
+          );
+        } else {
+          // Invalidate uploaded image names, uploaded image and mask metadata, and image upload status.
+          invalidateQueries(queryClient, [
+            "imageNames",
+            "metadata",
+            "imageUploadStatus",
+          ]);
+        }
+      } catch (error: any) {
+        toast({
+          title: error.title || "Unexpected Error",
+          description: error.message || "An unexpected error occurred.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       }
     }
   );

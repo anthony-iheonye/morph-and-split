@@ -1,30 +1,37 @@
-import { Button, Input, Spinner, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  Spinner,
+  useBreakpointValue,
+  useToast,
+} from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BackendResponse, SignedUploadUrls } from "../../entities";
+import { useEffect } from "react";
+import { BackendResponse, CustomError, SignedUploadUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
-import { bucketFolders } from "../../store";
-import { useEffect } from "react";
 import invalidateQueries from "../../services/invalidateQueries";
+import { bucketFolders } from "../../store";
 
 const MaskUploader = () => {
-  const queryClient = useQueryClient();
   const uploadClient = new APIClient<SignedUploadUrls>(
     "/generate-signed-upload-url"
   );
 
   const maskTransferClient = new APIClient<BackendResponse>(
-    "/transfer_masks_to_backend"
+    "/gcs/transfer_masks_to_backend"
   );
 
   const resizeClient = new APIClient<BackendResponse>("/resize-uploaded-masks");
-
-  const { setBackendResponseLog } = useBackendResponse();
 
   const buttonText = useBreakpointValue({
     base: "Select",
     md: "Select Masks",
   });
+
+  const { setBackendResponseLog } = useBackendResponse();
+  const queryClient = useQueryClient();
+  const toast = useToast();
 
   const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
@@ -35,29 +42,43 @@ const MaskUploader = () => {
           bucketFolders.masks
         );
 
-        if (response.success) {
-          try {
-            // transfer uploaded images from GCS to backend
-            const maskTransferred = await maskTransferClient.processFiles();
-            console.log(`download response:`, maskTransferred);
-
-            if (maskTransferred.success) {
-              // produce resized version of uploaded masks
-              const resized = await resizeClient.processFiles();
-              if (resized) {
-                invalidateQueries(queryClient, [
-                  "maskNames",
-                  "metadata",
-                  "maskUploadStatus",
-                ]);
-              }
-            }
-          } catch (error) {
-            console.error(`Error `);
-          }
+        if (!response.success) {
+          throw new CustomError(
+            "Upload Failed",
+            "Failed to upload masks to Google Cloud."
+          );
         }
-      } catch (error) {
-        console.error("Error uploading images to Google Cloud storage");
+
+        const masksTransfered = await maskTransferClient.processFiles();
+        if (!masksTransfered.success) {
+          throw new CustomError(
+            "Transfer Failed",
+            "Failed to transfer masks to the backend"
+          );
+        }
+
+        const resized = await resizeClient.processFiles();
+        if (!resized.success) {
+          throw new CustomError(
+            "Resize Failed",
+            "Failed to resize uploaded masks."
+          );
+        } else {
+          // Invalidate uploaded image names, uploaded image and mask metadata, and image upload status.
+          invalidateQueries(queryClient, [
+            "maskNames",
+            "metadata",
+            "maskUploadStatus",
+          ]);
+        }
+      } catch (error: any) {
+        toast({
+          title: error.title || "Unexpected Error",
+          description: error.message || "An unexpected error occurred.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       }
     }
   );
