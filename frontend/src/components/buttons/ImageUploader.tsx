@@ -78,7 +78,7 @@ const ImageUploader = () => {
           title: error.title || "Unexpected Error",
           description: error.message || "An unexpected error occurred.",
           status: "error",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         });
       }
