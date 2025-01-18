@@ -39,12 +39,12 @@ const ImageUploader = () => {
     async (files) => {
       try {
         // Trigger the upload process
-        const response = await uploadClient.uploadToGoogleCloudBucket(
+        const uploaded = await uploadClient.uploadToGoogleCloudBucket(
           files,
           bucketFolders.images
         );
 
-        if (!response.success) {
+        if (!uploaded.success) {
           throw new CustomError(
             "Upload Failed",
             "Failed to upload images to Google Cloud."
