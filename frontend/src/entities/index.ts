@@ -10,3 +10,5 @@ export type { default as VisualAttributeFile } from "./VisualAttributeFile";
 
 export type { FetchResponse } from "./../services/api-client";
 export type { Metadata } from "./UploadedImageMask";
+
+export { default as CustomError } from "./CustomError";
