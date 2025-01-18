@@ -9,7 +9,7 @@ const apiClient = new APIClient<UploadedImageMask>(
 
 const useTrainingSet = () =>
   useInfiniteQuery<FetchResponse<UploadedImageMask>, Error>({
-    queryKey: ["training_set"],
+    queryKey: ["trainingSet"],
     queryFn: ({ pageParam = 1 }) =>
       apiClient.getAll({
         params: { page: pageParam, page_size: 10 },

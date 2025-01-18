@@ -15,21 +15,18 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
-import {
-  useAugConfigAndSetter,
-  useBackendResponse,
-  useNavIconColor,
-} from "../../../hooks";
+import { useAugConfigAndSetter, useNavIconColor } from "../../../hooks";
 import { APIClient } from "../../../services";
+import invalidateQueries from "../../../services/invalidateQueries";
 
 const ResetIcon = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { augConfig, setAugConfig, resetAugConfig } = useAugConfigAndSetter();
-  const { setBackendResponseLog } = useBackendResponse();
 
   const toast = useToast();
-  const queryClient = useQueryClient();
   const backgroundColor = useNavIconColor();
+  // Query client for reseting queries
+  const queryClient = useQueryClient();
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -52,15 +49,16 @@ const ResetIcon = () => {
         // Reset local configurations
         resetAugConfig();
         setAugConfig(key, !augConfig[key]);
-        setBackendResponseLog("augmentationIsComplete", false);
 
-        // Reset 'image_names', 'mask_names', and 'metadata' queries.
-        queryClient.invalidateQueries(["image_names"]);
-        queryClient.invalidateQueries(["mask_names"]);
-        queryClient.invalidateQueries(["metadata"]);
-        queryClient.invalidateQueries(["training_set"]);
-        queryClient.invalidateQueries(["validation_set"]);
-        queryClient.invalidateQueries(["testing_set"]);
+        // Reset queries.
+        invalidateQueries(queryClient, [
+          "imageNames",
+          "maskNames",
+          "metadata",
+          "trainingSet",
+          "validationSet",
+          "testingSet",
+        ]);
       } else {
         throw new Error(response.error || "Unknown error");
       }

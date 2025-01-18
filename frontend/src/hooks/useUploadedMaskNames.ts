@@ -7,7 +7,7 @@ const apiClient = new APIClient<string[]>("/upload/mask_names");
 
 const useUploadedMaskNames = () =>
   useQuery<FetchResponse<string[]>, Error>({
-    queryKey: ["mask_names"],
+    queryKey: ["maskNames"],
     queryFn: apiClient.getAll,
     staleTime: ms("24h"),
   });
