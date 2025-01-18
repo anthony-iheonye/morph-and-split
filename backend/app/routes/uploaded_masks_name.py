@@ -11,6 +11,6 @@ def get_uploaded_image_names():
         mask_files = list_files_in_bucket_directory(bucket_name=google_cloud_config.bucket_name,
                                                     directory_path=f"{google_cloud_config.mask_dir}/")
 
-        return jsonify({'count': len(mask_files), 'results': mask_files})
+        return jsonify({'success': True, 'count': len(mask_files), 'results': mask_files}), 200
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 500
