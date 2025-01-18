@@ -1,9 +1,11 @@
 import { Button, Input, Spinner, useBreakpointValue } from "@chakra-ui/react";
 import { BackendResponse, SignedUploadUrls } from "../../entities";
-import { useFileUploader } from "../../hooks";
+import { useBackendResponse, useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const ImageUploader = () => {
   const uploadClient = new APIClient<SignedUploadUrls>(
@@ -20,6 +22,9 @@ const ImageUploader = () => {
     base: "Select",
     md: "Select Images",
   });
+
+  const { setBackendResponseLog } = useBackendResponse();
+  const queryClient = useQueryClient();
 
   const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
@@ -41,7 +46,7 @@ const ImageUploader = () => {
 
               if (resized) {
                 // Invalidate the 'image_names' query to refresh the updated list, and 'metadata' query to refresh the  image and mask preview grid
-                invalidateQueries([
+                invalidateQueries(queryClient, [
                   "imageNames",
                   "metadata",
                   "imageUploadStatus",
@@ -57,6 +62,10 @@ const ImageUploader = () => {
       }
     }
   );
+
+  useEffect(() => {
+    setBackendResponseLog("imageIsUploading", isUploading);
+  }, [isUploading]);
 
   return (
     <Button

@@ -4,6 +4,8 @@ import { BackendResponse, SignedUploadUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
 import { bucketFolders } from "../../store";
+import { useEffect } from "react";
+import invalidateQueries from "../../services/invalidateQueries";
 
 const MaskUploader = () => {
   const queryClient = useQueryClient();
@@ -34,10 +36,8 @@ const MaskUploader = () => {
         );
 
         if (response.success) {
-          setBackendResponseLog("augmentationIsComplete", false);
-
-          // transfer uploaded images from GCS to backend
           try {
+            // transfer uploaded images from GCS to backend
             const maskTransferred = await maskTransferClient.processFiles();
             console.log(`download response:`, maskTransferred);
 
@@ -45,11 +45,11 @@ const MaskUploader = () => {
               // produce resized version of uploaded masks
               const resized = await resizeClient.processFiles();
               if (resized) {
-                // Invalidate the 'image_names' query to refresh the updated list
-                queryClient.invalidateQueries(["mask_names"]);
-                // invaliate the 'metadata' query to refresh the  image and mask preview grid
-                queryClient.invalidateQueries(["metadata"]);
-                // invalidate the
+                invalidateQueries(queryClient, [
+                  "maskNames",
+                  "metadata",
+                  "maskUploadStatus",
+                ]);
               }
             }
           } catch (error) {
@@ -61,6 +61,10 @@ const MaskUploader = () => {
       }
     }
   );
+
+  useEffect(() => {
+    setBackendResponseLog("maskIsUploading", isUploading);
+  }, [isUploading]);
 
   return (
     <Button

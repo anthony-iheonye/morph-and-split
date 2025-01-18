@@ -1,21 +1,13 @@
 import { create } from "zustand";
 
 interface BackendResponseLog {
-  augmentationIsComplete?: Boolean;
-  imageUploaded?: Boolean;
-  maskUploaded?: Boolean;
-  uploadedImagesCount?: number;
-  uploadedMasksCount?: number;
-  imageMaskCountIsEqual?: Boolean;
+  imageIsUploading: boolean;
+  maskIsUploading: boolean;
 }
 
 const initialBackendResponseLog: BackendResponseLog = {
-  augmentationIsComplete: false,
-  imageUploaded: false,
-  maskUploaded: false,
-  uploadedImagesCount: 0,
-  uploadedMasksCount: 0,
-  imageMaskCountIsEqual: false,
+  imageIsUploading: false,
+  maskIsUploading: false,
 };
 interface BackendResponseStore {
   backendResponseLog: BackendResponseLog;

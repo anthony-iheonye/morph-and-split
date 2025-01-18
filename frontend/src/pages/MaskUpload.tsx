@@ -9,11 +9,16 @@ import {
   IconHeadingDescriptionCombo,
   PageTitle,
 } from "../components/miscellaneous";
-import { useMaskUploadStatus, useUploadedMaskNames } from "../hooks";
+import {
+  useBackendResponse,
+  useMaskUploadStatus,
+  useUploadedMaskNames,
+} from "../hooks";
 
 const MaskUpload = () => {
   const { data: maskData } = useUploadedMaskNames();
   const { data: uploadStatus } = useMaskUploadStatus();
+  const { maskIsUploading } = useBackendResponse();
 
   return (
     <>
@@ -66,7 +71,7 @@ const MaskUpload = () => {
           <PreviousBtn to="/upload_data/images" />
           <ContinueBtn
             to="/upload_data/preview"
-            disable={!uploadStatus?.success}
+            disable={!uploadStatus?.success || maskIsUploading}
           />
         </HStack>
       </BoundingBox>

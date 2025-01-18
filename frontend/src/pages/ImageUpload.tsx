@@ -9,12 +9,16 @@ import {
   IconHeadingDescriptionCombo,
   PageTitle,
 } from "../components/miscellaneous";
-import { useImageUploadStatus, useUploadedImageNames } from "../hooks";
+import {
+  useBackendResponse,
+  useImageUploadStatus,
+  useUploadedImageNames,
+} from "../hooks";
 
 const ImageUpload = () => {
   const { data } = useUploadedImageNames();
   const { data: uploadStatus } = useImageUploadStatus();
-  console.log(uploadStatus?.success);
+  const { imageIsUploading } = useBackendResponse();
 
   return (
     <>
@@ -68,7 +72,10 @@ const ImageUpload = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <ContinueBtn to="/upload_data/masks" disable={!uploadStatus?.success} />
+        <ContinueBtn
+          to="/upload_data/masks"
+          disable={!uploadStatus?.success || imageIsUploading}
+        />
       </BoundingBox>
     </>
   );

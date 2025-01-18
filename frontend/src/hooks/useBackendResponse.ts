@@ -2,27 +2,21 @@ import { useBackendResponseStore } from "../store";
 
 const useBackendResponse = () => {
   const {
-    augmentationIsComplete,
+    imageIsUploading,
+    maskIsUploading,
     backendResponseLog,
-    imageUploaded,
-    maskUploaded,
-    imageMaskCountIsEqual,
     setBackendResponseLog,
   } = useBackendResponseStore((store) => ({
-    setBackendResponseLog: store.setBackendResponseLog,
-    augmentationIsComplete: store.backendResponseLog.augmentationIsComplete,
-    imageUploaded: store.backendResponseLog.imageUploaded,
-    maskUploaded: store.backendResponseLog.maskUploaded,
-    imageMaskCountIsEqual: store.backendResponseLog.imageMaskCountIsEqual,
+    imageIsUploading: store.backendResponseLog.imageIsUploading,
+    maskIsUploading: store.backendResponseLog.maskIsUploading,
     backendResponseLog: store.backendResponseLog,
+    setBackendResponseLog: store.setBackendResponseLog,
   }));
 
   return {
-    augmentationIsComplete,
+    imageIsUploading,
+    maskIsUploading,
     backendResponseLog,
-    imageUploaded,
-    maskUploaded,
-    imageMaskCountIsEqual,
     setBackendResponseLog,
   };
 };
