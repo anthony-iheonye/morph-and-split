@@ -14,6 +14,7 @@ interface Props {
   iconLabel: string;
   backgroundColor?: string;
   tooltipPlacement?: PlacementWithLogical;
+  disabled?: boolean;
 }
 
 const MainNavBarItem = ({
@@ -23,6 +24,7 @@ const MainNavBarItem = ({
   backgroundColor,
   tooltipLabel,
   tooltipPlacement = "top-start",
+  disabled = false,
 }: Props) => {
   const colorScheme = useNavIconColor();
   return (
@@ -37,6 +39,7 @@ const MainNavBarItem = ({
             fontSize="1.5rem"
             colorScheme={colorScheme}
             backgroundColor={backgroundColor}
+            disabled={disabled}
           />
         </Tooltip>
       </Link>
