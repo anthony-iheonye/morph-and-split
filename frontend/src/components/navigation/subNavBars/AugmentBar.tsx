@@ -1,20 +1,9 @@
 import { Flex, Heading } from "@chakra-ui/react";
-import { FaCirclePlay } from "react-icons/fa6";
-import { MdGridView } from "react-icons/md";
-import {
-  useBoundingBoxColor,
-  useActiveNavColor,
-  useActiveSubParent,
-  subParentNames,
-} from "../../../hooks";
-import { SubNavBarItem } from "../subNavItems";
+import { useBoundingBoxColor } from "../../../hooks";
+import { AugmentationResult, AugmentData } from "../subNavItems";
 
 const AugmentBar = () => {
   const backgroundColor = useBoundingBoxColor();
-  const { subParentColor } = useActiveNavColor();
-
-  const activeSubParent = useActiveSubParent();
-  const { startAugmentation, previewResult } = subParentNames;
 
   return (
     <Flex
@@ -30,26 +19,8 @@ const AugmentBar = () => {
         Augment
       </Heading>
 
-      <SubNavBarItem
-        icon={<FaCirclePlay />}
-        iconLabel="Apply random transformations to images and their masks."
-        text={{ md: "Start Augmentation" }}
-        to="/augment/start_augmentation"
-        backgroundColor={
-          activeSubParent === startAugmentation ? subParentColor : "transparent"
-        }
-      />
-
-      <SubNavBarItem
-        icon={<MdGridView />}
-        iconLabel="Preview augmented results."
-        text={{ md: "Preview Result" }}
-        to="/augment/preview"
-        backgroundColor={
-          activeSubParent === previewResult ? subParentColor : "transparent"
-        }
-        tooltipLabel="Preveiw augmentation data"
-      />
+      <AugmentData />
+      <AugmentationResult />
     </Flex>
   );
 };

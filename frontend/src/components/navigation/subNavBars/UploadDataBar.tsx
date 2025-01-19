@@ -1,20 +1,9 @@
 import { Flex, Heading } from "@chakra-ui/react";
-import { IoImages, IoImagesOutline } from "react-icons/io5";
-import { MdGridView } from "react-icons/md";
-import {
-  subParentNames,
-  useActiveNavColor,
-  useActiveSubParent,
-  useBoundingBoxColor,
-} from "../../../hooks";
-import { SubNavBarItem } from "../subNavItems";
+import { useBoundingBoxColor } from "../../../hooks";
+import { PreviewUploads, UploadImages, UploadMasks } from "../subNavItems";
 
 const UploadDataBar = () => {
   const backgroundColor = useBoundingBoxColor();
-  const { subParentColor } = useActiveNavColor();
-
-  const { uploadImages, uploadMasks, previewUpload } = subParentNames;
-  const activeSubParent = useActiveSubParent();
 
   return (
     <Flex
@@ -31,38 +20,9 @@ const UploadDataBar = () => {
         Dataset
       </Heading>
 
-      <SubNavBarItem
-        icon={<IoImages />}
-        iconLabel="Upload Images"
-        text={{ md: "Images" }}
-        to="/upload_data/images"
-        backgroundColor={
-          activeSubParent === uploadImages ? subParentColor : "transparent"
-        }
-        tooltipLabel="Select Images"
-      />
-
-      <SubNavBarItem
-        icon={<IoImagesOutline />}
-        iconLabel="Select segmentation masks"
-        text={{ md: "Segmentation Masks" }}
-        to={"/upload_data/masks"}
-        backgroundColor={
-          activeSubParent === uploadMasks ? subParentColor : "transparent"
-        }
-        tooltipLabel="Select segmentation masks"
-      />
-
-      <SubNavBarItem
-        icon={<MdGridView />}
-        iconLabel="Preview uploaded images and masks"
-        text={{ md: "Preview" }}
-        to={"/upload_data/preview"}
-        backgroundColor={
-          activeSubParent === previewUpload ? subParentColor : "transparent"
-        }
-        tooltipLabel="Preview uploaded images and masks"
-      />
+      <UploadImages />
+      <UploadMasks />
+      <PreviewUploads />
     </Flex>
   );
 };
