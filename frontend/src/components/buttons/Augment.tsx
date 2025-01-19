@@ -4,6 +4,8 @@ import { TbTransform } from "react-icons/tb";
 import { BackendResponse } from "../../entities";
 import { APIClient } from "../../services";
 import { useAugConfigStore } from "../../store";
+import invalidateQueries from "../../services/invalidateQueries";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Augment = () => {
   const AugmentationAPI = new APIClient<BackendResponse>("/augment");
@@ -11,6 +13,7 @@ const Augment = () => {
   const { augConfig } = useAugConfigStore();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const handleAugment = async () => {
     setIsLoading(true);
@@ -38,6 +41,8 @@ const Augment = () => {
           duration: 3000,
           isClosable: true,
         });
+
+        invalidateQueries(queryClient, ["augmentationIsComplete"]);
       }
     } catch (error) {
       console.error("Error during augmentation:", error);
