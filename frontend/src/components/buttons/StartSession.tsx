@@ -52,7 +52,7 @@ const StartSession = ({
       }
     } catch (error: any) {
       toast({
-        title: error.title || "Unexpected Error",
+        title: error.title || "Failed to Start Session",
         description: error.message || "An unexpected error occurred.",
         status: "error",
         duration: 3000,

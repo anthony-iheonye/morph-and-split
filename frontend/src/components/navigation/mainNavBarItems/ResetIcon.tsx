@@ -15,30 +15,64 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
-import { useAugConfigAndSetter, useNavIconColor } from "../../../hooks";
+import {
+  useAugConfigAndSetter,
+  useBackendResponse,
+  useNavIconColor,
+} from "../../../hooks";
 import { APIClient } from "../../../services";
 import invalidateQueries from "../../../services/invalidateQueries";
+import { BackendResponse, CustomError } from "../../../entities";
+import { useNavigate } from "react-router-dom";
 
 const ResetIcon = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { augConfig, setAugConfig, resetAugConfig } = useAugConfigAndSetter();
+  const { resetBackendResponseLog } = useBackendResponse();
 
   const toast = useToast();
   const backgroundColor = useNavIconColor();
   // Query client for reseting queries
   const queryClient = useQueryClient();
 
+  const navigate = useNavigate();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  // Create API client for resetting session
-  const resetClient = new APIClient("/reset_session");
+  // Create API clients
+  const projectDirectoryClient = new APIClient<BackendResponse>(
+    "project_directories/create"
+  );
+  const GCSDeleteClient = new APIClient<BackendResponse>("/gcs/delete_bucket");
+  const GCSCreateClient = new APIClient<BackendResponse>("/gcs/create_bucket");
 
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
-      // Call reset API
-      const response = await resetClient.executeAction();
+      // Create new project directories
+      const projectDirectoryCreation =
+        await projectDirectoryClient.executeAction();
 
-      if (response.success) {
+      if (!projectDirectoryCreation.success) {
+        throw new CustomError(
+          "Project Directory Creation Failed.",
+          "Failed to create project directories."
+        );
+      }
+
+      const gcsBucketDeletion = await GCSDeleteClient.deleteDirectory();
+      if (!gcsBucketDeletion) {
+        throw new CustomError(
+          "GCS Storage Deletion  Failed.",
+          "Failed to delete Google Cloud Storage bucket."
+        );
+      }
+
+      const gcsBucketCreation = await GCSCreateClient.executeAction();
+      if (!gcsBucketCreation.success) {
+        throw new CustomError(
+          "GCS Bucket Creation",
+          "Failed to create Google Cloud Storage bucket."
+        );
+      } else {
         toast({
           title: "Session reset successfully!",
           status: "success",
@@ -48,6 +82,7 @@ const ResetIcon = () => {
 
         // Reset local configurations
         resetAugConfig();
+        resetBackendResponseLog();
         setAugConfig(key, !augConfig[key]);
 
         // Reset queries.
@@ -55,12 +90,15 @@ const ResetIcon = () => {
           "imageNames",
           "maskNames",
           "metadata",
+          "augmentationIsComplete",
+          "imageUploadStatus",
+          "maskUploadStatus",
           "trainingSet",
           "validationSet",
           "testingSet",
         ]);
-      } else {
-        throw new Error(response.error || "Unknown error");
+
+        navigate("/upload_data/images");
       }
     } catch (error) {
       toast({
