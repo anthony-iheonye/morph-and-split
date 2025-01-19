@@ -6,11 +6,13 @@ const useBackendResponse = () => {
     maskIsUploading,
     backendResponseLog,
     setBackendResponseLog,
+    resetBackendResponseLog,
   } = useBackendResponseStore((store) => ({
     imageIsUploading: store.backendResponseLog.imageIsUploading,
     maskIsUploading: store.backendResponseLog.maskIsUploading,
     backendResponseLog: store.backendResponseLog,
     setBackendResponseLog: store.setBackendResponseLog,
+    resetBackendResponseLog: store.resetBackendResponseLog,
   }));
 
   return {
@@ -18,6 +20,7 @@ const useBackendResponse = () => {
     maskIsUploading,
     backendResponseLog,
     setBackendResponseLog,
+    resetBackendResponseLog,
   };
 };
 

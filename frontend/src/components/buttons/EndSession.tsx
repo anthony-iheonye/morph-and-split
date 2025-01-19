@@ -1,8 +1,9 @@
-import { Button, useBreakpointValue } from "@chakra-ui/react";
+import { Button, useBreakpointValue, useToast } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AiOutlineCloseSquare } from "react-icons/ai";
-import { APIClient } from "../../services";
-import { BackendResponse } from "../../entities";
 import { useNavigate } from "react-router-dom";
+import { useAugConfigAndSetter, useBackendResponse } from "../../hooks";
+import { handleEndSession } from "../../services";
 
 interface Props {
   label?: string | { base?: string; md?: string; lg?: string };
@@ -13,21 +14,11 @@ const EndSession = ({ label = "End session", disable = false }: Props) => {
   const responsiveLabel = useBreakpointValue(
     typeof label === "string" ? { base: label } : label
   );
-
-  const sessionClient = new APIClient<BackendResponse>("/delete_session");
+  const { resetAugConfig } = useAugConfigAndSetter();
+  const { resetBackendResponseLog } = useBackendResponse();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const handleClick = async () => {
-    try {
-      const response = await sessionClient.executeAction();
-
-      if (response.success) {
-        navigate("/");
-      }
-    } catch (err) {
-      console.error(`Error: ${err}`);
-    }
-  };
+  const toast = useToast();
 
   return (
     <Button
@@ -36,7 +27,15 @@ const EndSession = ({ label = "End session", disable = false }: Props) => {
       borderRadius={20}
       leftIcon={<AiOutlineCloseSquare />}
       isDisabled={disable}
-      onClick={() => handleClick()}
+      onClick={() =>
+        handleEndSession({
+          resetAugConfig,
+          resetBackendResponseLog,
+          queryClient,
+          toast,
+          navigate,
+        })
+      }
     >
       {responsiveLabel}
     </Button>
