@@ -18,6 +18,7 @@ import { VscDebugRestart } from "react-icons/vsc";
 import {
   useAugConfigAndSetter,
   useBackendResponse,
+  useIsBackendRunning,
   useNavIconColor,
 } from "../../../hooks";
 import { APIClient } from "../../../services";
@@ -34,6 +35,7 @@ const ResetIcon = () => {
   const backgroundColor = useNavIconColor();
   // Query client for reseting queries
   const queryClient = useQueryClient();
+  const { data } = useIsBackendRunning();
 
   const navigate = useNavigate();
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -128,6 +130,7 @@ const ResetIcon = () => {
             fontSize="1.5rem"
             colorScheme={backgroundColor}
             onClick={onOpen}
+            disabled={!data?.success}
           />
         </Tooltip>
       </Box>

@@ -3,6 +3,7 @@ import {
   parentNames,
   useActiveNavColor,
   useActiveParent,
+  useIsBackendRunning,
 } from "../../../hooks";
 import MainNavBarItem from "./MainNavBarItem";
 
@@ -10,6 +11,7 @@ const AugmentationConfigIcon = () => {
   const activeParent = useActiveParent();
   const { augmentationConfig } = parentNames;
   const { parentColor } = useActiveNavColor();
+  const { data } = useIsBackendRunning();
 
   return (
     <MainNavBarItem
@@ -20,6 +22,7 @@ const AugmentationConfigIcon = () => {
         activeParent === augmentationConfig ? parentColor : "transparent"
       }
       tooltipLabel="Augmentation settings"
+      disabled={!data?.success}
     />
   );
 };

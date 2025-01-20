@@ -60,6 +60,7 @@ const handleEndSession = async ({
         "trainingSet",
         "validationSet",
         "testingSet",
+        "backendStatus",
       ]);
     }
   } catch (error: any) {

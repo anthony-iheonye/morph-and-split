@@ -3,6 +3,7 @@ import {
   parentNames,
   useActiveNavColor,
   useActiveParent,
+  useIsBackendRunning,
 } from "../../../hooks";
 import MainNavBarItem from "./MainNavBarItem";
 
@@ -10,6 +11,7 @@ const ImageMaskUploader = () => {
   const activeParent = useActiveParent();
   const { uploadImageAndMask } = parentNames;
   const { parentColor } = useActiveNavColor();
+  const { data } = useIsBackendRunning();
 
   return (
     <MainNavBarItem
@@ -20,6 +22,7 @@ const ImageMaskUploader = () => {
         activeParent === uploadImageAndMask ? parentColor : "transparent"
       }
       tooltipLabel="Upload data"
+      disabled={!data?.success}
     />
   );
 };

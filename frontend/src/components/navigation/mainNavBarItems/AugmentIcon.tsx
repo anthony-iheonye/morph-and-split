@@ -4,12 +4,14 @@ import {
   parentNames,
   useActiveNavColor,
   useActiveParent,
+  useIsBackendRunning,
 } from "../../../hooks";
 
 const AugmentIcon = () => {
   const activeParent = useActiveParent();
   const { augment } = parentNames;
   const { parentColor } = useActiveNavColor();
+  const { data } = useIsBackendRunning();
 
   return (
     <MainNavBarItem
@@ -18,6 +20,7 @@ const AugmentIcon = () => {
       to="/augment"
       backgroundColor={activeParent === augment ? parentColor : "transparent"}
       tooltipLabel="Initiate Augmentation"
+      disabled={!data?.success}
     />
   );
 };

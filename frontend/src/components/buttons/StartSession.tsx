@@ -3,6 +3,8 @@ import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { APIClient } from "../../services";
 import { BackendResponse, CustomError } from "../../entities";
+import invalidateQueries from "../../services/invalidateQueries";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   label?: string | { base?: string; md?: string; lg?: string };
@@ -15,17 +17,18 @@ const StartSession = ({
   label = "Start a Session",
   disable = false,
 }: Props) => {
-  const navigate = useNavigate();
   const GCSClient = new APIClient<BackendResponse>("/gcs/create_bucket");
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "project_directories/create"
   );
 
+  const navigate = useNavigate();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
   const responsiveLabel = useBreakpointValue(
     typeof label === "string" ? { base: label } : label
   );
-
-  const toast = useToast();
 
   const handleClick = async () => {
     try {
@@ -49,6 +52,7 @@ const StartSession = ({
         );
       } else {
         navigate(to);
+        invalidateQueries(queryClient, ["backendStatus"]);
       }
     } catch (error: any) {
       toast({
