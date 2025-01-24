@@ -1,6 +1,12 @@
-import { Button, useBreakpointValue, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  ResponsiveValue,
+  Spinner,
+  useBreakpointValue,
+  useToast,
+} from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AiOutlineCloseSquare } from "react-icons/ai";
+import { FaPowerOff } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAugConfigAndSetter, useBackendResponse } from "../../hooks";
 import { handleEndSession } from "../../services";
@@ -8,14 +14,20 @@ import { handleEndSession } from "../../services";
 interface Props {
   label?: string | { base?: string; md?: string; lg?: string };
   disable?: boolean;
+  size?: ResponsiveValue<"md" | "lg" | (string & {}) | "sm" | "xs"> | undefined;
 }
 
-const EndSession = ({ label = "End session", disable = false }: Props) => {
+const EndSession = ({
+  label = "End session",
+  size,
+  disable = false,
+}: Props) => {
   const responsiveLabel = useBreakpointValue(
     typeof label === "string" ? { base: label } : label
   );
   const { resetAugConfig } = useAugConfigAndSetter();
-  const { resetBackendResponseLog } = useBackendResponse();
+  const { resetBackendResponseLog, isShuttingDown, setBackendResponseLog } =
+    useBackendResponse();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const toast = useToast();
@@ -23,21 +35,24 @@ const EndSession = ({ label = "End session", disable = false }: Props) => {
   return (
     <Button
       colorScheme="red"
-      size="sm"
+      size={size}
       borderRadius={20}
-      leftIcon={<AiOutlineCloseSquare />}
+      leftIcon={
+        isShuttingDown ? <Spinner size={size} /> : <FaPowerOff size="1rem" />
+      }
       isDisabled={disable}
       onClick={() =>
         handleEndSession({
           resetAugConfig,
           resetBackendResponseLog,
+          setBackendResponseLog,
           queryClient,
           toast,
           navigate,
         })
       }
     >
-      {responsiveLabel}
+      {isShuttingDown ? "Shutting down ..." : responsiveLabel}
     </Button>
   );
 };
