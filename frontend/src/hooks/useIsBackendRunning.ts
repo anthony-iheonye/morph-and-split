@@ -9,7 +9,7 @@ const backendStatusClient = new APIClient<BackendResponse>(
 
 const useIsBackendRunning = () => {
   return useQuery<BackendResponse, Error>({
-    queryKey: ["backendStatus"],
+    queryKey: ["backendIsRunning"],
     queryFn: backendStatusClient.getStatus,
     staleTime: ms("24h"),
   });
