@@ -18,7 +18,9 @@ export { default as useValidationSet } from "./useValidationSet";
 export { default as useVisualAttributesFile } from "./useVisualAttributesFile";
 export { default as useImageUploadStatus } from "./useImageUploadStatus";
 export { default as useMaskUploadStatus } from "./useMaskUploadStatus";
+export { default as useImageMaskBalanceStatus } from "./useImageMaskBalanceStatus";
 export { default as useIsBackendRunning } from "./useIsBackendRunning";
+export { default as useAugmentationIsComplete } from "./useAugmentationIsComplete";
 
 export { parentNames } from "./useActiveParent";
 export { subParentNames } from "./useActiveSubParent";

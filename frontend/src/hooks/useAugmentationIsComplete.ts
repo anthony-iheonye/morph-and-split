@@ -7,7 +7,7 @@ const statusClient = new APIClient<BackendResponse>(
   "/status_checks/augmentation_is_complete"
 );
 
-const useAugmentationStatus = () => {
+const useAugmentationIsComplete = () => {
   return useQuery<BackendResponse, Error>({
     queryKey: ["augmentationIsComplete"],
     queryFn: statusClient.getStatus,
@@ -15,4 +15,4 @@ const useAugmentationStatus = () => {
   });
 };
 
-export default useAugmentationStatus;
+export default useAugmentationIsComplete;
