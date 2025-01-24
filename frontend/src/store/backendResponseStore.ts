@@ -1,13 +1,23 @@
 import { create } from "zustand";
 
-interface BackendResponseLog {
+export interface BackendResponseLog {
   imageIsUploading: boolean;
   maskIsUploading: boolean;
+  augmentationIsRunning: boolean;
+  deletingImages: boolean;
+  deletingMasks: boolean;
+  isResetting: boolean;
+  isShuttingDown: boolean;
 }
 
 const initialBackendResponseLog: BackendResponseLog = {
   imageIsUploading: false,
   maskIsUploading: false,
+  augmentationIsRunning: false,
+  deletingImages: false,
+  deletingMasks: false,
+  isResetting: false,
+  isShuttingDown: false,
 };
 interface BackendResponseStore {
   backendResponseLog: BackendResponseLog;

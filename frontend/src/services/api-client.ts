@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { BackendResponse, SignedUploadUrls } from "../entities";
 
 export interface FetchResponse<T> {
-  success?: Boolean;
+  success?: boolean;
   count: number;
   next: string | null;
 
