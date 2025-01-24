@@ -4,10 +4,15 @@ import { BackendResponse, CustomError } from "../entities";
 import APIClient from "./api-client";
 import invalidateQueries from "./invalidateQueries";
 import { QueryClient } from "@tanstack/react-query";
+import { BackendResponseLog } from "../store";
 
 interface Props {
   resetAugConfig: () => void;
   resetBackendResponseLog: () => void;
+  setBackendResponseLog: <K extends keyof BackendResponseLog>(
+    key: K,
+    value: BackendResponseLog[K]
+  ) => void;
   queryClient: QueryClient;
   toast: (options: UseToastOptions) => ToastId;
   navigate: NavigateFunction;
@@ -16,6 +21,7 @@ interface Props {
 const handleEndSession = async ({
   resetAugConfig,
   resetBackendResponseLog,
+  setBackendResponseLog,
   queryClient,
   toast,
   navigate,
@@ -26,6 +32,7 @@ const handleEndSession = async ({
   );
 
   try {
+    setBackendResponseLog("isShuttingDown", true);
     const gcsBucketDeletion = await GCSClient.deleteDirectory();
 
     if (!gcsBucketDeletion.success) {
@@ -60,7 +67,7 @@ const handleEndSession = async ({
         "trainingSet",
         "validationSet",
         "testingSet",
-        "backendStatus",
+        "backendIsRunning",
       ]);
     }
   } catch (error: any) {
@@ -71,6 +78,8 @@ const handleEndSession = async ({
       duration: 3000,
       isClosable: true,
     });
+  } finally {
+    setBackendResponseLog("isShuttingDown", false);
   }
 };
 
