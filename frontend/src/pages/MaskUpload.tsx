@@ -11,14 +11,24 @@ import {
 } from "../components/miscellaneous";
 import {
   useBackendResponse,
+  useImageMaskBalanceStatus,
+  useImageUploadStatus,
   useMaskUploadStatus,
   useUploadedMaskNames,
 } from "../hooks";
+import DeleteMasks from "../components/buttons/DeleteMasks";
 
 const MaskUpload = () => {
   const { data: maskData } = useUploadedMaskNames();
-  const { data: uploadStatus } = useMaskUploadStatus();
+  const { data: imageUploadStatus } = useImageUploadStatus();
+  const { data: maskUploadStatus } = useMaskUploadStatus();
+  const { data: imageMaskBalance } = useImageMaskBalanceStatus();
   const { maskIsUploading } = useBackendResponse();
+
+  const imbalanced =
+    imageUploadStatus?.success &&
+    maskUploadStatus?.success &&
+    !imageMaskBalance?.success;
 
   return (
     <>
@@ -36,6 +46,7 @@ const MaskUpload = () => {
           <MaskUploader />
         </HStack>
       </BoundingBox>
+
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
@@ -46,11 +57,18 @@ const MaskUpload = () => {
           <MaskChannel />
         </HStack>
       </BoundingBox>
+
       <BoundingBox>
-        <IconHeadingDescriptionCombo
-          icon={TbLayersSelected}
-          title="Selected Masks"
-        />
+        <HStack justify="space-between">
+          <IconHeadingDescriptionCombo
+            icon={TbLayersSelected}
+            title="Selected Masks"
+          />
+          {maskUploadStatus?.success && <DeleteMasks />}
+        </HStack>
+
+        {imbalanced && <Text color="red.500">{imageMaskBalance?.message}</Text>}
+
         <Box overflowY="auto" maxHeight={{ base: "28vh", md: "48vh" }} mt={4}>
           {maskData?.results && maskData?.results.length > 0 ? (
             maskData?.results.map((name, index) => (
@@ -71,7 +89,11 @@ const MaskUpload = () => {
           <PreviousBtn to="/upload_data/images" />
           <ContinueBtn
             to="/upload_data/preview"
-            disable={!uploadStatus?.success || maskIsUploading}
+            disable={
+              !maskUploadStatus?.success ||
+              !imageMaskBalance?.success ||
+              maskIsUploading
+            }
           />
         </HStack>
       </BoundingBox>

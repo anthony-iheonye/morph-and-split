@@ -1,8 +1,12 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
-import { ContinueBtn, ImageUploader } from "../components/buttons";
+import {
+  ContinueBtn,
+  DeleteImages,
+  ImageUploader,
+} from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { ImageChannel } from "../components/dropdowns";
 import {
@@ -11,18 +15,28 @@ import {
 } from "../components/miscellaneous";
 import {
   useBackendResponse,
+  useImageMaskBalanceStatus,
   useImageUploadStatus,
+  useMaskUploadStatus,
   useUploadedImageNames,
 } from "../hooks";
 
 const ImageUpload = () => {
   const { data } = useUploadedImageNames();
-  const { data: uploadStatus } = useImageUploadStatus();
+  const { data: imageUploadStatus } = useImageUploadStatus();
+  const { data: maskUploadStatus } = useMaskUploadStatus();
   const { imageIsUploading } = useBackendResponse();
+  const { data: imageMaskBalance } = useImageMaskBalanceStatus();
+
+  const imbalanced =
+    imageUploadStatus?.success &&
+    maskUploadStatus?.success &&
+    !imageMaskBalance?.success;
 
   return (
     <>
       <PageTitle title="Images" />
+
       <BoundingBox>
         <HStack justify="space-between" align="start" width="100%">
           <IconHeadingDescriptionCombo
@@ -30,7 +44,7 @@ const ImageUpload = () => {
             title="Upload Images"
             description={{
               base: "Select images",
-              md: "Click button to select images for augmentation.",
+              md: "Click button to upload images for augmentation.",
             }}
           />
           <ImageUploader />
@@ -52,10 +66,16 @@ const ImageUpload = () => {
       </BoundingBox>
 
       <BoundingBox>
-        <IconHeadingDescriptionCombo
-          icon={TbLayersSelected}
-          title="Selected Images"
-        />
+        <HStack justify="space-between">
+          <IconHeadingDescriptionCombo
+            icon={TbLayersSelected}
+            title="Selected Images"
+          />
+          {imageUploadStatus?.success && <DeleteImages />}
+        </HStack>
+
+        {imbalanced && <Text color="red.500">{imageMaskBalance?.message}</Text>}
+
         <Box overflowY="auto" maxHeight={{ base: "28vh", md: "48vh" }} mt={4}>
           {data?.results && data?.results.length > 0 ? (
             data?.results.map((name, index) => (
@@ -65,7 +85,7 @@ const ImageUpload = () => {
             ))
           ) : (
             <Text color="red" fontWeight="thin" fontSize="md">
-              Ready to get started? Select one or more images.
+              Ready to get started? Upload one or more images.
             </Text>
           )}
         </Box>
@@ -74,7 +94,7 @@ const ImageUpload = () => {
       <BoundingBox transparent padding={0}>
         <ContinueBtn
           to="/upload_data/masks"
-          disable={!uploadStatus?.success || imageIsUploading}
+          disable={!imageUploadStatus?.success || imageIsUploading}
         />
       </BoundingBox>
     </>
