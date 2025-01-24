@@ -236,7 +236,7 @@ const VisualAttributes = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <HStack>
+        <HStack justifyContent={{ base: "center", md: "start" }}>
           <PreviousBtn to="/settings/select_transformation" />
           <ContinueBtn to="/settings/pre_processing" />
         </HStack>

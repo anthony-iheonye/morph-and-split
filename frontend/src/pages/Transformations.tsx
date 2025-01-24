@@ -82,7 +82,7 @@ const AugTransformationsInput = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <HStack>
+        <HStack justifyContent={{ base: "center", md: "start" }}>
           <PreviousBtn to="/settings/data_split" />
           <ContinueBtn to="/settings/visual_attributes" />
         </HStack>

@@ -85,7 +85,7 @@ const MaskUpload = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <HStack>
+        <HStack justifyContent={{ base: "center", md: "start" }}>
           <PreviousBtn to="/upload_data/images" />
           <ContinueBtn
             to="/upload_data/preview"

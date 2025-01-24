@@ -33,7 +33,7 @@ const Preview = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <HStack>
+        <HStack justifyContent={{ base: "center", md: "start" }}>
           <PreviousBtn to="/upload_data/masks" />
           <ContinueBtn to="/settings/data_split" />
         </HStack>

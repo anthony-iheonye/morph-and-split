@@ -242,7 +242,7 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <HStack>
+        <HStack justifyContent={{ base: "center", md: "start" }}>
           <PreviousBtn to="/upload_data/preview" />
           <ContinueBtn to="/settings/select_transformation" />
         </HStack>

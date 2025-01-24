@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
@@ -91,7 +91,12 @@ const ImageUpload = () => {
         </Box>
       </BoundingBox>
 
-      <BoundingBox transparent padding={0}>
+      <BoundingBox
+        transparent
+        padding={0}
+        justifyContent={{ base: "center", md: "start" }}
+        display="flex"
+      >
         <ContinueBtn
           to="/upload_data/masks"
           disable={!imageUploadStatus?.success || imageIsUploading}

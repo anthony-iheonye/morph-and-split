@@ -76,15 +76,16 @@ const StartAugmentation = () => {
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
-        <HStack>
+        <HStack justifyContent={{ base: "center", md: "start" }}>
           <PreviousBtn
             to="/settings/pre_processing"
+            label={{ md: "Previous" }}
             disable={augmentationIsRunning}
           />
           <Augment />
           <ContinueBtn
             to="/augment/preview"
-            label="Continue"
+            label={{ md: "Continue" }}
             disable={augmentationIsRunning || !augmentationCompleted?.success}
           />
           {!augmentationIsRunning && augmentationCompleted?.success && (
