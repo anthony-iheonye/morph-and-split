@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from "@chakra-ui/react";
 import { FaDownload } from "react-icons/fa6";
+import IconButtonWithToolTip from "./IconButtonWithToolTip";
 
 interface DownloadFileProps {
   filename: string;
@@ -8,18 +8,16 @@ interface DownloadFileProps {
 
 const DownloadButton = ({ filename, onDownload }: DownloadFileProps) => {
   return (
-    <Tooltip label="Download augmented data">
-      <IconButton
-        aria-label="Click to download augmented result."
-        type="button"
-        color="teal"
-        backgroundColor="transparent"
-        onClick={() => onDownload(filename)}
-        icon={<FaDownload />}
-        borderRadius={20}
-        size={"lg"}
-      />
-    </Tooltip>
+    <IconButtonWithToolTip
+      aria-label="Click to download augmented result."
+      type="button"
+      tooltipLabel="Download augmented result"
+      color="teal.500"
+      backgroundColor="transparent"
+      onClick={() => onDownload(filename)}
+      icon={<FaDownload />}
+      iconHoverColor="teal.200"
+    />
   );
 };
 
