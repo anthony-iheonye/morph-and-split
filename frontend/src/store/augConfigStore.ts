@@ -6,7 +6,7 @@ import ImgMaskChannels from "../entities/ImgMaskChannels";
 import AugMask from "../entities/AugMask";
 import VisualAttributeJSONFile from "../entities/VisualAttributeFile";
 
-interface AugConfig {
+export interface AugConfig {
   initialTrainSaveId?: number;
   initialValSaveId?: number;
   initialTestSaveId?: number;
