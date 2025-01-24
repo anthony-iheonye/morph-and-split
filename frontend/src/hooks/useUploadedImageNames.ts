@@ -3,7 +3,7 @@ import ms from "ms";
 import { FetchResponse } from "../entities";
 import { APIClient } from "../services";
 
-const apiClient = new APIClient<string[]>("/upload/image_names");
+const apiClient = new APIClient<string[]>("/upload/backend/image_names");
 
 /**
  * Custom hook to fetch the list of uploaded image names.

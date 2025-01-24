@@ -3,7 +3,7 @@ import ms from "ms";
 import { FetchResponse } from "../entities";
 import { APIClient } from "../services";
 
-const apiClient = new APIClient<string[]>("/upload/mask_names");
+const apiClient = new APIClient<string[]>("/upload/backend/mask_names");
 
 const useUploadedMaskNames = () =>
   useQuery<FetchResponse<string[]>, Error>({
