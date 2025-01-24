@@ -4,12 +4,16 @@ import {
   subParentNames,
   useActiveNavColor,
   useActiveSubParent,
+  useImageMaskBalanceStatus,
+  useImageUploadStatus,
 } from "../../../hooks";
 
 const PreviewUploads = () => {
   const { subParentColor } = useActiveNavColor();
   const { previewUpload } = subParentNames;
   const activeSubParent = useActiveSubParent();
+  const { data: imageUploaded } = useImageUploadStatus();
+  const { data: imageMaskBalance } = useImageMaskBalanceStatus();
 
   return (
     <SubNavBarItem
@@ -21,6 +25,7 @@ const PreviewUploads = () => {
         activeSubParent === previewUpload ? subParentColor : "transparent"
       }
       tooltipLabel="Preview uploaded images and masks"
+      disabled={!imageUploaded?.success || !imageMaskBalance?.success}
     />
   );
 };

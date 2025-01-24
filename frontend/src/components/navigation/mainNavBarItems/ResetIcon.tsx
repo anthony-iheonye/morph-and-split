@@ -8,31 +8,41 @@ import {
   Box,
   Button,
   IconButton,
+  Spinner,
   Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
+import { GrPowerShutdown } from "react-icons/gr";
 import { VscDebugRestart } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
+import { BackendResponse, CustomError } from "../../../entities";
 import {
   useAugConfigAndSetter,
   useBackendResponse,
   useIsBackendRunning,
   useNavIconColor,
 } from "../../../hooks";
-import { APIClient } from "../../../services";
+import { APIClient, handleEndSession } from "../../../services";
 import invalidateQueries from "../../../services/invalidateQueries";
-import { BackendResponse, CustomError } from "../../../entities";
-import { useNavigate } from "react-router-dom";
+import { IconButtonWithToolTip } from "../../buttons";
 
 const ResetIcon = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { augConfig, setAugConfig, resetAugConfig } = useAugConfigAndSetter();
-  const { resetBackendResponseLog } = useBackendResponse();
+  const {
+    resetBackendResponseLog,
+    augmentationIsRunning,
+    isResetting,
+    isShuttingDown,
+    setBackendResponseLog,
+  } = useBackendResponse();
 
   const toast = useToast();
   const backgroundColor = useNavIconColor();
+
   // Query client for reseting queries
   const queryClient = useQueryClient();
   const { data } = useIsBackendRunning();
@@ -49,6 +59,8 @@ const ResetIcon = () => {
 
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
+      setBackendResponseLog("isResetting", true);
+
       // Create new project directories
       const projectDirectoryCreation =
         await projectDirectoryClient.executeAction();
@@ -110,6 +122,8 @@ const ResetIcon = () => {
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setBackendResponseLog("isResetting", false);
     }
   };
 
@@ -118,19 +132,37 @@ const ResetIcon = () => {
     onClose();
   };
 
+  const confirmEndSession = () => {
+    handleEndSession({
+      resetAugConfig,
+      resetBackendResponseLog,
+      setBackendResponseLog,
+      queryClient,
+      toast,
+      navigate,
+    });
+    onClose();
+  };
+
   return (
     <>
       <Box width="auto" alignSelf="center">
-        <Tooltip label="Reset Session" placement="top-start">
+        <Tooltip label="Reset/End Session" placement="top-start">
           <IconButton
             aria-label="Upload Image and segmentation mask"
-            icon={<VscDebugRestart />}
+            icon={
+              isResetting || isShuttingDown ? (
+                <Spinner size="md" color="white" />
+              ) : (
+                <VscDebugRestart />
+              )
+            }
             variant="ghost"
             size="lg"
             fontSize="1.5rem"
             colorScheme={backgroundColor}
             onClick={onOpen}
-            disabled={!data?.success}
+            disabled={!data?.success || augmentationIsRunning || isShuttingDown}
           />
         </Tooltip>
       </Box>
@@ -158,9 +190,17 @@ const ResetIcon = () => {
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={confirmReset} ml={3}>
+              <Button colorScheme="red" onClick={confirmReset} ml={3} mr={1}>
                 Reset
               </Button>
+
+              <IconButtonWithToolTip
+                tooltipLabel="End Session"
+                aria-label="Click to end current session"
+                icon={<GrPowerShutdown />}
+                onClick={confirmEndSession}
+                isDisabled={isShuttingDown}
+              />
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>

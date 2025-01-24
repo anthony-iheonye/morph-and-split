@@ -14,6 +14,7 @@ import {
 } from "../components/miscellaneous";
 import { PreviewAugResultSwitch } from "../components/switches";
 import { useAugConfigStore } from "../store";
+import { useBackendResponse } from "../hooks";
 
 const PreviewAugmentedResults = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(
@@ -22,6 +23,7 @@ const PreviewAugmentedResults = () => {
       previewedSet: state.augConfig.previewedSet,
     })
   );
+  const { isShuttingDown } = useBackendResponse();
 
   return (
     <>
@@ -56,8 +58,11 @@ const PreviewAugmentedResults = () => {
 
       <BoundingBox transparent padding={0}>
         <HStack>
-          <PreviousBtn to="/augment/start_augmentation" />
-          <EndSession />
+          <PreviousBtn
+            to="/augment/start_augmentation"
+            disable={isShuttingDown}
+          />
+          <EndSession size={"sm"} />
         </HStack>
       </BoundingBox>
     </>

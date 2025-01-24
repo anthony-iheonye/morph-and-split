@@ -5,12 +5,13 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
-import { useAugConfigAndSetter } from "../../hooks";
+import { useAugConfigAndSetter, useBackendResponse } from "../../hooks";
 import { sizes } from "../../services";
 
 const ValStartIndex = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
+  const { augmentationIsRunning } = useBackendResponse();
 
   return (
     <NumberInput
@@ -26,6 +27,7 @@ const ValStartIndex = () => {
           isNaN(value) ? augConfig.initialValSaveId : value
         );
       }}
+      isDisabled={augmentationIsRunning}
     >
       <NumberInputField />
       <NumberInputStepper>

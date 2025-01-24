@@ -6,7 +6,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { BackendResponse, CustomError, SignedUploadUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
@@ -69,6 +69,7 @@ const MaskUploader = () => {
             "maskNames",
             "metadata",
             "maskUploadStatus",
+            "imageMaskBalanceStatus",
           ]);
         }
       } catch (error: any) {
@@ -82,6 +83,10 @@ const MaskUploader = () => {
       }
     }
   );
+
+  const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.target.value = ""; // Reset the file input's value so the previous file can be reuploaded, if we choose to.
+  };
 
   useEffect(() => {
     setBackendResponseLog("maskIsUploading", isUploading);
@@ -103,7 +108,10 @@ const MaskUploader = () => {
         padding="0"
         display="None"
         accept=".png, .jpeg, .jpg"
-        onChange={handleFileChange}
+        onChange={(event) => {
+          handleFileChange(event);
+          resetInput(event);
+        }}
       />
     </Button>
   );

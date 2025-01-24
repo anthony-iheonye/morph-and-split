@@ -71,6 +71,7 @@ const ImageUploader = () => {
             "imageNames",
             "metadata",
             "imageUploadStatus",
+            "imageMaskBalanceStatus",
           ]);
         }
       } catch (error: any) {
@@ -84,6 +85,10 @@ const ImageUploader = () => {
       }
     }
   );
+
+  const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.target.value = ""; // Reset the file input's value so the previous file can be reuploaded, if we choose to.
+  };
 
   useEffect(() => {
     setBackendResponseLog("imageIsUploading", isUploading);
@@ -106,7 +111,10 @@ const ImageUploader = () => {
         padding="0"
         display="None"
         accept=".png, .jpeg, .jpg"
-        onChange={handleFileChange}
+        onChange={(event) => {
+          handleFileChange(event);
+          resetInput(event);
+        }}
       />
     </Button>
   );

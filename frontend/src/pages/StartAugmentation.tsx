@@ -16,12 +16,14 @@ import {
   IconHeadingDescriptionCombo,
   PageTitle,
 } from "../components/miscellaneous";
-import useAugmentationStatus from "../hooks/useAugmentationStatus";
+import { useBackendResponse } from "../hooks";
+import useAugmentationIsComplete from "../hooks/useAugmentationIsComplete";
 import { APIClient } from "../services";
 
 const StartAugmentation = () => {
   const DownloadAPI = new APIClient<Blob>("/download/augmentation_results");
-  const { data } = useAugmentationStatus();
+  const { data: augmentationCompleted } = useAugmentationIsComplete();
+  const { augmentationIsRunning } = useBackendResponse();
 
   return (
     <>
@@ -75,14 +77,17 @@ const StartAugmentation = () => {
 
       <BoundingBox transparent padding={0}>
         <HStack>
-          <PreviousBtn to="/settings/pre_processing" />
+          <PreviousBtn
+            to="/settings/pre_processing"
+            disable={augmentationIsRunning}
+          />
           <Augment />
           <ContinueBtn
             to="/augment/preview"
             label="Continue"
-            disable={!data?.success}
+            disable={augmentationIsRunning || !augmentationCompleted?.success}
           />
-          {data?.success && (
+          {!augmentationIsRunning && augmentationCompleted?.success && (
             <DownloadButton
               filename="augmented_data.zip"
               onDownload={DownloadAPI.downloadFile}

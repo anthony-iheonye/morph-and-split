@@ -4,6 +4,9 @@ import {
   parentNames,
   useActiveNavColor,
   useActiveParent,
+  useBackendResponse,
+  useImageMaskBalanceStatus,
+  useImageUploadStatus,
   useIsBackendRunning,
 } from "../../../hooks";
 
@@ -11,7 +14,10 @@ const AugmentIcon = () => {
   const activeParent = useActiveParent();
   const { augment } = parentNames;
   const { parentColor } = useActiveNavColor();
-  const { data } = useIsBackendRunning();
+  const { data: imageUploaded } = useImageUploadStatus();
+  const { data: backendIsRunning } = useIsBackendRunning();
+  const { data: imageMaskBalance } = useImageMaskBalanceStatus();
+  const { isShuttingDown } = useBackendResponse();
 
   return (
     <MainNavBarItem
@@ -20,7 +26,12 @@ const AugmentIcon = () => {
       to="/augment"
       backgroundColor={activeParent === augment ? parentColor : "transparent"}
       tooltipLabel="Initiate Augmentation"
-      disabled={!data?.success}
+      disabled={
+        !imageUploaded?.success ||
+        !backendIsRunning?.success ||
+        !imageMaskBalance?.success ||
+        isShuttingDown
+      }
     />
   );
 };

@@ -3,6 +3,7 @@ import {
   subParentNames,
   useActiveNavColor,
   useActiveSubParent,
+  useImageUploadStatus,
 } from "../../../hooks";
 import SubNavBarItem from "./SubNavBarItem";
 
@@ -10,6 +11,7 @@ const UploadMasks = () => {
   const { subParentColor } = useActiveNavColor();
   const { uploadMasks } = subParentNames;
   const activeSubParent = useActiveSubParent();
+  const { data: imageUploaded } = useImageUploadStatus();
 
   return (
     <SubNavBarItem
@@ -21,6 +23,7 @@ const UploadMasks = () => {
         activeSubParent === uploadMasks ? subParentColor : "transparent"
       }
       tooltipLabel="Select segmentation masks"
+      disabled={!imageUploaded?.success}
     />
   );
 };

@@ -1,10 +1,16 @@
-import { Button, useBreakpointValue, useToast } from "@chakra-ui/react";
-import { IoIosArrowForward } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { APIClient } from "../../services";
-import { BackendResponse, CustomError } from "../../entities";
-import invalidateQueries from "../../services/invalidateQueries";
+import {
+  Button,
+  Spinner,
+  useBreakpointValue,
+  useToast,
+} from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { FaPowerOff } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { BackendResponse, CustomError } from "../../entities";
+import { APIClient } from "../../services";
+import invalidateQueries from "../../services/invalidateQueries";
 
 interface Props {
   label?: string | { base?: string; md?: string; lg?: string };
@@ -25,6 +31,7 @@ const StartSession = ({
   const navigate = useNavigate();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
 
   const responsiveLabel = useBreakpointValue(
     typeof label === "string" ? { base: label } : label
@@ -32,6 +39,7 @@ const StartSession = ({
 
   const handleClick = async () => {
     try {
+      setIsLoading(true);
       // Create a new bucket
       const bucketCreation = await GCSClient.executeAction();
 
@@ -42,6 +50,7 @@ const StartSession = ({
         );
       }
 
+      // Create backend project directories
       const projectDirectoryCreation =
         await projectDirectoryClient.executeAction();
 
@@ -52,7 +61,7 @@ const StartSession = ({
         );
       } else {
         navigate(to);
-        invalidateQueries(queryClient, ["backendStatus"]);
+        invalidateQueries(queryClient, ["backendIsRunning"]);
       }
     } catch (error: any) {
       toast({
@@ -62,6 +71,8 @@ const StartSession = ({
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -71,10 +82,10 @@ const StartSession = ({
       size="sm"
       onClick={() => handleClick()}
       borderRadius={20}
-      rightIcon={<IoIosArrowForward />}
+      leftIcon={isLoading ? <Spinner /> : <FaPowerOff size="1rem" />}
       isDisabled={disable}
     >
-      {responsiveLabel}
+      {isLoading ? "Preparing work space..." : responsiveLabel}
     </Button>
   );
 };

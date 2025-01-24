@@ -3,14 +3,15 @@ import {
   subParentNames,
   useActiveNavColor,
   useActiveSubParent,
+  useBackendResponse,
 } from "../../../hooks";
 import SubNavBarItem from "./SubNavBarItem";
 
 const AugmentData = () => {
   const { subParentColor } = useActiveNavColor();
-
   const activeSubParent = useActiveSubParent();
   const { startAugmentation } = subParentNames;
+  const { isShuttingDown } = useBackendResponse();
 
   return (
     <SubNavBarItem
@@ -21,6 +22,7 @@ const AugmentData = () => {
       backgroundColor={
         activeSubParent === startAugmentation ? subParentColor : "transparent"
       }
+      disabled={isShuttingDown}
     />
   );
 };

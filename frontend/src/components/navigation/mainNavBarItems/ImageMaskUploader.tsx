@@ -3,6 +3,7 @@ import {
   parentNames,
   useActiveNavColor,
   useActiveParent,
+  useBackendResponse,
   useIsBackendRunning,
 } from "../../../hooks";
 import MainNavBarItem from "./MainNavBarItem";
@@ -11,7 +12,9 @@ const ImageMaskUploader = () => {
   const activeParent = useActiveParent();
   const { uploadImageAndMask } = parentNames;
   const { parentColor } = useActiveNavColor();
-  const { data } = useIsBackendRunning();
+  const { data: backendRunning } = useIsBackendRunning();
+  const { augmentationIsRunning, isShuttingDown, isResetting } =
+    useBackendResponse();
 
   return (
     <MainNavBarItem
@@ -22,7 +25,12 @@ const ImageMaskUploader = () => {
         activeParent === uploadImageAndMask ? parentColor : "transparent"
       }
       tooltipLabel="Upload data"
-      disabled={!data?.success}
+      disabled={
+        !backendRunning?.success ||
+        augmentationIsRunning ||
+        isShuttingDown ||
+        isResetting
+      }
     />
   );
 };
