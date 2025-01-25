@@ -1,3 +1,4 @@
+import { UseToastOptions } from "@chakra-ui/react";
 import { useState } from "react";
 import { sortByName } from "../services";
 
@@ -20,9 +21,9 @@ import { sortByName } from "../services";
  *     the selected files and invokes the `setFilePaths` callback with the valid files.
  */
 const useFileUploader = <T extends File>(
-  setFilePaths: (files: T[]) => Promise<void>
+  setFilePaths: (files: T[]) => Promise<void>,
+  toast: (options: UseToastOptions) => void
 ) => {
-  const [error, setError] = useState<string | null>(null);
   const [isUploading, setUploading] = useState<boolean>(false);
 
   const getFileExt = (file: File): "png" | "jpeg" | "jpg" | null => {
@@ -39,40 +40,61 @@ const useFileUploader = <T extends File>(
     const curFiles = event.target.files;
 
     if (!curFiles || curFiles.length == 0) {
-      setError("No file currently selected for upload.");
+      toast({
+        title: "No File Selected",
+        description: "Please select at least one file to upload.",
+        status: "error",
+        duration: 40000,
+        isClosable: true,
+      });
       return;
     }
 
     // Convert FileList to Array and sort it alphabetically by file name
     const sortedFiles = sortByName(Array.from(curFiles), (file) => file.name);
-
     const validFiles: T[] = [];
 
     for (const file of sortedFiles) {
       const extension = getFileExt(file);
 
       if (!extension) {
-        setError(
-          `File name "${file.name}": Not a valid file type. Update your selection.`
-        );
-        setFilePaths([]);
+        toast({
+          title: "Invalid File Format",
+          description: `File "${file.name}" is not a valid format (only jpg, jpeg, png allowed).`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
         return; // Stop processing further files
-      } else validFiles.push(file as T);
+      } else {
+        validFiles.push(file as T);
+      }
     }
-
-    setError(null); //clear any previous errors.
 
     // Upload files
     try {
       setUploading(true);
       await setFilePaths(validFiles);
+      toast({
+        title: "Upload Successful",
+        description: `${validFiles.length} file(s) uploaded successfully.`,
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
     } catch (uploadError) {
-      setError(`Upload failed: ${(uploadError as Error).message}`);
+      toast({
+        title: "Upload Failed",
+        description: `Error: ${(uploadError as Error).message}`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setUploading(false);
     }
   };
-  return { error, isUploading, handleFileChange };
+  return { isUploading, handleFileChange };
 };
 
 export default useFileUploader;

@@ -83,7 +83,8 @@ const ImageUploader = () => {
           isClosable: true,
         });
       }
-    }
+    },
+    toast
   );
 
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {

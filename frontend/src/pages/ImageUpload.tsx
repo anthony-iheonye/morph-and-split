@@ -22,7 +22,7 @@ import {
 } from "../hooks";
 
 const ImageUpload = () => {
-  const { data } = useUploadedImageNames();
+  const { data: uploadedImages } = useUploadedImageNames();
   const { data: imageUploadStatus } = useImageUploadStatus();
   const { data: maskUploadStatus } = useMaskUploadStatus();
   const { imageIsUploading } = useBackendResponse();
@@ -77,8 +77,8 @@ const ImageUpload = () => {
         {imbalanced && <Text color="red.500">{imageMaskBalance?.message}</Text>}
 
         <Box overflowY="auto" maxHeight={{ base: "28vh", md: "48vh" }} mt={4}>
-          {data?.results && data?.results.length > 0 ? (
-            data?.results.map((name, index) => (
+          {uploadedImages?.results && uploadedImages?.results.length > 0 ? (
+            uploadedImages?.results.map((name, index) => (
               <Text fontWeight="thin" fontSize="md" key={index}>
                 {name}
               </Text>

@@ -81,7 +81,8 @@ const MaskUploader = () => {
           isClosable: true,
         });
       }
-    }
+    },
+    toast
   );
 
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
