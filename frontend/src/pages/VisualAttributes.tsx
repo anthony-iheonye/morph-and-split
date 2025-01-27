@@ -18,34 +18,8 @@ import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
 import { IconComboControl, PageTitle } from "../components/miscellaneous";
 import { VisualAttributeSwitch } from "../components/switches";
-import { useAugConfigAndSetter } from "../hooks";
 
 const VisualAttributes = () => {
-  const { augConfig, setAugConfig } = useAugConfigAndSetter();
-
-  const handleCheckBoxChange = (key: keyof typeof augConfig) => {
-    setAugConfig(key, !augConfig[key]);
-  };
-
-  const transforms = {
-    eccentricity: "Measures how elongated an object is",
-    equivalentDiameter:
-      "Diameter of a circle with the same area as the object.",
-    feretDiameterMax:
-      "The maximum distance between any two points on the object's boundary.",
-    filledArea: "The total area of the segmented object.",
-    perimeter: "The length of the object's boundary.",
-    roundness: "Measures how circular an object is.",
-    l: "Indicates the brightness of the object.",
-    a: "Measures the green to red color balance.",
-    b: "Measures the blue to yellow color balance.",
-    contrast:
-      "The difference in intensity or color between the object and background.",
-    correlation:
-      "Measures the relationship between pixel values and neighbors.",
-    energy:
-      "Indicates texture uniformity, with higher values showing less complexity.",
-  };
   return (
     <>
       <PageTitle title="Visual Attributes" />

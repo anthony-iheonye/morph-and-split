@@ -29,10 +29,6 @@ const RandomTransformation = ({
 }: Props) => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
 
-  const responsiveTitle = useBreakpointValue(
-    typeof title === "string" ? { base: title } : title
-  );
-
   const responsiveDescription = useBreakpointValue(
     typeof description === "string" ? { base: description } : description
   );
@@ -64,7 +60,7 @@ const RandomTransformation = ({
     <IconComboControl
       icon={icon}
       title={title}
-      description={transforms[transformName]}
+      description={transforms[transformName] || responsiveDescription}
       titleFontSize={titleFontSize}
       controlElement={
         <Switch
