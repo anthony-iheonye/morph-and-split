@@ -1,4 +1,4 @@
-import { HStack, VStack, Switch } from "@chakra-ui/react";
+import { HStack, VStack, Switch, SimpleGrid } from "@chakra-ui/react";
 import { BiSolidArea } from "react-icons/bi";
 import { BsFiletypeCsv } from "react-icons/bs";
 import { FaCircleNotch } from "react-icons/fa6";
@@ -19,8 +19,10 @@ import { SplitParameterSelector } from "../components/dropdowns";
 import {
   PageTitle,
   IconHeadingDescriptionCombo,
+  IconComboControl,
 } from "../components/miscellaneous";
 import { useAugConfigAndSetter } from "../hooks";
+import { VisualAttributeSwitch } from "../components/switches";
 
 const VisualAttributes = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -52,47 +54,104 @@ const VisualAttributes = () => {
     <>
       <PageTitle title="Visual Attributes" />
       <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={HiOutlineArrowsExpand}
-            title="Stratified Split Parameter"
-            description={{
-              md: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
-            }}
-          />
-          <SplitParameterSelector />
-        </HStack>
+        <IconComboControl
+          icon={HiOutlineArrowsExpand}
+          title="Stratified Split Parameter"
+          description={{
+            base: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
+          }}
+          controlElement={<SplitParameterSelector />}
+          contolElementWidth="100px"
+        />
       </BoundingBox>
 
       <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={BsFiletypeCsv}
-            title="Upload Visual Attribute Data"
-            description={{
-              md: "Select the CSV file containing the visual attributes of the food in the image.",
-            }}
-          />
-          <VisualAttributeFilePicker />
-        </HStack>
+        <IconComboControl
+          icon={BsFiletypeCsv}
+          title="Upload Visual Attribute Data"
+          description={{
+            md: "Select the CSV file containing the visual attributes of the food in the image.",
+          }}
+          controlElement={<VisualAttributeFilePicker />}
+        />
       </BoundingBox>
 
       <BoundingBox overflowY="auto" maxHeight={{ base: "300px", md: "57vh" }}>
-        <VStack spacing={8}>
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={IoColorPaletteSharp}
-              title="L (Lightness)"
-              description={transforms.l}
-            />
-            <Switch
-              id="l"
-              colorScheme="teal"
-              isChecked={augConfig.l}
-              onChange={() => handleCheckBoxChange("l")}
-            />
-          </HStack>
+        <SimpleGrid columns={{ base: 1 }} spacing={{ base: 8, md: 8 }}>
+          <VisualAttributeSwitch
+            attributeName="l"
+            icon={IoColorPaletteSharp}
+            title="L (Lightness)"
+          />
 
+          <VisualAttributeSwitch
+            attributeName="a"
+            icon={IoColorPaletteSharp}
+            title="a (Green-Red Index)"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="b"
+            icon={IoColorPaletteSharp}
+            title="b (Blue-Yellow index)"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="contrast"
+            icon={MdOutlineContrast}
+            title="Contrast"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="correlation"
+            icon={TbTexture}
+            title="Correlation"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="energy"
+            icon={GiRollingEnergy}
+            title="Energy"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="feretDiameterMax"
+            icon={GoCircleSlash}
+            title="Ferret Diameter"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="filledArea"
+            icon={BiSolidArea}
+            title="Filled Area"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="perimeter"
+            icon={RxDimensions}
+            title="Perimeter"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="eccentricity"
+            icon={TbOvalVertical}
+            title="Eccentricity"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="feretDiameterMax"
+            icon={GoCircleSlash}
+            title="Ferret Diameter"
+          />
+
+          <VisualAttributeSwitch
+            attributeName="roundness"
+            icon={FaCircleNotch}
+            title="Roundness"
+          />
+        </SimpleGrid>
+
+        {/* <VStack spacing={8}>
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
               icon={IoColorPaletteSharp}
@@ -232,7 +291,7 @@ const VisualAttributes = () => {
               onChange={() => handleCheckBoxChange("roundness")}
             />
           </HStack>
-        </VStack>
+        </VStack> */}
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
