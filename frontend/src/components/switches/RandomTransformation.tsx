@@ -1,10 +1,12 @@
-import { HStack, Switch } from "@chakra-ui/react";
+import { GridProps, Switch, useBreakpointValue } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import { useAugConfigAndSetter } from "../../hooks";
-import { IconHeadingDescriptionCombo } from "../miscellaneous";
+import { IconComboControl } from "../miscellaneous";
 
-interface Props {
-  header: string;
+interface Props extends GridProps {
+  title: string;
+  titleFontSize?: number | { base?: number; md?: number; lg?: number };
+  description?: string | { base?: string; md?: string; lg?: string };
   transformName:
     | "randomCrop"
     | "flipUpDown"
@@ -18,12 +20,22 @@ interface Props {
   switchRightMargin?: number;
 }
 const RandomTransformation = ({
-  header,
+  title,
+  titleFontSize,
+  description = "",
   transformName,
   icon,
   switchRightMargin = 0,
 }: Props) => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
+
+  const responsiveTitle = useBreakpointValue(
+    typeof title === "string" ? { base: title } : title
+  );
+
+  const responsiveDescription = useBreakpointValue(
+    typeof description === "string" ? { base: description } : description
+  );
 
   const handleCheckBoxChange = (key: keyof typeof augConfig) => {
     setAugConfig(key, !augConfig[key]);
@@ -49,20 +61,21 @@ const RandomTransformation = ({
   };
 
   return (
-    <HStack justify="space-between" align="start" width="100%">
-      <IconHeadingDescriptionCombo
-        icon={icon}
-        title={header}
-        description={transforms[transformName]}
-      />
-      <Switch
-        id={transformName}
-        colorScheme="teal"
-        isChecked={augConfig[transformName]}
-        onChange={() => handleCheckBoxChange(transformName)}
-        marginRight={switchRightMargin}
-      />
-    </HStack>
+    <IconComboControl
+      icon={icon}
+      title={title}
+      description={transforms[transformName]}
+      titleFontSize={titleFontSize}
+      controlElement={
+        <Switch
+          id={transformName}
+          colorScheme="teal"
+          isChecked={augConfig[transformName]}
+          onChange={() => handleCheckBoxChange(transformName)}
+          marginRight={switchRightMargin}
+        />
+      }
+    />
   );
 };
 
