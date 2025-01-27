@@ -17,7 +17,7 @@ const BoundingBox = ({
   display,
   marginLeft,
   marginRight,
-  padding = 5,
+  padding = { base: 3.5, md: 5 },
   maxHeight = "none",
   overflowY = undefined,
   borderRadius = 4,
