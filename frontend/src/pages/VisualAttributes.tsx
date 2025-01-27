@@ -61,7 +61,7 @@ const VisualAttributes = () => {
             base: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
           }}
           controlElement={<SplitParameterSelector />}
-          contolElementWidth="100px"
+          controlElementWidth="100px"
         />
       </BoundingBox>
 

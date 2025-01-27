@@ -233,7 +233,7 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
           title="Augmented Training Set Size"
           description="Specifies the desired number of training images post-augmentation."
           controlElement={<TotalTrainData />}
-          contolElementWidth={8}
+          controlElementWidth={8}
         />
       </BoundingBox>
 

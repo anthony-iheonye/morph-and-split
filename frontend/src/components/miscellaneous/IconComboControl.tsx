@@ -16,7 +16,7 @@ interface IconComboControlProps extends GridProps {
   description?: string | { base?: string; md?: string; lg?: string };
   icon?: IconType | undefined;
   controlElement?: ReactNode;
-  contolElementWidth?: number | string;
+  controlElementWidth?: number | string | {};
 }
 const IconComboControl = ({
   icon,
@@ -24,7 +24,7 @@ const IconComboControl = ({
   description = "",
   titleFontSize = 16,
   controlElement,
-  contolElementWidth = "auto",
+  controlElementWidth = "auto",
   ...rest
 }: IconComboControlProps) => {
   const responsiveTitle = useBreakpointValue(
@@ -44,8 +44,8 @@ const IconComboControl = ({
                    "description ."`,
       }}
       templateColumns={{
-        base: `1fr ${contolElementWidth}`,
-        md: `1fr ${contolElementWidth}`,
+        base: `1fr ${controlElementWidth}`,
+        md: `1fr ${controlElementWidth}`,
       }}
       {...rest}
     >
@@ -63,6 +63,7 @@ const IconComboControl = ({
         display="flex"
         justifyContent="flex-end"
         alignItems="center"
+        marginLeft={3}
       >
         {controlElement && controlElement}
       </GridItem>
