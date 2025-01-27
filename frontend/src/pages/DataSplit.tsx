@@ -13,10 +13,7 @@ import { FaLayerGroup } from "react-icons/fa6";
 import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { TotalTrainData } from "../components/inputFields";
-import {
-  IconHeadingDescriptionCombo,
-  PageTitle,
-} from "../components/miscellaneous";
+import { IconComboControl, PageTitle } from "../components/miscellaneous";
 import {
   TestRatioLock,
   TrainRatioLock,
@@ -231,14 +228,13 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
       </BoundingBox>
 
       <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={FaLayerGroup}
-            title="Augmented Training Set Size"
-            description="Specifies the desired number of training images post-augmentation."
-          />
-          <TotalTrainData />
-        </HStack>
+        <IconComboControl
+          icon={FaLayerGroup}
+          title="Augmented Training Set Size"
+          description="Specifies the desired number of training images post-augmentation."
+          controlElement={<TotalTrainData />}
+          contolElementWidth={8}
+        />
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>
