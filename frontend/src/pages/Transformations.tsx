@@ -26,46 +26,47 @@ const AugTransformationsInput = () => {
           overflowY={{ base: "auto", md: "hidden" }}
           padding={"0"}
           mr={0}
+          ml={2}
         >
           <SimpleGrid columns={{ base: 1 }} spacing={{ base: 5, md: 4, lg: 8 }}>
             <RandomTransformation
-              header={"Random Crop"}
+              title={"Random Crop"}
               transformName={"randomCrop"}
               icon={RiCropFill}
             />
 
             <RandomTransformation
-              header={"Flip Left-Right"}
+              title={"Flip Left-Right"}
               transformName={"flipLeftRight"}
               icon={PiFlipHorizontalFill}
             />
 
             <RandomTransformation
-              header={"Flip Up-Down"}
+              title={"Flip Up-Down"}
               transformName={"flipUpDown"}
               icon={PiFlipVerticalFill}
             />
 
             <RandomTransformation
-              header={"Random Rotate"}
+              title={"Random Rotate"}
               transformName={"randomRotate"}
               icon={RxRotateCounterClockwise}
             />
 
             <RandomTransformation
-              header={"Corrupt Brightness"}
+              title={"Corrupt Brightness"}
               transformName={"corruptBrightness"}
               icon={TbBrightnessFilled}
             />
 
             <RandomTransformation
-              header={"Corrupt Contrast"}
+              title={"Corrupt Contrast"}
               transformName={"corruptContrast"}
               icon={TbContrast2Filled}
             />
 
             <RandomTransformation
-              header={"Corrupt Saturation"}
+              title={"Corrupt Saturation"}
               transformName={"corruptSaturation"}
               icon={RiContrastDropLine}
             />
@@ -75,7 +76,7 @@ const AugTransformationsInput = () => {
 
       <BoundingBox>
         <RandomTransformation
-          header={"Augment Validation Set"}
+          title={"Augment Validation Set"}
           transformName={"augmentValData"}
           icon={TbTransformFilled}
         />
