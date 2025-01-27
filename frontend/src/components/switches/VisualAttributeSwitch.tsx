@@ -65,11 +65,27 @@ const VisualAttributeSwitch = ({
       "Indicates texture uniformity, with higher values showing less complexity.",
   };
 
+  // Dynamically derive the title if not explicitly provided
+  const defaultTitle = {
+    eccentricity: "Eccentricity",
+    equivalentDiameter: "Equivalent Diameter",
+    feretDiameterMax: "Feret Diameter (Max)",
+    filledArea: "Filled Area",
+    perimeter: "Perimeter",
+    roundness: "Roundness",
+    l: "Brightness (L*)",
+    a: "Green-Red Balance (a*)",
+    b: "Blue-Yellow Balance (b*)",
+    contrast: "Contrast",
+    correlation: "Correlation",
+    energy: "Energy",
+  }[attributeName];
+
   return (
     <IconComboControl
       icon={icon}
-      title={title}
-      description={transforms[attributeName]}
+      title={responsiveTitle || defaultTitle}
+      description={transforms[attributeName] || responsiveDescription}
       titleFontSize={titleFontSize}
       controlElement={
         <Switch

@@ -1,4 +1,4 @@
-import { HStack, VStack, Switch, SimpleGrid } from "@chakra-ui/react";
+import { HStack, SimpleGrid } from "@chakra-ui/react";
 import { BiSolidArea } from "react-icons/bi";
 import { BsFiletypeCsv } from "react-icons/bs";
 import { FaCircleNotch } from "react-icons/fa6";
@@ -8,21 +8,17 @@ import { HiOutlineArrowsExpand } from "react-icons/hi";
 import { IoColorPaletteSharp } from "react-icons/io5";
 import { MdOutlineContrast } from "react-icons/md";
 import { RxDimensions } from "react-icons/rx";
-import { TbTexture, TbOvalVertical } from "react-icons/tb";
+import { TbOvalVertical, TbTexture } from "react-icons/tb";
 import {
-  VisualAttributeFilePicker,
-  PreviousBtn,
   ContinueBtn,
+  PreviousBtn,
+  VisualAttributeFilePicker,
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
-import {
-  PageTitle,
-  IconHeadingDescriptionCombo,
-  IconComboControl,
-} from "../components/miscellaneous";
-import { useAugConfigAndSetter } from "../hooks";
+import { IconComboControl, PageTitle } from "../components/miscellaneous";
 import { VisualAttributeSwitch } from "../components/switches";
+import { useAugConfigAndSetter } from "../hooks";
 
 const VisualAttributes = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -150,148 +146,6 @@ const VisualAttributes = () => {
             title="Roundness"
           />
         </SimpleGrid>
-
-        {/* <VStack spacing={8}>
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={IoColorPaletteSharp}
-              title="a (Green-Red Component)"
-              description={transforms.a}
-            />
-            <Switch
-              id="a"
-              colorScheme="teal"
-              isChecked={augConfig.a}
-              onChange={() => handleCheckBoxChange("a")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={IoColorPaletteSharp}
-              title="b (Blue-Yellow Component)"
-              description={transforms.b}
-            />
-            <Switch
-              id="b"
-              colorScheme="teal"
-              isChecked={augConfig.b}
-              onChange={() => handleCheckBoxChange("b")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={MdOutlineContrast}
-              title="Contrast"
-              description={transforms.contrast}
-            />
-            <Switch
-              id="contrast"
-              colorScheme="teal"
-              isChecked={augConfig.contrast}
-              onChange={() => handleCheckBoxChange("contrast")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={TbTexture}
-              title="Correlation"
-              description={transforms.correlation}
-            />
-            <Switch
-              id="correlation"
-              colorScheme="teal"
-              isChecked={augConfig.correlation}
-              onChange={() => handleCheckBoxChange("correlation")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={GiRollingEnergy}
-              title="Energy"
-              description={transforms.energy}
-            />
-            <Switch
-              id="energy"
-              colorScheme="teal"
-              isChecked={augConfig.energy}
-              onChange={() => handleCheckBoxChange("energy")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={GoCircleSlash}
-              title="Ferret Diameter"
-              description={transforms.feretDiameterMax}
-            />
-            <Switch
-              id="feretDiameterMax"
-              colorScheme="teal"
-              isChecked={augConfig.feretDiameterMax}
-              onChange={() => handleCheckBoxChange("feretDiameterMax")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={BiSolidArea}
-              title="Filled Area"
-              description={transforms.filledArea}
-            />
-            <Switch
-              id="filledArea"
-              colorScheme="teal"
-              isChecked={augConfig.filledArea}
-              onChange={() => handleCheckBoxChange("filledArea")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={RxDimensions}
-              title="Perimeter"
-              description={transforms.perimeter}
-            />
-            <Switch
-              id="perimeter"
-              colorScheme="teal"
-              isChecked={augConfig.perimeter}
-              onChange={() => handleCheckBoxChange("perimeter")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={TbOvalVertical}
-              title="Eccentricity"
-              description={transforms.eccentricity}
-            />
-            <Switch
-              id="eccentricity"
-              colorScheme="teal"
-              isChecked={augConfig.eccentricity}
-              onChange={() => handleCheckBoxChange("eccentricity")}
-            />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={FaCircleNotch}
-              title="Roundness"
-              description={transforms.roundness}
-            />
-            <Switch
-              id="roundness"
-              colorScheme="teal"
-              isChecked={augConfig.roundness}
-              onChange={() => handleCheckBoxChange("roundness")}
-            />
-          </HStack>
-        </VStack> */}
       </BoundingBox>
 
       <BoundingBox transparent padding={0}>

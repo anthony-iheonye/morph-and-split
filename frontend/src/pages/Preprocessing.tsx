@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid, Switch, VStack } from "@chakra-ui/react";
+import { HStack, SimpleGrid, Switch } from "@chakra-ui/react";
 import { GiResize } from "react-icons/gi";
 import { PiResizeFill } from "react-icons/pi";
 import { RiCropFill } from "react-icons/ri";
