@@ -1,8 +1,9 @@
+import os
+
 from flask import Blueprint, jsonify
 
-from app.utils import directory_store
-from app.utils import get_sorted_filenames
-import os
+from app.routes.augment import is_augmenting
+from app.utils import directory_exit, directory_store, get_sorted_filenames, list_filenames
 
 status_checks = Blueprint('status_checks', __name__)
 
@@ -12,7 +13,7 @@ def images_upload_status():
     Checks if the images were successfully uploaded.
     """
     try:
-        count = len(get_sorted_filenames(directory_store.image_dir))
+        count = len(list_filenames(directory_store.image_dir))
         if count > 0:
             return jsonify({'success': True, 'count': count,
                             'message': 'images uploaded successfully'}), 200
@@ -26,19 +27,35 @@ def images_upload_status():
 @status_checks.route('/status_checks/mask_upload_status', methods=['GET'])
 def masks_upload_status():
     """
-    Checks if the masks were successfully uploaded, and that the number of masks equal the number of images.
+    Checks if masks were successfully uploaded to the mask folder.
     """
     try:
-        images_count = len(get_sorted_filenames(directory_store.image_dir))
-        masks_count = len(get_sorted_filenames(directory_store.mask_dir))
+        masks_count = len(list_filenames(directory_store.mask_dir))
 
-        if all([images_count > 0, masks_count > 0, masks_count == images_count]):
+        if masks_count > 0:
             return jsonify({'success': True,
-                            'message': 'Mask uploaded successfully, and masks count match image count.'}), 200
+                            'message': 'Masks uploaded successfully.'}), 200
         else:
             return jsonify({'success': False,
-                            'message': f'Image count ({images_count}) '
-                                       f'and masks count ({masks_count}) do not match.'}), 200
+                            'message': f'Masks have not been uploaded'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@status_checks.route('/status_checks/image_mask_balance_status', methods=['GET'])
+def image_mask_balance_status():
+    """
+    Checks if the number of uploaded images equal the number of uploaded masks.
+    """
+    try:
+        images_count = len(list_filenames(directory_store.image_dir))
+        masks_count = len(list_filenames(directory_store.mask_dir))
+
+        if images_count == masks_count:
+            return jsonify({'success': True,
+                            'message': 'Number of uploaded images is equal to number of uploaded masks.'}), 200
+        else:
+            return jsonify({'success': False,
+                            'message': f'Number of images ({images_count}) do not match number of masks ({masks_count}). Please ensure they are equal.'}), 200
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
@@ -59,3 +76,30 @@ def augmentation_complete():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+
+@status_checks.route('/status_checks/backend_is_running', methods=['GET'])
+def backend_is_running():
+    """
+    Checks if a session is currently running.
+    """
+    try:
+        if directory_exit(directory_store.image_dir):
+            return jsonify({'success': True, 'message': 'Session is running'}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Session is not running'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@status_checks.route('/status_checks/augmentation_is_running', methods=['GET'])
+def augmentation_is_running():
+    """
+    Checks if augmentation is running.
+    """
+    try:
+        if is_augmenting.is_set():
+            return jsonify({'isRunning': True, 'message': 'Augmentation is running'}), 200
+        else:
+            return jsonify({'isRunning': False, 'message': 'Augmentation is not running'}), 200
+    except Exception as e:
+        return jsonify({'isRunning': False, 'error': str(e)}), 500

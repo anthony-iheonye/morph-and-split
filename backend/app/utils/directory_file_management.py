@@ -3,7 +3,6 @@ import re
 import shutil
 import subprocess
 from typing import Union
-import asyncio
 
 import attr
 from google.api_core.exceptions import NotFound, GoogleAPIError
@@ -340,6 +339,41 @@ def delete_files_in_google_cloud_storage_bucket(bucket_name: str,
         print(f"An error occurred: {e}")
         return None
 
+def delete_and_recreate_directory_in_gcs_bucket(bucket_name: str, directory: str):
+    """
+    Deletes a directory (and all its contents) in a Google Cloud Storage bucket
+    and recreates the directory.
+
+    :param bucket_name: (str) The name of the GCS bucket.
+    :param directory: (str) The directory to delete and recreate.
+    :return: Success or Failure message
+    """
+
+    try:
+        # Initialize the storage client
+        storage_client = storage.Client()
+
+        # Get the bucket
+        bucket = storage_client.get_bucket(bucket_name)
+
+        # List all blobs in the directory
+        blobs = list(bucket.list_blobs(prefix=f"{directory}/"))
+        if blobs:
+            bucket.delete_blobs(blobs)
+            print(f"All contents of {directory} deleted.")
+        else:
+            print(f"No blobs found in directory '{directory}'.")
+
+        # Recreate the directory by uploading an empty blob
+        empty_blob = bucket.blob(f"{directory}/")
+        empty_blob.upload_from_string("")
+
+    except NotFound:
+        print(f"Bucket '{bucket_name}' or directory'{directory}' not found.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 
 def delete_google_cloud_storage_bucket(bucket_name: str):
     """
@@ -435,19 +469,21 @@ def upload_file_to_gcs_bucket(bucket_name:str, source_file_name:str, destination
     print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
 
-def download_files_from_gcs_folder(bucket_name: str, source_folder_path: str, destination_folder_path: str):
+def download_files_from_gcs_folder(bucket_name: str, source_folder_path: str, destination_folder_path: str, copy= True):
     """
-    Copies files/folder from a Google Cloud Storage bucket to a local directory
+    Copies or moves files/folder from a Google Cloud Storage bucket to a local directory
 
+    :param copy: if 'copy' is False, the files are moved, instead of copied, to the destination folder.
     :param bucket_name: (str) The name of the GCS bucket.
     :param source_folder_path: (str) Path to the file/folder to be downloaded.
     :param destination_folder_path: (str) Path to the local directory.
     """
     try:
+        download_mode = 'cp' if copy else 'mv'
         source_directory = source_folder_path[:-2] if source_folder_path.endswith("/") else source_folder_path
         gcloud_command = ["gcloud",
                           "storage",
-                          "cp",
+                          download_mode,
                           f"gs://{bucket_name}/{source_directory}/*",
                           destination_folder_path
                           ]
@@ -476,6 +512,11 @@ def sort_filenames(file_paths):
         ])
 
 
+def list_filenames(directory_path):
+    """Returns a list containing the names of all files in the directory."""
+    return os.listdir(directory_path)
+
+
 def get_sorted_filepaths(images_dir):
     """
     Generates the sorted list of path for images within a specified directory.
@@ -492,15 +533,23 @@ def get_sorted_filepaths(images_dir):
     return image_paths
 
 
-def get_sorted_filenames(images_dir):
+def get_sorted_filenames(directory_path):
     """
-    Generates the sorted list of path for images within a specified directory.
+    Generates the sorted list of names of files within a specified directory.
 
-    :param images_dir: a directory containing images
+    :param directory_path: a directory containing images
     :return: Returns a list containing the file path for the images
     """
-    image_file_list = os.listdir(path=images_dir)
+    image_file_list = os.listdir(path=directory_path)
 
     # sort the file paths in ascending order
     return sort_filenames(image_file_list)
 
+
+def directory_exit(dir_path):
+    """
+    Checks if a direct exists
+    :param dir_path: Path to the directory.
+    :return: True, if directory exists, else False.
+    """
+    return os.path.exists(dir_path)
