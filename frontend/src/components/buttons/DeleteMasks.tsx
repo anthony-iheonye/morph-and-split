@@ -17,8 +17,8 @@ const DeleteMasks = () => {
 
   return (
     <IconButtonWithToolTip
-      aria-label="Click to delete uploaded images"
-      tooltipLabel="Delete all images"
+      aria-label="Click to delete uploaded masks"
+      tooltipLabel="Delete all masks"
       icon={deletingMasks ? <Spinner /> : <MdDeleteForever />}
       onClick={() =>
         handleDeleteMasks({
@@ -27,6 +27,7 @@ const DeleteMasks = () => {
           toast,
         })
       }
+      placement="left-start"
       isDisabled={maskIsUploading}
     />
   );

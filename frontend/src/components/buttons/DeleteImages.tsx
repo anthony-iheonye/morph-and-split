@@ -27,6 +27,7 @@ const DeleteImages = () => {
           toast,
         })
       }
+      placement="left-start"
       isDisabled={imageIsUploading}
     />
   );

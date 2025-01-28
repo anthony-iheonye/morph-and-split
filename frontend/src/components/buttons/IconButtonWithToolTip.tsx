@@ -1,7 +1,13 @@
-import { IconButton, IconButtonProps, Tooltip } from "@chakra-ui/react";
+import {
+  IconButton,
+  IconButtonProps,
+  PlacementWithLogical,
+  Tooltip,
+} from "@chakra-ui/react";
 
 interface Props extends IconButtonProps {
   tooltipLabel: string;
+  placement?: PlacementWithLogical | undefined;
   iconHoverBackgroundColor?: string;
   iconHoverColor?: string;
 }
@@ -9,6 +15,7 @@ interface Props extends IconButtonProps {
 const IconButtonWithToolTip = ({
   tooltipLabel,
   "aria-label": ariaLabel,
+  placement,
   colorScheme = "red",
   iconHoverBackgroundColor = "transparent",
   iconHoverColor = "red.400",
@@ -20,7 +27,7 @@ const IconButtonWithToolTip = ({
   ...rest // Excludes ariaLabel
 }: Props) => {
   return (
-    <Tooltip label={tooltipLabel}>
+    <Tooltip label={tooltipLabel} placement={placement}>
       <IconButton
         aria-label={ariaLabel} // Explicitly passed
         icon={icon}
