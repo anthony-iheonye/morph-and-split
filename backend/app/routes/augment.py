@@ -2,6 +2,7 @@ import gc
 import json
 import os
 import zipfile
+import threading
 
 from flask import Blueprint, request, jsonify
 from tensorflow.keras.backend import clear_session
@@ -19,6 +20,9 @@ AUGMENTED_DIR = directory_store.augmented
 channels = aug_config['imageMaskChannels']
 image_channels = channels['imgChannels']
 mask_channels = channels['maskChannels']
+
+# A global variable to track teh augmentation status
+is_augmenting = threading.Event()
 
 
 def save_aug_config(aug_config: dict, target_file: str):
@@ -61,6 +65,9 @@ def augment_data():
 
         # Save the aug_config as a python script in the 'app' package
         save_aug_config(aug_config, config_filepath)
+
+        # set augmentation status to running
+        is_augmenting.set()
 
         augmenter = DataSplitterAugmenterAndSaver(images_directory=directory_store.image_dir,
                                                   masks_directory=directory_store.mask_dir,
@@ -110,9 +117,12 @@ def augment_data():
         # Store a resized version of the augmented results
         resize_augmented_data()
 
+        # Clear the augmentation status after completion
+        is_augmenting.clear()
         return jsonify({'success': True}), 201
 
     except Exception as e:
+        is_augmenting.clear()
         return jsonify({'success': False, 'error': str(e)}), 500
     finally:
         # clear Tensorflow session and garbage collect unused variables
