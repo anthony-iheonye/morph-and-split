@@ -10,8 +10,8 @@ export interface FetchResponse<T> {
 }
 
 const axiosInstance = axios.create({
-  baseURL: "http://127.0.0.1:5000", // Local backend base URL
-  // baseURL: "https://morph-and-split-backend-1055861427938.us-south1.run.app", // Google cloud run backend base URL
+  // baseURL: "http://127.0.0.1:5000", // Local backend base URL
+  baseURL: "https://morph-and-split-backend-1055861427938.us-south1.run.app", // Google cloud run backend base URL
 });
 
 class APIClient<T> {
