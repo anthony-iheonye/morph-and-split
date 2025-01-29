@@ -91,3 +91,5 @@ practice.ipynb
 /app/utils/__pycache__
 emeka/
 requirements_old.txt
+Dockerfile.2
+practice.py
