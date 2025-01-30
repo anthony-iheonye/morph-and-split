@@ -23,7 +23,9 @@ const WidthOffsetInput = () => {
         setAugConfig("cropDimension", {
           ...augConfig.cropDimension,
           offsetHeight: augConfig.cropDimension!.offsetHeight,
-          offsetWidth: parseInt(value),
+          offsetWidth: isNaN(Number(value))
+            ? augConfig.cropDimension!.offsetWidth
+            : Number(value),
           targetHeight: augConfig.cropDimension!.targetHeight,
           targetWidth: augConfig.cropDimension!.targetWidth,
         })

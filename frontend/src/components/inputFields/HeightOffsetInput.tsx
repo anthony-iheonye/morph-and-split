@@ -22,7 +22,9 @@ const HeightOffsetInput = () => {
       onChange={(value) =>
         setAugConfig("cropDimension", {
           ...augConfig.cropDimension,
-          offsetHeight: parseInt(value),
+          offsetHeight: isNaN(Number(value))
+            ? augConfig.cropDimension!.offsetHeight
+            : Number(value),
           offsetWidth: augConfig.cropDimension!.offsetWidth,
           targetHeight: augConfig.cropDimension!.targetHeight,
           targetWidth: augConfig.cropDimension!.targetWidth,

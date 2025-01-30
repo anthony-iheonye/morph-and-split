@@ -18,7 +18,10 @@ const TotalTrainData = () => {
       width="auto"
       value={augConfig.totalAugmentedImages}
       onChange={(value) =>
-        setAugConfig("totalAugmentedImages", parseInt(value))
+        setAugConfig(
+          "totalAugmentedImages",
+          isNaN(Number(value)) ? augConfig.totalAugmentedImages : Number(value)
+        )
       }
     >
       <NumberInputField />

@@ -23,7 +23,9 @@ const ResizeWidthInput = () => {
         setAugConfig("augImageDimension", {
           ...augConfig.augImageDimension,
           height: augConfig.augImageDimension!.height,
-          width: parseInt(value),
+          width: isNaN(Number(value))
+            ? augConfig.augImageDimension!.width
+            : Number(value),
         })
       }
     >

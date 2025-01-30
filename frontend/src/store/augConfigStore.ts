@@ -73,7 +73,7 @@ const initialAugConfig: AugConfig = {
   splitParameter: "a",
   imageMaskChannels: { imgChannels: 3, maskChannels: 3 },
   resizeAugImage: false,
-  augImageDimension: { width: 2000, height: 2000 },
+  augImageDimension: { width: 1024, height: 1024 },
   trainRatio: 0.6,
   valRatio: 0.2,
   testRatio: 0.2,

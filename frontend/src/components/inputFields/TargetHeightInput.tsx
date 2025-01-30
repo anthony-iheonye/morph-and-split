@@ -24,7 +24,9 @@ const TargetHeightInput = () => {
           ...augConfig.cropDimension,
           offsetHeight: augConfig.cropDimension!.offsetHeight,
           offsetWidth: augConfig.cropDimension!.offsetWidth,
-          targetHeight: parseInt(value),
+          targetHeight: isNaN(Number(value))
+            ? augConfig.cropDimension!.targetHeight
+            : Number(value),
           targetWidth: augConfig.cropDimension!.targetWidth,
         })
       }

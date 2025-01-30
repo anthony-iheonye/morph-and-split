@@ -22,7 +22,9 @@ const ResizeHeightInput = () => {
       onChange={(value) =>
         setAugConfig("augImageDimension", {
           ...augConfig.augImageDimension,
-          height: parseInt(value),
+          height: isNaN(Number(value))
+            ? augConfig.augImageDimension!.height
+            : Number(value),
           width: augConfig.augImageDimension!.width,
         })
       }
