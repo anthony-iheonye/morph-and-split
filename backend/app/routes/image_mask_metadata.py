@@ -1,3 +1,5 @@
+import os
+
 from flask import Blueprint, jsonify, send_from_directory, url_for, request
 
 from app.utils import directory_store, get_sorted_filenames
@@ -16,6 +18,12 @@ RESIZED_TEST_IMAGE_DIR = directory_store.resized_test_image_dir
 RESIZED_TEST_MASK_DIR = directory_store.resized_test_mask_dir
 
 # Route to serve image files
+
+def get_scheme():
+    """Detect whether the app is running on Cloud Run or locally."""
+    if os.getenv("K_SERVICE"):  # This environment variable exists in Cloud Run
+        return "https"
+    return "http"
 
 
 @image_mask_metadata.route('/images/<filename>')
@@ -63,7 +71,8 @@ def serve_test_mask(filename):
 def get_image_mask_metadata():
     try:
         # Detect the scheme (http or https) dynamically
-        scheme = request.scheme
+        # scheme = request.scheme
+        scheme = get_scheme()
 
         # Pagination parameters
         page = int(request.args.get('page', 1))
