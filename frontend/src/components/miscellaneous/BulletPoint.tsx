@@ -1,5 +1,4 @@
 import { ListIcon, ListItem } from "@chakra-ui/react";
-import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
 const BulletPoint = () => {
