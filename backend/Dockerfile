@@ -89,7 +89,8 @@ RUN gcloud auth activate-service-account --key-file=/app/morph-and-split-key.jso
 
 # Set Flask environment variables
 ENV FLASK_ENV=production \
-    PYTHONPATH=/app
+    PYTHONPATH=/app \
+    K_SERVICE=morph-and-split-backend
 
 # Expose port 5000 (default Flask port)
 EXPOSE 5000
