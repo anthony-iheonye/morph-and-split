@@ -1,6 +1,7 @@
 import { UseToastOptions } from "@chakra-ui/react";
 import { useState } from "react";
 import { sortByName } from "../services";
+import useAugConfigAndSetter from "./useAugConfigAndSetter";
 
 /**
  * A custom hook to handle file uploads with validation and state management.
@@ -25,6 +26,7 @@ const useFileUploader = <T extends File>(
   toast: (options: UseToastOptions) => void
 ) => {
   const [isUploading, setUploading] = useState<boolean>(false);
+  const { setAugConfig } = useAugConfigAndSetter();
 
   const getFileExt = (file: File): "png" | "jpeg" | "jpg" | null => {
     const ext = file.name.split(".").pop()?.toLowerCase();
@@ -53,6 +55,8 @@ const useFileUploader = <T extends File>(
     // Convert FileList to Array and sort it alphabetically by file name
     const sortedFiles = sortByName(Array.from(curFiles), (file) => file.name);
     const validFiles: T[] = [];
+
+    setAugConfig("imageType", `image/${getFileExt(sortedFiles[0])}`);
 
     for (const file of sortedFiles) {
       const extension = getFileExt(file);

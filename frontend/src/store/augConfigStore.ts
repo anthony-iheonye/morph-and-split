@@ -46,6 +46,7 @@ export interface AugConfig {
   correlation?: boolean;
   energy?: boolean;
   previewedSet?: string;
+  imageType?: string;
   reset?: boolean;
 }
 
@@ -110,6 +111,7 @@ const initialAugConfig: AugConfig = {
   correlation: false,
   energy: false,
   previewedSet: "train",
+  imageType: "",
   reset: false,
 };
 
