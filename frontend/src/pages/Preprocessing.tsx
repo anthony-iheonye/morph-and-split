@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid, Switch } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, SimpleGrid, Switch } from "@chakra-ui/react";
 import { GiResize } from "react-icons/gi";
 import { PiResizeFill } from "react-icons/pi";
 import { RiCropFill } from "react-icons/ri";
@@ -24,115 +24,137 @@ const PreProcessing = () => {
   };
 
   return (
-    <>
-      <PageTitle title="Pre-Procesing" />
-      {/*Crop data */}
+    <Grid
+      templateAreas={{
+        base: `"title"
+               "cropData"
+               "resizeData"
+               "navBtn"`,
+      }}
+      templateColumns={{ base: "1fr" }}
+      templateRows={{ base: "auto 1fr auto auto" }}
+      overflow="hidden"
+      maxHeight="100%"
+    >
+      <GridItem area="title">
+        <PageTitle title="Pre-Procesing" />
+      </GridItem>
+
       <BoundingBox
         transparent={true}
         padding="0"
         overflowY="auto"
-        maxHeight={{ base: "70vh", md: "80vh" }}
         marginLeft={0}
         marginRight={0}
       >
-        <BoundingBox>
-          <IconComboControl
-            icon={RiCropFill}
-            title="Crop Original Data"
-            description="Crop the original image and mask to a specified size before applying augmentation"
-            controlElement={
-              <Switch
-                id="crop"
-                colorScheme="teal"
-                isChecked={augConfig.crop}
-                onChange={() => handleCheckBoxChange("crop")}
-              />
-            }
-          />
-          {augConfig.crop ? (
-            <BoundingBox maxWidth={"600px"} padding={{ base: "0", md: "6" }}>
-              <SimpleGrid columns={{ base: 1 }} spacing={{ base: 8, md: 8 }}>
-                <IconComboControl
-                  icon={PiResizeFill}
-                  title="Height Offset"
-                  description="Adjusts the vertical position of the cropping area within the image."
-                  controlElement={<HeightOffsetInput />}
-                  controlElementWidth={"100px"}
+        <GridItem area="cropData">
+          <BoundingBox>
+            <IconComboControl
+              icon={RiCropFill}
+              title="Crop Original Data"
+              description="Crop the original image and mask to a specified size before applying augmentation"
+              controlElement={
+                <Switch
+                  id="crop"
+                  colorScheme="teal"
+                  isChecked={augConfig.crop}
+                  onChange={() => handleCheckBoxChange("crop")}
                 />
+              }
+            />
+            {augConfig.crop ? (
+              <BoundingBox
+                maxWidth={"600px"}
+                padding={{ base: "0", md: "6" }}
+                paddingTop={{ base: "3", md: "3" }}
+                paddingBottom={{ base: "0", md: "0" }}
+              >
+                <SimpleGrid columns={{ base: 1 }} spacing={{ base: 8, md: 8 }}>
+                  <IconComboControl
+                    icon={PiResizeFill}
+                    title="Height Offset"
+                    description="Adjusts the vertical position of the cropping area within the image."
+                    controlElement={<HeightOffsetInput />}
+                    controlElementWidth={"100px"}
+                  />
 
-                <IconComboControl
-                  icon={PiResizeFill}
-                  title="Width Offset"
-                  description="Adjusts the horizontal position of the cropping area within the image."
-                  controlElement={<WidthOffsetInput />}
-                  controlElementWidth={"100px"}
-                />
+                  <IconComboControl
+                    icon={PiResizeFill}
+                    title="Width Offset"
+                    description="Adjusts the horizontal position of the cropping area within the image."
+                    controlElement={<WidthOffsetInput />}
+                    controlElementWidth={"100px"}
+                  />
 
-                <IconComboControl
-                  icon={TbArrowAutofitHeight}
-                  title="Target Height"
-                  description="The height of the image/mask after cropping."
-                  controlElement={<TargetHeightInput />}
-                  controlElementWidth={"100px"}
-                />
+                  <IconComboControl
+                    icon={TbArrowAutofitHeight}
+                    title="Target Height"
+                    description="The height of the image/mask after cropping."
+                    controlElement={<TargetHeightInput />}
+                    controlElementWidth={"100px"}
+                  />
 
-                <IconComboControl
-                  icon={TbArrowAutofitWidth}
-                  title="Target Width"
-                  description="The width of the image/mask after cropping."
-                  controlElement={<TargetWidthInput />}
-                  controlElementWidth={"100px"}
-                />
-              </SimpleGrid>
-            </BoundingBox>
-          ) : null}
-        </BoundingBox>
+                  <IconComboControl
+                    icon={TbArrowAutofitWidth}
+                    title="Target Width"
+                    description="The width of the image/mask after cropping."
+                    controlElement={<TargetWidthInput />}
+                    controlElementWidth={"100px"}
+                  />
+                </SimpleGrid>
+              </BoundingBox>
+            ) : null}
+          </BoundingBox>
+        </GridItem>
 
-        {/*Resize Data*/}
-        <BoundingBox>
-          <IconComboControl
-            icon={GiResize}
-            title="Resize Data"
-            description="Resize images and masks to specified dimensions before augmentation. If cropping is selected, the images and masks will be cropped first, then resized."
-            controlElement={
-              <Switch
-                id="crop"
-                colorScheme="teal"
-                isChecked={augConfig.resizeAugImage}
-                onChange={() => handleCheckBoxChange("resizeAugImage")}
-              />
-            }
-          />
-          {augConfig.resizeAugImage ? (
-            <BoundingBox maxWidth={"600px"} padding={{ base: "0", md: "6" }}>
-              <SimpleGrid columns={{ base: 1 }} spacing={{ base: 8, md: 8 }}>
-                <IconComboControl
-                  icon={TbArrowAutofitHeight}
-                  title="Image Height"
-                  description="The height of the image/mask after resizing."
-                  controlElement={<ResizeHeightInput />}
-                  controlElementWidth={"100px"}
+        <GridItem area="resizeData">
+          <BoundingBox>
+            <IconComboControl
+              icon={GiResize}
+              title="Resize Data"
+              description="Resize images and masks to specified dimensions before augmentation. If cropping is selected, the images and masks will be cropped first, then resized."
+              controlElement={
+                <Switch
+                  id="crop"
+                  colorScheme="teal"
+                  isChecked={augConfig.resizeAugImage}
+                  onChange={() => handleCheckBoxChange("resizeAugImage")}
                 />
-                <IconComboControl
-                  icon={TbArrowAutofitWidth}
-                  title="Image Width"
-                  description="The width of the image/mask after resizing."
-                  controlElement={<ResizeWidthInput />}
-                  controlElementWidth={"100px"}
-                />
-              </SimpleGrid>
-            </BoundingBox>
-          ) : null}
-        </BoundingBox>
+              }
+            />
+            {augConfig.resizeAugImage ? (
+              <BoundingBox maxWidth={"600px"} padding={{ base: "0", md: "6" }}>
+                <SimpleGrid columns={{ base: 1 }} spacing={{ base: 8, md: 8 }}>
+                  <IconComboControl
+                    icon={TbArrowAutofitHeight}
+                    title="Image Height"
+                    description="The height of the image/mask after resizing."
+                    controlElement={<ResizeHeightInput />}
+                    controlElementWidth={"100px"}
+                  />
+                  <IconComboControl
+                    icon={TbArrowAutofitWidth}
+                    title="Image Width"
+                    description="The width of the image/mask after resizing."
+                    controlElement={<ResizeWidthInput />}
+                    controlElementWidth={"100px"}
+                  />
+                </SimpleGrid>
+              </BoundingBox>
+            ) : null}
+          </BoundingBox>
+        </GridItem>
       </BoundingBox>
 
-      <BoundingBox transparent padding={0}>
-        <HStack justifyContent={{ base: "center", md: "start" }}>
-          <PreviousBtn to="/settings/visual_attributes" />
-          <ContinueBtn to="/augment/start_augmentation" />
-        </HStack>
-      </BoundingBox>
-    </>
+      <GridItem area="navBtn">
+        <BoundingBox transparent padding={0} mt={0}>
+          <HStack justifyContent={{ base: "center", md: "start" }}>
+            <PreviousBtn to="/settings/visual_attributes" />
+            <ContinueBtn to="/augment/start_augmentation" />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
+    </Grid>
   );
 };
 

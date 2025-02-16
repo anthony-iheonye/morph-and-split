@@ -91,7 +91,7 @@ const MaskUpload = () => {
           flex="1"
           flexDirection="column"
           mt={0}
-          overflow="hidden"
+          overflowY="hidden"
         >
           <HStack justify="space-between">
             <IconHeadingDescriptionCombo

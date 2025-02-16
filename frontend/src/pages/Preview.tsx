@@ -51,7 +51,7 @@ const Preview = () => {
           display="flex"
           flex="1"
           flexDirection="column"
-          overflow="auto"
+          overflowY="hidden"
         >
           <Text color={"gray.400"} fontSize="sm">
             Preview of uploaded Images and Masks.
