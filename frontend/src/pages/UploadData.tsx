@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { UploadDataBar } from "../components/navigation/subNavBars";
 
@@ -14,15 +14,21 @@ const UploadData = () => {
         base: "1fr",
         md: "200px 1fr",
       }}
+      height="100%"
+      overflow="hidden"
     >
       <GridItem area="upload_bar">
         <UploadDataBar />
       </GridItem>
 
-      <GridItem area="outlet">
-        <Box marginTop={8}>
-          <Outlet />
-        </Box>
+      <GridItem
+        area="outlet"
+        display="flex"
+        flexDirection="column"
+        flex="1"
+        overflow="auto" // Allows content scrolling when needed
+      >
+        <Outlet />
       </GridItem>
     </Grid>
   );

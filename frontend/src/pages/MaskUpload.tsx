@@ -1,4 +1,4 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, Grid, GridItem, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
@@ -31,73 +31,112 @@ const MaskUpload = () => {
     !imageMaskBalance?.success;
 
   return (
-    <>
-      <PageTitle title="Segmentation Masks" />
-      <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={BiSolidImageAdd}
-            title={{ base: "Upload Masks", md: "Upload Segmentation Masks" }}
-            description={{
-              base: "Select masks",
-              md: "Click button to upload segmentation masks",
-            }}
-          />
-          <MaskUploader />
-        </HStack>
-      </BoundingBox>
+    <Grid
+      templateAreas={{
+        base: `"title"
+               "uploader"
+               "channels"
+               "selectedMasks"
+               "navBtn"`,
+      }}
+      templateColumns={{ base: "1fr" }}
+      templateRows={{ base: "auto auto auto 1fr auto" }} // ✅ Ensures selectedMasks expands
+      overflow="hidden"
+    >
+      <GridItem area="title" mt={8}>
+        <PageTitle title="Segmentation Masks" />
+      </GridItem>
 
-      <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={IoLayers}
-            title={{ base: "Mask Channels", md: "Number of Mask Channels" }}
-            description={{ md: "Select the number of mask channels." }}
-          />
-          <MaskChannel />
-        </HStack>
-      </BoundingBox>
+      <GridItem area="uploader">
+        <BoundingBox>
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={BiSolidImageAdd}
+              title={{ base: "Upload Masks", md: "Upload Segmentation Masks" }}
+              description={{
+                base: "Select masks",
+                md: "Click button to upload segmentation masks",
+              }}
+            />
+            <MaskUploader />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
 
-      <BoundingBox>
-        <HStack justify="space-between">
-          <IconHeadingDescriptionCombo
-            icon={TbLayersSelected}
-            title="Selected Masks"
-          />
-          {maskUploadStatus?.success && <DeleteMasks />}
-        </HStack>
+      <GridItem area="channels">
+        <BoundingBox mt={0}>
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={IoLayers}
+              title={{ base: "Mask Channels", md: "Number of Mask Channels" }}
+              description={{
+                base: "Select channels",
+                md: "Select the number of mask channels.",
+              }}
+            />
+            <MaskChannel />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
 
-        {imbalanced && <Text color="red.500">{imageMaskBalance?.message}</Text>}
+      <GridItem
+        area="selectedMasks"
+        display="flex"
+        flexDirection="column"
+        flex="1"
+        overflow="hidden"
+      >
+        <BoundingBox
+          display="flex"
+          flex="1"
+          flexDirection="column"
+          mt={0}
+          overflow="hidden"
+        >
+          <HStack justify="space-between">
+            <IconHeadingDescriptionCombo
+              icon={TbLayersSelected}
+              title="Selected Masks"
+            />
+            {maskUploadStatus?.success && <DeleteMasks />}
+          </HStack>
 
-        <Box overflowY="auto" maxHeight={{ base: "28vh", md: "48vh" }} mt={4}>
-          {maskData?.results && maskData?.results.length > 0 ? (
-            maskData?.results.map((name, index) => (
-              <Text fontWeight="thin" fontSize="md" key={index}>
-                {name}
-              </Text>
-            ))
-          ) : (
-            <Text color="red" fontWeight="thin" fontSize="md">
-              Ready to get started? Select the corresponding masks.
-            </Text>
+          {imbalanced && (
+            <Text color="red.500">{imageMaskBalance?.message}</Text>
           )}
-        </Box>
-      </BoundingBox>
 
-      <BoundingBox transparent padding={0}>
-        <HStack justifyContent={{ base: "center", md: "start" }}>
-          <PreviousBtn to="/upload_data/images" />
-          <ContinueBtn
-            to="/upload_data/preview"
-            disable={
-              !maskUploadStatus?.success ||
-              !imageMaskBalance?.success ||
-              maskIsUploading
-            }
-          />
-        </HStack>
-      </BoundingBox>
-    </>
+          <Box mt={4} flex="1" overflowY="auto">
+            {maskData?.results && maskData?.results.length > 0 ? (
+              maskData.results.map((name, index) => (
+                <Text fontWeight="thin" fontSize="md" key={index}>
+                  {name}
+                </Text>
+              ))
+            ) : (
+              <Text color="red" fontWeight="thin" fontSize="md">
+                Ready to get started? Select the corresponding masks.
+              </Text>
+            )}
+          </Box>
+        </BoundingBox>
+      </GridItem>
+
+      <GridItem area="navBtn">
+        <BoundingBox transparent padding={0} mt={0}>
+          <HStack justifyContent={{ base: "center", md: "start" }}>
+            <PreviousBtn to="/upload_data/images" />
+            <ContinueBtn
+              to="/upload_data/preview"
+              disable={
+                !maskUploadStatus?.success ||
+                !imageMaskBalance?.success ||
+                maskIsUploading
+              }
+            />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
+    </Grid>
   );
 };
 

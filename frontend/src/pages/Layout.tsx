@@ -11,29 +11,39 @@ const Layout = () => {
   return (
     <Box
       display="flex"
-      maxHeight="100vh"
       flexDirection="column"
+      width="100%"
       maxWidth="2560px"
       margin="0 auto"
-      width="100%"
+      maxHeight="100vh" // ensure the layout doesn't grow more than the height of the viewport
+      overflow="hidden"
     >
       <Grid
         templateAreas={{
           base: `"nav"
-              "outlet"`,
+                 "outlet"`,
           md: `"nav outlet"`,
         }}
         templateColumns={{
           base: "1fr",
           md: "65px 1fr",
         }}
+        height="100vh"
+        overflow="hidden"
+        flex="1" // ensure the content below takes remaining space
       >
         <GridItem area="nav">
           <NavBar />
         </GridItem>
 
-        <GridItem area="outlet">
-          <Box>
+        <GridItem
+          area="outlet"
+          display="flex"
+          flexDirection="column"
+          flex="1"
+          overflow="hidden"
+        >
+          <Box flex="1" overflow="hidden">
             {activeParent === home ? <WelcomePage /> : null}
             <Outlet />
           </Box>

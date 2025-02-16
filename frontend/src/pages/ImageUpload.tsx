@@ -1,4 +1,4 @@
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, Grid, GridItem, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
@@ -34,75 +34,111 @@ const ImageUpload = () => {
     !imageMaskBalance?.success;
 
   return (
-    <>
-      <PageTitle title="Images" />
+    <Grid
+      templateAreas={{
+        base: `"title"
+               "uploader"
+               "channels"
+               "selectedImages"
+               "navBtn"`,
+      }}
+      templateColumns={{ base: "1fr" }}
+      templateRows={{ base: "auto auto auto 1fr auto" }}
+      overflow="hidden"
+    >
+      <GridItem area="title" mt={8}>
+        <PageTitle title="Images" />
+      </GridItem>
 
-      <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={BiSolidImageAdd}
-            title="Upload Images"
-            description={{
-              base: "Select images",
-              md: "Click button to upload images for augmentation.",
-            }}
-          />
-          <ImageUploader />
-        </HStack>
-      </BoundingBox>
+      <GridItem area="uploader">
+        <BoundingBox>
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={BiSolidImageAdd}
+              title="Upload Images"
+              description={{
+                base: "Select images",
+                md: "Click button to upload images for augmentation.",
+              }}
+            />
+            <ImageUploader />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
 
-      <BoundingBox>
-        <HStack justify="space-between" align="start" width="100%">
-          <IconHeadingDescriptionCombo
-            icon={IoLayers}
-            title={{ base: "Image Channels", md: "Number of Image Channels" }}
-            description={{
-              base: "Image channels",
-              md: "Select the number of image channels.",
-            }}
-          />
-          <ImageChannel />
-        </HStack>
-      </BoundingBox>
+      <GridItem area="channels">
+        <BoundingBox mt={0}>
+          <HStack justify="space-between" align="start" width="100%">
+            <IconHeadingDescriptionCombo
+              icon={IoLayers}
+              title={{ base: "Image Channels", md: "Number of Image Channels" }}
+              description={{
+                base: "Select image channels",
+                md: "Select the number of image channels.",
+              }}
+            />
+            <ImageChannel />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
 
-      <BoundingBox>
-        <HStack justify="space-between">
-          <IconHeadingDescriptionCombo
-            icon={TbLayersSelected}
-            title="Selected Images"
-          />
-          {imageUploadStatus?.success && <DeleteImages />}
-        </HStack>
-
-        {imbalanced && <Text color="red.500">{imageMaskBalance?.message}</Text>}
-
-        <Box overflowY="auto" maxHeight={{ base: "28vh", md: "48vh" }} mt={4}>
-          {uploadedImages?.results && uploadedImages?.results.length > 0 ? (
-            uploadedImages?.results.map((name, index) => (
-              <Text fontWeight="thin" fontSize="md" key={index}>
-                {name}
-              </Text>
-            ))
-          ) : (
-            <Text color="red" fontWeight="thin" fontSize="md">
-              Ready to get started? Upload one or more images.
-            </Text>
-          )}
-        </Box>
-      </BoundingBox>
-
-      <BoundingBox
-        transparent
-        padding={0}
-        justifyContent={{ base: "center", md: "start" }}
+      <GridItem
+        area="selectedImages"
         display="flex"
+        flexDirection="column"
+        flex="1"
+        overflowY="hidden"
       >
-        <ContinueBtn
-          to="/upload_data/masks"
-          disable={!imageUploadStatus?.success || imageIsUploading}
-        />
-      </BoundingBox>
-    </>
+        <BoundingBox
+          display="flex"
+          flex="1"
+          flexDirection="column"
+          mt={0}
+          overflow="hidden"
+        >
+          <HStack justify="space-between">
+            <IconHeadingDescriptionCombo
+              icon={TbLayersSelected}
+              title="Selected Images"
+            />
+            {imageUploadStatus?.success && <DeleteImages />}
+          </HStack>
+
+          {imbalanced && (
+            <Text color="red.500">{imageMaskBalance?.message}</Text>
+          )}
+
+          <Box overflowY="auto" mt={4} flex="1">
+            {uploadedImages?.results && uploadedImages?.results.length > 0 ? (
+              uploadedImages?.results.map((name, index) => (
+                <Text fontWeight="thin" fontSize="md" key={index}>
+                  {name}
+                </Text>
+              ))
+            ) : (
+              <Text color="red" fontWeight="thin" fontSize="md">
+                Ready to get started? Upload one or more images.
+              </Text>
+            )}
+          </Box>
+        </BoundingBox>
+      </GridItem>
+
+      <GridItem area="navBtn">
+        <BoundingBox
+          transparent
+          padding={0}
+          mt={0}
+          justifyContent={{ base: "center", md: "start" }}
+          display="flex"
+        >
+          <ContinueBtn
+            to="/upload_data/masks"
+            disable={!imageUploadStatus?.success || imageIsUploading}
+          />
+        </BoundingBox>
+      </GridItem>
+    </Grid>
   );
 };
 
