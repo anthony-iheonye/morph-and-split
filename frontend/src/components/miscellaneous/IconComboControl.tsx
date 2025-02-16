@@ -47,6 +47,7 @@ const IconComboControl = ({
         base: `1fr ${controlElementWidth}`,
         md: `1fr ${controlElementWidth}`,
       }}
+      width="100%"
       {...rest}
     >
       <GridItem area="iconHeading">
