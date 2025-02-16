@@ -5,11 +5,15 @@ import { useUploadedImageMask } from "../../hooks";
 import { useAugConfigStore } from "../../store";
 import PreviewCard from "./PreviewCard";
 import PreviewContainer from "./PreviewContainer";
+import PreviewCardSkeleton from "./PreviewCardSkeleton";
 
 const PreviewUploadedDataGrid = () => {
   const previewSelection = useAugConfigStore((state) => state.previewSelection);
 
-  const { data, error, fetchNextPage, hasNextPage } = useUploadedImageMask();
+  const { data, error, isLoading, fetchNextPage, hasNextPage } =
+    useUploadedImageMask();
+
+  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   if (!previewSelection) return null;
   if (error)
@@ -42,6 +46,13 @@ const PreviewUploadedDataGrid = () => {
             spacing={6}
             padding={"10px"}
           >
+            {isLoading &&
+              skeletons.map((skeleton) => (
+                <PreviewContainer key={skeleton}>
+                  <PreviewCardSkeleton />
+                </PreviewContainer>
+              ))}
+
             {data?.pages.map((page, index) => (
               <React.Fragment key={index}>
                 {page.results.map(({ image, mask }) => (

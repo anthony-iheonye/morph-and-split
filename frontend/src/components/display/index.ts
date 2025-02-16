@@ -7,3 +7,4 @@ export { default as PreviewGridTrain } from "./PreviewGridTrain";
 export { default as PreviewGridVal } from "./PreviewGridVal";
 export { default as PreviewSkeleton } from "./PreviewSkeleton";
 export { default as PreviewUploadedDataGrid } from "./PreviewUploadedDataGrid";
+export { default as PreviewCardSkeleton } from "./PreviewCardSkeleton";
