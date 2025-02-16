@@ -8,3 +8,4 @@ export { default as TotalTrainData } from "./TotalTrainData";
 export { default as TrainStartIndex } from "./TrainStartIndex";
 export { default as ValStartIndex } from "./ValStartIndex";
 export { default as WidthOffsetInput } from "./WidthOffsetInput";
+export { default as SaveSuffixInput } from "./SaveSuffixInput";
