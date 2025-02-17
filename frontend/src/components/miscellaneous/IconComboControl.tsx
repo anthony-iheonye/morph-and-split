@@ -10,8 +10,8 @@ import {
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
 
-interface IconComboControlProps extends GridProps {
-  title: string;
+interface IconComboControlProps extends Omit<GridProps, "title"> {
+  title: string | { base?: string; md?: string; lg?: string };
   titleFontSize?: number | { base?: number; md?: number; lg?: number };
   description?: string | { base?: string; md?: string; lg?: string };
   icon?: IconType | undefined;

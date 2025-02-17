@@ -24,12 +24,7 @@ const PreviewGridTrain = () => {
 
   return (
     <>
-      <Box
-        id="trainSetBox"
-        overflowY="auto"
-        maxHeight={{ base: "70vh", md: "65vh" }}
-        mt={4}
-      >
+      <Box id="trainSetBox" overflowY="auto" flex="1">
         <InfiniteScroll
           dataLength={fetchedImageMaskCount}
           hasMore={!!hasNextPage}

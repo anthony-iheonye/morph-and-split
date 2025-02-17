@@ -1,4 +1,4 @@
-import { HStack, Text, VStack } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
 import { TbNumbers } from "react-icons/tb";
 import {
   Augment,
@@ -7,15 +7,8 @@ import {
   PreviousBtn,
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import {
-  TestStartIndex,
-  TrainStartIndex,
-  ValStartIndex,
-} from "../components/inputFields";
-import {
-  IconHeadingDescriptionCombo,
-  PageTitle,
-} from "../components/miscellaneous";
+import { SaveSuffixInput } from "../components/inputFields";
+import { PageTitle } from "../components/miscellaneous";
 import { useBackendResponse } from "../hooks";
 import useAugmentationIsComplete from "../hooks/useAugmentationIsComplete";
 import { APIClient } from "../services";
@@ -26,77 +19,102 @@ const StartAugmentation = () => {
   const { augmentationIsRunning } = useBackendResponse();
 
   return (
-    <>
-      <PageTitle title="Start Augmentation" />
-      <BoundingBox>
-        <Text color={"gray.400"} mb={4} fontSize="sm">
-          Enter numerical suffices for naming the first augmented training,
-          validaiton, and test data (eg. img-1.jpg, mask-1.jpg).
-        </Text>
+    <Grid
+      templateAreas={{
+        base: `"title"
+               "suffix"
+               "navBtn"`,
+      }}
+      templateColumns={{ base: "1fr" }}
+      templateRows={{ base: "auto 1fr auto" }}
+      overflow="hidden"
+      // height="100%"
+    >
+      <GridItem area="title">
+        <PageTitle title="Start Augmentation" />
+      </GridItem>
 
-        <VStack spacing={{ base: 5, md: 4, lg: 8 }}>
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={TbNumbers}
+      <GridItem
+        area="suffix"
+        display="flex"
+        flexDirection="column"
+        flex="1"
+        overflow="hidden"
+      >
+        <BoundingBox
+          display="flex"
+          flexDirection="column"
+          flex="1"
+          overflow="hidden"
+        >
+          <Text color={"gray.400"} mb={4} fontSize="sm">
+            Augmented images and masks are named as 'img-1.jpg' and
+            'mask-1.jpg'. Enter the starting numerical suffixes for the first
+            augmented training, validation, and test data."
+          </Text>
+
+          <VStack
+            spacing={{ base: 5, md: 4, lg: 8 }}
+            flex="1"
+            overflowY="auto"
+            paddingRight={3}
+            pt={2}
+            align="start"
+          >
+            <SaveSuffixInput
               title={{
-                base: "Train save suffix",
+                base: "Training set",
                 md: "Training Set Initial Save Suffix",
               }}
-              description={{
-                base: "Number to append to the file name of first augmented training data. (eg. img-1.jpg, mask-1.jpg)",
-              }}
-            />
-            <TrainStartIndex />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
+              setName="training"
               icon={TbNumbers}
+            />
+
+            <SaveSuffixInput
               title={{
-                base: "Val save suffix",
+                base: "Validation set",
                 md: "Validation Set Initial Save Suffix",
               }}
-              description="Number to append to the file name of the first augmented validation data. (eg. img-1.jpg, mask-1.jpg)"
-            />
-            <ValStartIndex />
-          </HStack>
-
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
+              setName="validation"
               icon={TbNumbers}
+            />
+
+            <SaveSuffixInput
               title={{
-                base: "Test save suffix",
+                base: "Test set",
                 md: "Test Set Initial Save Suffix",
               }}
-              description="A number to append to the file name of first augmented test data. (eg. img-1.jpg, mask-1.jpg)"
+              setName="testing"
+              icon={TbNumbers}
             />
-            <TestStartIndex />
-          </HStack>
-        </VStack>
-      </BoundingBox>
+          </VStack>
+        </BoundingBox>
+      </GridItem>
 
-      <BoundingBox transparent padding={0}>
-        <HStack justifyContent={{ base: "center", md: "start" }}>
-          <PreviousBtn
-            to="/settings/pre_processing"
-            label={{ md: "Previous" }}
-            disable={augmentationIsRunning}
-          />
-          <Augment />
-          <ContinueBtn
-            to="/augment/preview"
-            label={{ md: "Continue" }}
-            disable={augmentationIsRunning || !augmentationCompleted?.success}
-          />
-          {!augmentationIsRunning && augmentationCompleted?.success && (
-            <DownloadButton
-              filename="augmented_data.zip"
-              onDownload={DownloadAPI.downloadFile}
+      <GridItem area="navBtn">
+        <BoundingBox transparent padding={0} mt={0}>
+          <HStack justifyContent={{ base: "center", md: "start" }}>
+            <PreviousBtn
+              to="/settings/pre_processing"
+              label={{ md: "Previous" }}
+              disable={augmentationIsRunning}
             />
-          )}
-        </HStack>
-      </BoundingBox>
-    </>
+            <Augment />
+            <ContinueBtn
+              to="/augment/preview"
+              label={{ md: "Continue" }}
+              disable={augmentationIsRunning || !augmentationCompleted?.success}
+            />
+            {!augmentationIsRunning && augmentationCompleted?.success && (
+              <DownloadButton
+                filename="augmented_data.zip"
+                onDownload={DownloadAPI.downloadFile}
+              />
+            )}
+          </HStack>
+        </BoundingBox>
+      </GridItem>
+    </Grid>
   );
 };
 

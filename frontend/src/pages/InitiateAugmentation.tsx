@@ -14,13 +14,21 @@ const InitiateAugmentation = () => {
         base: "1fr",
         md: "200px 1fr",
       }}
+      height="100%"
+      overflow="hidden"
     >
       <GridItem area="augment">
         <AugmentBar />
       </GridItem>
 
-      <GridItem area="outlet">
-        <Box marginTop={8}>
+      <GridItem
+        area="outlet"
+        display="flex"
+        flexDirection="column"
+        flex="1"
+        overflow="hidden"
+      >
+        <Box marginTop={8} overflow="auto" height="100%">
           <Outlet />
         </Box>
       </GridItem>

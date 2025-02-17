@@ -24,12 +24,7 @@ const PreviewGridVal = () => {
 
   return (
     <>
-      <Box
-        id="valSetBox"
-        overflowY="auto"
-        maxHeight={{ base: "70vh", md: "65vh" }}
-        mt={4}
-      >
+      <Box id="valSetBox" overflowY="auto" flex="1">
         <InfiniteScroll
           dataLength={fetchedImageMaskCount}
           hasMore={!!hasNextPage}

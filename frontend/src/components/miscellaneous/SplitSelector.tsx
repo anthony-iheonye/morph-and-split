@@ -16,7 +16,7 @@ const SplitSelector = () => {
       onChange={(value) => setAugConfig("previewedSet", value)}
       value={previewedSet}
     >
-      <Stack direction="row" spacing={6}>
+      <Stack direction="row" spacing={6} ml={1}>
         <Radio colorScheme="teal" value="train">
           {trainText}
         </Radio>

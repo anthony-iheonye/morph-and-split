@@ -150,136 +150,134 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
   const mb = "3px";
 
   return (
-    <>
-      <Grid
-        templateAreas={{
-          base: `"title"
+    <Grid
+      templateAreas={{
+        base: `"title"
                    "splitSlider"
                    "augmentedSize"
                    "navBtn"`,
-        }}
-        templateColumns={{ base: "1fr" }}
-        templateRows={{ base: "auto 1fr auto auto" }}
-        overflow="hidden"
-        height="100%"
-      >
-        <GridItem area="title">
-          <PageTitle title="Data Split" />
-        </GridItem>
+      }}
+      templateColumns={{ base: "1fr" }}
+      templateRows={{ base: "auto 1fr auto auto" }}
+      overflow="hidden"
+      height="100%"
+    >
+      <GridItem area="title">
+        <PageTitle title="Data Split" />
+      </GridItem>
 
-        <GridItem
-          area="splitSlider"
+      <GridItem
+        area="splitSlider"
+        display="flex"
+        flexDirection="column"
+        flex="1"
+        overflow="hidden"
+      >
+        <BoundingBox
+          overflow="hidden"
           display="flex"
           flexDirection="column"
           flex="1"
-          overflow="hidden"
         >
-          <BoundingBox
-            overflow="hidden"
-            display="flex"
-            flexDirection="column"
-            flex="1"
-          >
-            <Text color={"gray.400"} mb={4} fontSize="md">
-              Select the split percentage for the training, validation and test
-              sets.
-            </Text>
+          <Text color={"gray.400"} mb={4} fontSize="md">
+            Select the split percentage for the training, validation and test
+            sets.
+          </Text>
 
-            <VStack spacing={{ base: 5, lg: 4 }} flex="1" overflow="auto">
-              {/*Training Slider*/}
-              <FormControl>
-                <FormLabel fontWeight={labelweight} marginBottom={mb}>
-                  Training split ({(trainRatio * 100).toFixed(1)}%)
-                </FormLabel>
-                <HStack>
-                  <Slider
-                    value={trainRatio}
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    onChange={(value) => handleChange("train", value)}
-                    isDisabled={trainRatioLocked}
-                  >
-                    <SliderTrack bg="teal.100">
-                      <SliderFilledTrack bg="teal.500" />
-                    </SliderTrack>
-                    <SliderThumb boxSize={4} />
-                  </Slider>
-                  <TrainRatioLock />
-                </HStack>
-              </FormControl>
+          <VStack spacing={{ base: 5, lg: 4 }} flex="1" overflow="auto">
+            {/*Training Slider*/}
+            <FormControl>
+              <FormLabel fontWeight={labelweight} marginBottom={mb}>
+                Training split ({(trainRatio * 100).toFixed(1)}%)
+              </FormLabel>
+              <HStack>
+                <Slider
+                  value={trainRatio}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={(value) => handleChange("train", value)}
+                  isDisabled={trainRatioLocked}
+                >
+                  <SliderTrack bg="teal.100">
+                    <SliderFilledTrack bg="teal.500" />
+                  </SliderTrack>
+                  <SliderThumb boxSize={4} />
+                </Slider>
+                <TrainRatioLock />
+              </HStack>
+            </FormControl>
 
-              {/* Validation Split slider */}
-              <FormControl>
-                <FormLabel fontWeight={labelweight} marginBottom={mb}>
-                  Validation split ({(valRatio * 100).toFixed(1)}%)
-                </FormLabel>
-                <HStack>
-                  <Slider
-                    value={valRatio}
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    onChange={(value) => handleChange("val", value)}
-                    isDisabled={valRatioLocked}
-                  >
-                    <SliderTrack bg="orange.200">
-                      <SliderFilledTrack bg="orange.500" />
-                    </SliderTrack>
-                    <SliderThumb boxSize={4} />
-                  </Slider>
-                  <ValRatioLock />
-                </HStack>
-              </FormControl>
+            {/* Validation Split slider */}
+            <FormControl>
+              <FormLabel fontWeight={labelweight} marginBottom={mb}>
+                Validation split ({(valRatio * 100).toFixed(1)}%)
+              </FormLabel>
+              <HStack>
+                <Slider
+                  value={valRatio}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={(value) => handleChange("val", value)}
+                  isDisabled={valRatioLocked}
+                >
+                  <SliderTrack bg="orange.200">
+                    <SliderFilledTrack bg="orange.500" />
+                  </SliderTrack>
+                  <SliderThumb boxSize={4} />
+                </Slider>
+                <ValRatioLock />
+              </HStack>
+            </FormControl>
 
-              {/* Testing Split slider */}
-              <FormControl>
-                <FormLabel fontWeight={labelweight} marginBottom={mb}>
-                  Testing split ({(testRatio * 100).toFixed(1)}%)
-                </FormLabel>
-                <HStack>
-                  <Slider
-                    value={testRatio}
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    onChange={(value) => handleChange("test", value)}
-                    isDisabled={testRatioLocked}
-                  >
-                    <SliderTrack bg="green.200">
-                      <SliderFilledTrack bg="green.500" />
-                    </SliderTrack>
-                    <SliderThumb boxSize={4} />
-                  </Slider>
-                  <TestRatioLock />
-                </HStack>
-              </FormControl>
-            </VStack>
-          </BoundingBox>
-        </GridItem>
+            {/* Testing Split slider */}
+            <FormControl>
+              <FormLabel fontWeight={labelweight} marginBottom={mb}>
+                Testing split ({(testRatio * 100).toFixed(1)}%)
+              </FormLabel>
+              <HStack>
+                <Slider
+                  value={testRatio}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={(value) => handleChange("test", value)}
+                  isDisabled={testRatioLocked}
+                >
+                  <SliderTrack bg="green.200">
+                    <SliderFilledTrack bg="green.500" />
+                  </SliderTrack>
+                  <SliderThumb boxSize={4} />
+                </Slider>
+                <TestRatioLock />
+              </HStack>
+            </FormControl>
+          </VStack>
+        </BoundingBox>
+      </GridItem>
 
-        <GridItem area="augmentedSize">
-          <BoundingBox mt={0}>
-            <IconComboControl
-              icon={FaLayerGroup}
-              title="Augmented Training Set Size"
-              description="Specifies the desired number of training images post-augmentation."
-              controlElement={<TotalTrainData />}
-              controlElementWidth={8}
-            />
-          </BoundingBox>
-        </GridItem>
+      <GridItem area="augmentedSize">
+        <BoundingBox mt={0}>
+          <IconComboControl
+            icon={FaLayerGroup}
+            title="Augmented Training Set Size"
+            description="Specifies the desired number of training images post-augmentation."
+            controlElement={<TotalTrainData />}
+            controlElementWidth={8}
+          />
+        </BoundingBox>
+      </GridItem>
 
-        <GridItem area="navBtn">
-          <BoundingBox transparent padding={0} mt={0}>
-            <HStack justifyContent={{ base: "center", md: "start" }}>
-              <PreviousBtn to="/upload_data/preview" />
-              <ContinueBtn to="/settings/select_transformation" />
-            </HStack>
-          </BoundingBox>
-        </GridItem>
-      </Grid>
-    </>
+      <GridItem area="navBtn">
+        <BoundingBox transparent padding={0} mt={0}>
+          <HStack justifyContent={{ base: "center", md: "start" }}>
+            <PreviousBtn to="/upload_data/preview" />
+            <ContinueBtn to="/settings/select_transformation" />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
+    </Grid>
   );
 };
 
