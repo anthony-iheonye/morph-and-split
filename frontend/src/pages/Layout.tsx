@@ -16,6 +16,7 @@ const Layout = () => {
       maxWidth="2560px"
       margin="0 auto"
       height="100vh" // ensure the layout doesn't grow more than the height of the viewport
+      maxHeight="100vh"
       overflow="hidden"
     >
       <Grid

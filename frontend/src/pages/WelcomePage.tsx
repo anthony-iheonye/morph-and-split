@@ -22,8 +22,8 @@ const WelcomePage = () => {
                 "startSession"`,
       }}
       textAlign="center"
-      p={8}
-      maxW="703px"
+      p={6}
+      maxW="740px"
       mx="auto"
       backgroundColor="gray.650"
       height="100%"
@@ -37,7 +37,7 @@ const WelcomePage = () => {
           </Text>
         </Heading>
         <Text fontSize="lg" color="gray.400" mb={6}>
-          Effortlessly Enhance, Transform, and Structure Image-Mask Datasets.
+          Seamless Image-Mask Processing for Machine Learning & Computer Vision
         </Text>
       </GridItem>
 
@@ -48,42 +48,46 @@ const WelcomePage = () => {
         flex="1"
         overflow="hidden"
       >
-        <BoundingBox display="flex" flex="1" overflow="hidden" mx={0}>
-          <VStack spacing={4} align="start" textAlign="left" mb={4}>
+        <BoundingBox display="flex" overflow="hidden" mx={0}>
+          <VStack
+            display="flex"
+            overflow="hidden"
+            spacing={4}
+            align="start"
+            textAlign="left"
+            mb={4}
+          >
             <Heading as="h2" size="lg" color="teal.500">
               Key Features
             </Heading>
-            <List spacing={3} overflow="auto">
-              <ListItem>
-                <ListIcon as={FaCheckCircle} color="teal.500" />
-                <b>Smart Resizing & Cropping</b>
-                <Text as="span" color="gray.300" display="block">
-                  Adjust sizes and crop both images and masks with precision for
-                  seamless preprocessing.
-                </Text>
-              </ListItem>
+            <List spacing={3} overflowY="auto">
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="teal.500" />
                 <b>Advanced Augmentation</b>
                 <Text as="span" color="gray.300" display="block">
-                  Apply powerful transformations like flips, rotations, and
-                  color shifts to enrich dataset diversity.
+                  Apply flips, rotations, color shifts, and more.
                 </Text>
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="teal.500" />
-                <b>Stratified Dataset Splitting</b>
+                <b>Smart Dataset Splitting</b>
                 <Text as="span" color="gray.300" display="block">
-                  Ensure class balance across train, validation, and test sets
-                  for optimal model training.
+                  Maintain class balance across train, validation, and test
+                  sets.
+                </Text>
+              </ListItem>
+              <ListItem>
+                <ListIcon as={FaCheckCircle} color="teal.500" />
+                <b>Resize & Crop with Precision</b>
+                <Text as="span" color="gray.300" display="block">
+                  Refine image and mask dimensions effortlessly
                 </Text>
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="teal.500" />
                 <b>Intuitive No-Code Interface</b>
                 <Text as="span" color="gray.300" display="block">
-                  Manage dataset preparation effortlessly with a clean and
-                  streamlined UI.
+                  A sleek UI designed for speed, efficiency, and automation.
                 </Text>
               </ListItem>
             </List>
@@ -95,13 +99,19 @@ const WelcomePage = () => {
         area="benefits"
         display="flex"
         flexDirection="column"
-        flex="1"
         overflow="hidden"
       >
-        <BoundingBox display="flex" flex="1" overflow="hidden" mx={0} mt={0}>
-          <VStack spacing={4} align="start" textAlign="left" mb={6}>
+        <BoundingBox display="flex" overflowY="hidden" mx={0} mt={0}>
+          <VStack
+            display="flex"
+            overflow="hidden"
+            spacing={4}
+            align="start"
+            textAlign="left"
+            mb={6}
+          >
             <Heading as="h2" size="lg" color="teal.500">
-              How Morph & Split Helps You
+              Why Choose Morph & Split
             </Heading>
             <List spacing={3} overflow="auto" pr={1}>
               <ListItem>
