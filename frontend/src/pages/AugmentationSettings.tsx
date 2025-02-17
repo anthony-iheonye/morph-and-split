@@ -25,10 +25,10 @@ const AugmentationSettings = () => {
         area="outlet"
         display="flex"
         flexDirection="column"
-        flex="1"
+        // flex="1"
         overflow="auto" // Allows content scrolling when needed
       >
-        <Box marginTop={8} overflow="hidden" height="100%">
+        <Box marginTop={8} overflowY="hidden">
           <Outlet />
         </Box>
       </GridItem>

@@ -28,7 +28,7 @@ const StartAugmentation = () => {
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto 1fr auto" }}
       overflow="hidden"
-      // height="100%"
+      maxHeight="100%"
     >
       <GridItem area="title">
         <PageTitle title="Start Augmentation" />
@@ -38,7 +38,7 @@ const StartAugmentation = () => {
         area="suffix"
         display="flex"
         flexDirection="column"
-        flex="1"
+        // flex="1"
         overflow="hidden"
       >
         <BoundingBox
@@ -50,12 +50,12 @@ const StartAugmentation = () => {
           <Text color={"gray.400"} mb={4} fontSize="sm">
             Augmented images and masks are named as 'img-1.jpg' and
             'mask-1.jpg'. Enter the starting numerical suffixes for the first
-            augmented training, validation, and test data."
+            augmented training, validation, and test data.
           </Text>
 
           <VStack
             spacing={{ base: 5, md: 4, lg: 8 }}
-            flex="1"
+            // flex="1"
             overflowY="auto"
             paddingRight={3}
             pt={2}

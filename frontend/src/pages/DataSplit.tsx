@@ -9,6 +9,7 @@ import {
   SliderThumb,
   SliderTrack,
   Text,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import { FaLayerGroup } from "react-icons/fa6";
@@ -149,6 +150,11 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
   };
   const mb = "3px";
 
+  const splitDetail = useBreakpointValue({
+    base: "Set split ratios for train, validation and test sets.",
+    md: "Set split ratios for the training, validation and test sets.",
+  });
+
   return (
     <Grid
       templateAreas={{
@@ -160,7 +166,7 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto 1fr auto auto" }}
       overflow="hidden"
-      height="100%"
+      maxHeight="100%"
     >
       <GridItem area="title">
         <PageTitle title="Data Split" />
@@ -170,18 +176,17 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
         area="splitSlider"
         display="flex"
         flexDirection="column"
-        flex="1"
-        overflow="hidden"
+        // flex="1"
+        overflowY="hidden"
       >
         <BoundingBox
-          overflow="hidden"
+          overflowY="hidden"
           display="flex"
           flexDirection="column"
-          flex="1"
+          // flex="1"
         >
           <Text color={"gray.400"} mb={4} fontSize="md">
-            Select the split percentage for the training, validation and test
-            sets.
+            {splitDetail}
           </Text>
 
           <VStack spacing={{ base: 5, lg: 4 }} flex="1" overflow="auto">

@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, SimpleGrid } from "@chakra-ui/react";
 import { BiSolidArea } from "react-icons/bi";
 import { BsFiletypeCsv } from "react-icons/bs";
 import { FaCircleNotch } from "react-icons/fa6";
@@ -21,114 +21,151 @@ import { VisualAttributeSwitch } from "../components/switches";
 
 const VisualAttributes = () => {
   return (
-    <>
-      <PageTitle title="Visual Attributes" />
-      <BoundingBox>
-        <IconComboControl
-          icon={HiOutlineArrowsExpand}
-          title="Stratified Split Parameter"
-          description={{
-            base: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
-          }}
-          controlElement={<SplitParameterSelector />}
-          controlElementWidth="100px"
-        />
-      </BoundingBox>
+    <Grid
+      templateAreas={{
+        base: `"title"
+               "splitParameter"
+               "csvFile"
+               "attributes"
+               "navBtn"`,
+      }}
+      templateColumns={{ base: "1fr" }}
+      templateRows={{ base: "auto 1fr auto auto" }}
+      overflow="hidden"
+      maxHeight="100%"
+    >
+      <GridItem area="title">
+        <PageTitle title="Visual Attributes" />
+      </GridItem>
 
-      <BoundingBox>
-        <IconComboControl
-          icon={BsFiletypeCsv}
-          title="Upload Visual Attribute Data"
-          description={{
-            md: "Select the CSV file containing the visual attributes of the food in the image.",
-          }}
-          controlElement={<VisualAttributeFilePicker />}
-        />
-      </BoundingBox>
-
-      <BoundingBox overflowY="auto" maxHeight={{ base: "300px", md: "57vh" }}>
-        <SimpleGrid columns={{ base: 1 }} spacing={{ base: 8, md: 8 }}>
-          <VisualAttributeSwitch
-            attributeName="l"
-            icon={IoColorPaletteSharp}
-            title="L (Lightness)"
+      <GridItem area="splitParameter">
+        <BoundingBox>
+          <IconComboControl
+            icon={HiOutlineArrowsExpand}
+            title="Stratified Split Parameter"
+            description={{
+              base: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
+            }}
+            controlElement={<SplitParameterSelector />}
+            controlElementWidth="100px"
           />
+        </BoundingBox>
+      </GridItem>
 
-          <VisualAttributeSwitch
-            attributeName="a"
-            icon={IoColorPaletteSharp}
-            title="a (Green-Red Index)"
+      <GridItem area="csvFile">
+        <BoundingBox>
+          <IconComboControl
+            icon={BsFiletypeCsv}
+            title="Upload Visual Attribute Data"
+            description={{
+              md: "Select the CSV file containing the visual attributes of the food in the image.",
+            }}
+            controlElement={<VisualAttributeFilePicker />}
           />
+        </BoundingBox>
+      </GridItem>
 
-          <VisualAttributeSwitch
-            attributeName="b"
-            icon={IoColorPaletteSharp}
-            title="b (Blue-Yellow index)"
-          />
+      <GridItem
+        area="attributes"
+        display="flex"
+        flexDirection="column"
+        overflow="hidden"
+      >
+        <BoundingBox
+          display="flex"
+          flexDirection="column"
+          flex="1"
+          overflowY="hidden"
+        >
+          <SimpleGrid
+            columns={{ base: 1 }}
+            spacing={{ base: 8, md: 8 }}
+            overflow="auto"
+          >
+            <VisualAttributeSwitch
+              attributeName="l"
+              icon={IoColorPaletteSharp}
+              title="L (Lightness)"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="contrast"
-            icon={MdOutlineContrast}
-            title="Contrast"
-          />
+            <VisualAttributeSwitch
+              attributeName="a"
+              icon={IoColorPaletteSharp}
+              title="a (Green-Red Index)"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="correlation"
-            icon={TbTexture}
-            title="Correlation"
-          />
+            <VisualAttributeSwitch
+              attributeName="b"
+              icon={IoColorPaletteSharp}
+              title="b (Blue-Yellow index)"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="energy"
-            icon={GiRollingEnergy}
-            title="Energy"
-          />
+            <VisualAttributeSwitch
+              attributeName="contrast"
+              icon={MdOutlineContrast}
+              title="Contrast"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="feretDiameterMax"
-            icon={GoCircleSlash}
-            title="Ferret Diameter"
-          />
+            <VisualAttributeSwitch
+              attributeName="correlation"
+              icon={TbTexture}
+              title="Correlation"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="filledArea"
-            icon={BiSolidArea}
-            title="Filled Area"
-          />
+            <VisualAttributeSwitch
+              attributeName="energy"
+              icon={GiRollingEnergy}
+              title="Energy"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="perimeter"
-            icon={RxDimensions}
-            title="Perimeter"
-          />
+            <VisualAttributeSwitch
+              attributeName="feretDiameterMax"
+              icon={GoCircleSlash}
+              title="Ferret Diameter"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="eccentricity"
-            icon={TbOvalVertical}
-            title="Eccentricity"
-          />
+            <VisualAttributeSwitch
+              attributeName="filledArea"
+              icon={BiSolidArea}
+              title="Filled Area"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="feretDiameterMax"
-            icon={GoCircleSlash}
-            title="Ferret Diameter"
-          />
+            <VisualAttributeSwitch
+              attributeName="perimeter"
+              icon={RxDimensions}
+              title="Perimeter"
+            />
 
-          <VisualAttributeSwitch
-            attributeName="roundness"
-            icon={FaCircleNotch}
-            title="Roundness"
-          />
-        </SimpleGrid>
-      </BoundingBox>
+            <VisualAttributeSwitch
+              attributeName="eccentricity"
+              icon={TbOvalVertical}
+              title="Eccentricity"
+            />
 
-      <BoundingBox transparent padding={0}>
-        <HStack justifyContent={{ base: "center", md: "start" }}>
-          <PreviousBtn to="/settings/select_transformation" />
-          <ContinueBtn to="/settings/pre_processing" />
-        </HStack>
-      </BoundingBox>
-    </>
+            <VisualAttributeSwitch
+              attributeName="feretDiameterMax"
+              icon={GoCircleSlash}
+              title="Ferret Diameter"
+            />
+
+            <VisualAttributeSwitch
+              attributeName="roundness"
+              icon={FaCircleNotch}
+              title="Roundness"
+            />
+          </SimpleGrid>
+        </BoundingBox>
+      </GridItem>
+
+      <GridItem area="navBtn">
+        <BoundingBox transparent padding={0}>
+          <HStack justifyContent={{ base: "center", md: "start" }}>
+            <PreviousBtn to="/settings/select_transformation" />
+            <ContinueBtn to="/settings/pre_processing" />
+          </HStack>
+        </BoundingBox>
+      </GridItem>
+    </Grid>
   );
 };
 

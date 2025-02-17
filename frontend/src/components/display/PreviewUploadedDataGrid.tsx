@@ -30,7 +30,6 @@ const PreviewUploadedDataGrid = () => {
         id="uploadedDataBox"
         overflowY="auto"
         maxHeight={{ base: "50vh", md: "62vh" }}
-        // height="100%"
         mt={4}
         flex="1"
       >

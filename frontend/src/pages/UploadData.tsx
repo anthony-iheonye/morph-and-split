@@ -25,7 +25,7 @@ const UploadData = () => {
         area="outlet"
         display="flex"
         flexDirection="column"
-        flex="1"
+        // flex="1"
         overflow="auto" // Allows content scrolling when needed
       >
         <Outlet />

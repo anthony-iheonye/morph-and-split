@@ -24,7 +24,7 @@ const AugTransformationsInput = () => {
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto 1fr auto auto" }}
       overflow="hidden"
-      height="100%"
+      maxHeight="100%"
     >
       <GridItem area="title">
         <PageTitle title="Transformations" />
@@ -35,13 +35,13 @@ const AugTransformationsInput = () => {
         display="flex"
         flexDirection="column"
         overflowY="hidden"
-        flex="1"
+        // flex="1"
       >
         <BoundingBox
           display="flex"
           flexDirection="column"
           overflowY="hidden"
-          flex="1"
+          // flex="1"
         >
           <Text
             color={"gray.400"}
@@ -53,9 +53,8 @@ const AugTransformationsInput = () => {
               lg: "none",
             }}
           >
-            Choose random transformations to apply to the training set, and
-            optionally to the validation and test sets, to enhance data
-            variability.
+            Choose random transformations to apply during image-mask
+            augmentation of the training set.
           </Text>
           <BoundingBox
             padding={"0"}
@@ -63,7 +62,7 @@ const AugTransformationsInput = () => {
             mr={0}
             ml={2}
             mt={0}
-            flex="1"
+            // flex="1"
             overflow="auto"
           >
             <SimpleGrid
@@ -120,7 +119,7 @@ const AugTransformationsInput = () => {
         <BoundingBox mt={0} paddingRight={{ base: 7, md: 9 }}>
           <RandomTransformation
             title={{
-              base: "Augment Val & Test Sets",
+              base: "Augment Validation & Test Sets",
               md: "Augment Validation and Test Sets",
             }}
             transformName={"augmentValData"}

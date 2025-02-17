@@ -29,7 +29,7 @@ const VisualAttributeSwitch = ({
   title,
   titleFontSize,
   description = "",
-  switchRightMargin = 0,
+  switchRightMargin = 4,
 }: Props) => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
 
