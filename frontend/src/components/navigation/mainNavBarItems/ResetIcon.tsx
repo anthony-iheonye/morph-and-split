@@ -38,6 +38,8 @@ const ResetIcon = () => {
     isResetting,
     isShuttingDown,
     setBackendResponseLog,
+    imageIsUploading,
+    maskIsUploading,
   } = useBackendResponse();
 
   const toast = useToast();
@@ -162,7 +164,13 @@ const ResetIcon = () => {
             fontSize="1.5rem"
             colorScheme={backgroundColor}
             onClick={onOpen}
-            disabled={!data?.success || augmentationIsRunning || isShuttingDown}
+            disabled={
+              !data?.success ||
+              augmentationIsRunning ||
+              isShuttingDown ||
+              imageIsUploading ||
+              maskIsUploading
+            }
           />
         </Tooltip>
       </Box>
