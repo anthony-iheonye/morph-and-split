@@ -43,7 +43,11 @@ const Layout = () => {
           flex="1"
           overflow="hidden"
         >
-          <Box flex="1" overflow="hidden">
+          <Box
+            flex="1"
+            overflow="hidden"
+            // backgroundColor={activeParent === home ? "gray.700" : ""}
+          >
             {activeParent === home ? <WelcomePage /> : null}
             <Outlet />
           </Box>
