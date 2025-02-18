@@ -56,11 +56,12 @@ const WelcomePage = () => {
             align="start"
             textAlign="left"
             mb={4}
+            width="100%"
           >
             <Heading as="h2" size="lg" color="teal.500">
               Key Features
             </Heading>
-            <List spacing={3} overflowY="auto">
+            <List spacing={3} overflowY="auto" width="100%">
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="teal.500" />
                 <b>Advanced Augmentation</b>

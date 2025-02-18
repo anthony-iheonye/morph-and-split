@@ -15,8 +15,7 @@ const Layout = () => {
       width="100%"
       maxWidth="2560px"
       margin="0 auto"
-      height="100vh" // ensure the layout doesn't grow more than the height of the viewport
-      maxHeight="100vh"
+      height="100dvh" // ensure the layout doesn't grow more than the height of the viewport
       overflow="hidden"
     >
       <Grid
@@ -29,9 +28,7 @@ const Layout = () => {
           base: "1fr",
           md: "65px 1fr",
         }}
-        // height="100%"
         overflow="hidden"
-        // flex="1" // ensure the content below takes remaining space
       >
         <GridItem area="nav">
           <NavBar />
@@ -43,7 +40,7 @@ const Layout = () => {
           flexDirection="column"
           // flex="1"
           overflow="hidden"
-          // height="100%"
+          height="100%"
         >
           <Box overflow="hidden">
             {activeParent === home ? <WelcomePage /> : null}
