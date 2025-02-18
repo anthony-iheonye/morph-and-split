@@ -47,7 +47,7 @@ const WelcomePage = () => {
         flex="1"
         overflow="hidden"
       >
-        <BoundingBox overflow="auto" transparent mx={0} mt={0}>
+        <BoundingBox overflow="auto" transparent mx={0} mt={0} p={0}>
           <BoundingBox display="flex" overflow="hidden" mx={0} mt={0}>
             <VStack
               display="flex"
