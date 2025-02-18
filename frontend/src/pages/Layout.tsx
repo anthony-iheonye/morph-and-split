@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { NavBar } from "../components/navigation";
 import { parentNames, useActiveParent } from "../hooks";
 import WelcomePage from "./WelcomePage";
+// import FeatureSwitcher from "../components/display/FeatureSwitcher";
 
 const Layout = () => {
   const activeParent = useActiveParent();
@@ -38,12 +39,12 @@ const Layout = () => {
           area="outlet"
           display="flex"
           flexDirection="column"
-          // flex="1"
           overflow="hidden"
           height="100%"
         >
           <Box overflow="hidden">
             {activeParent === home ? <WelcomePage /> : null}
+            {/* {activeParent === home ? <FeatureSwitcher /> : null} */}
             <Outlet />
           </Box>
         </GridItem>
