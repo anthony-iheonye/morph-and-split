@@ -1,5 +1,9 @@
 import attr
 
+from app.aug_config import aug_config
+from app.utils import directory_store
+
+
 @attr.s
 class GoogleCloudStorageConfig:
     project_name = attr.ib(type=str, default='morph-and-split')
@@ -17,12 +21,14 @@ class GoogleCloudStorageConfig:
     mask_dir = attr.ib(type=str, default='masks')
     resized_image_dir = attr.ib(type=str, default='resized_images')
     resized_mask_dir = attr.ib(type=str, default='resized_masks')
-    train_images_dir = attr.ib(type=str, default='augmented/train/images')
-    train_masks_dir = attr.ib(type=str, default='augmented/train/masks')
-    val_images_dir = attr.ib(type=str, default='augmented/val/images')
-    val_masks_dir = attr.ib(type=str, default='augmented/val/masks')
-    test_images_dir = attr.ib(type=str, default='augmented/test/images')
-    test_masks_dir = attr.ib(type=str, default='augmented/test/masks')
+    resized_augmented = attr.ib(type=str, default='resized_augmented')
+    resized_train_images_dir = attr.ib(type=str, default='resized_augmented/train/images')
+    resized_train_masks_dir = attr.ib(type=str, default='resized_augmented/train/masks')
+    resized_val_images_dir = attr.ib(type=str, default='resized_augmented/val/images')
+    resized_val_masks_dir = attr.ib(type=str, default='resized_augmented/val/masks')
+    resized_test_images_dir = attr.ib(type=str, default='resized_augmented/test/images')
+    resized_test_masks_dir = attr.ib(type=str, default='resized_augmented/test/masks')
+    augmented_dir = attr.ib(type=str, default='augmented/combined')
 
 google_cloud_config = GoogleCloudStorageConfig()
 
@@ -30,12 +36,14 @@ DIRECTORIES = [google_cloud_config.image_dir,
                google_cloud_config.mask_dir,
                google_cloud_config.resized_image_dir,
                google_cloud_config.resized_mask_dir,
-               google_cloud_config.train_images_dir,
-               google_cloud_config.train_masks_dir,
-               google_cloud_config.val_images_dir,
-               google_cloud_config.val_masks_dir,
-               google_cloud_config.test_images_dir,
-               google_cloud_config.test_masks_dir
+               google_cloud_config.resized_augmented,
+               google_cloud_config.resized_train_images_dir,
+               google_cloud_config.resized_train_masks_dir,
+               google_cloud_config.resized_val_images_dir,
+               google_cloud_config.resized_val_masks_dir,
+               google_cloud_config.resized_test_images_dir,
+               google_cloud_config.resized_test_masks_dir,
+               google_cloud_config.augmented_dir,
                ]
 cors = [{
     "origin": google_cloud_config.origin,
@@ -43,3 +51,8 @@ cors = [{
     "method": google_cloud_config.method,
     "maxAgeSeconds": google_cloud_config.maxAgeSeconds,
 }]
+
+
+if __name__ == '__main__':
+    config = GoogleCloudStorageConfig()
+    print(config.resized_image_dir, directory_store.resized_image_dir)

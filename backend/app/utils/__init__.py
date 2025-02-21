@@ -3,7 +3,9 @@ from .directory_file_management import (create_directory,
                                         get_sorted_filenames,
                                         current_directory,
                                         list_filenames,
-                                        directory_exit)
+                                        directory_exit,
+                                        upload_file_to_gcs_bucket,
+                                        upload_files_to_gcs_bucket)
 
 from .directory_file_management import (create_google_cloud_storage_bucket,
                                         delete_google_cloud_storage_bucket)
@@ -15,4 +17,4 @@ from .directory_file_management import (create_project_directories,
                                         delete_files_in_google_cloud_storage_bucket,
                                         download_files_from_gcs_folder,
                                         delete_directory,
-                                        delete_and_recreate_directory_in_gcs_bucket)
+                                        delete_and_recreate_directories_in_gcs_bucket)

@@ -339,13 +339,13 @@ def delete_files_in_google_cloud_storage_bucket(bucket_name: str,
         print(f"An error occurred: {e}")
         return None
 
-def delete_and_recreate_directory_in_gcs_bucket(bucket_name: str, directory: str):
+def delete_and_recreate_directories_in_gcs_bucket(bucket_name: str, directories: list):
     """
     Deletes a directory (and all its contents) in a Google Cloud Storage bucket
     and recreates the directory.
 
     :param bucket_name: (str) The name of the GCS bucket.
-    :param directory: (str) The directory to delete and recreate.
+    :param directories: (list) A list containing the directories to delete and recreate.
     :return: Success or Failure message
     """
 
@@ -356,23 +356,29 @@ def delete_and_recreate_directory_in_gcs_bucket(bucket_name: str, directory: str
         # Get the bucket
         bucket = storage_client.get_bucket(bucket_name)
 
-        # List all blobs in the directory
-        blobs = list(bucket.list_blobs(prefix=f"{directory}/"))
-        if blobs:
-            bucket.delete_blobs(blobs)
-            print(f"All contents of {directory} deleted.")
-        else:
-            print(f"No blobs found in directory '{directory}'.")
+        for directory in directories:
+            # List all blobs in the directory
+            blobs = list(bucket.list_blobs(prefix=f"{directory}/"))
 
-        # Recreate the directory by uploading an empty blob
-        empty_blob = bucket.blob(f"{directory}/")
-        empty_blob.upload_from_string("")
+            if not blobs:
+                raise FileNotFoundError(f"Directory '{directory}' does not exist in bucket {bucket_name}.")
+
+            # Delete all blobs in the directory
+            bucket.delete_blobs(blobs)
+            print(f"Deleted all contents of directory '{directory}'.")
+
+            # Recreate the directory by uploading an empty blob
+            empty_blob = bucket.blob(f"{directory}/")
+            empty_blob.upload_from_string("")
+            print(f"Recreated empty directory '{directory}'.")
+
 
     except NotFound:
-        print(f"Bucket '{bucket_name}' or directory'{directory}' not found.")
+        print(f"Bucket '{bucket_name}' does not exist.")
 
     except Exception as e:
         print(f"An error occurred: {e}")
+        raise
 
 
 def delete_google_cloud_storage_bucket(bucket_name: str):
@@ -496,6 +502,38 @@ def download_files_from_gcs_folder(bucket_name: str, source_folder_path: str, de
     except subprocess.CalledProcessError as e:
         print("Error while copying file from Google Cloud Storage: ", e.stderr)
         return e.stderr
+
+
+def upload_files_to_gcs_bucket(bucket_name: str, source_folder_path: str, destination_folder_path: str, copy=True):
+    """
+    Copies or moves files/folder from a local directory to a Google Cloud Storage bucket.
+
+    :param bucket_name: (str) The name of the GCS bucket.
+    :param source_folder_path: (str) Path to the local file/folder to be uploaded.
+    :param destination_folder_path: (str) Path to the destination directory in GCS.
+    :param copy: if 'copy' is False, the files are moved instead of copied to GCS.
+    """
+    try:
+        upload_mode = 'cp' if copy else 'mv'  # Choose between copy or move
+        source_directory = source_folder_path.rstrip("/")  # Ensure no trailing slash
+        destination_directory = destination_folder_path.rstrip("/")  # Ensure no trailing slash
+
+        gcloud_command = [
+            "gcloud",
+            "storage",
+            upload_mode,
+            source_directory,  # Local source folder
+            f"gs://{bucket_name}/",  # Destination in GCS
+            "--recursive"
+        ]
+
+        result = subprocess.run(gcloud_command, check=True, capture_output=True)
+
+        print(f"File uploaded successfully!\n{result.stdout.decode('utf-8')}\n")
+
+    except subprocess.CalledProcessError as e:
+        print("Error while uploading file to Google Cloud Storage:", e.stderr.decode('utf-8'))
+        return e.stderr.decode('utf-8')
 
 
 def current_directory(file_path=None):

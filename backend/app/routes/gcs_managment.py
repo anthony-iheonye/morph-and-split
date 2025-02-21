@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 
 from app.config import google_cloud_config, DIRECTORIES, cors
 from app.utils import create_google_cloud_storage_bucket, \
-    delete_google_cloud_storage_bucket, delete_and_recreate_directory_in_gcs_bucket
+    delete_google_cloud_storage_bucket, delete_and_recreate_directories_in_gcs_bucket
 
 # Blueprint definition
 gcs_management = Blueprint('gcs_management', __name__)
@@ -39,7 +39,7 @@ def delete_bucket():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@gcs_management.route('/gcs/images/delete', methods=['DELETE'])
+@gcs_management.route('/gcs/resized_original_images/delete', methods=['DELETE'])
 def delete_uploaded_images():
     """
     Delete the uploaded images from the 'images' folder
@@ -47,8 +47,8 @@ def delete_uploaded_images():
     """
 
     try:
-        delete_and_recreate_directory_in_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
-                                                    directory=google_cloud_config.image_dir)
+        delete_and_recreate_directories_in_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
+                                                    directories=[google_cloud_config.resized_image_dir,])
 
         return jsonify({'success': True,
                         'message': 'Successfully deleted uploaded images in Google Cloud Storage Bucket'}), 200
@@ -56,7 +56,7 @@ def delete_uploaded_images():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@gcs_management.route('/gcs/masks/delete', methods=['DELETE'])
+@gcs_management.route('/gcs/resized_original_masks/delete', methods=['DELETE'])
 def delete_uploaded_masks():
     """
     Delete the uploaded masks from the 'masks' folder
@@ -64,8 +64,8 @@ def delete_uploaded_masks():
     """
 
     try:
-        delete_and_recreate_directory_in_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
-                                                    directory=google_cloud_config.mask_dir)
+        delete_and_recreate_directories_in_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
+                                                    directories=[google_cloud_config.resized_mask_dir,])
 
         return jsonify({'success': True,
                         'message': 'Successfully deleted uploaded masks in Google Cloud Storage Bucket'}), 200

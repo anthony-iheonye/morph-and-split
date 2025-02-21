@@ -5,6 +5,7 @@ from app.routes import (
     augment,
     directory_management,
     download_data_from_gcs,
+    transfer_data_to_gcs,
     download_file,
     status_checks,
     gcs_management,
@@ -13,7 +14,8 @@ from app.routes import (
     mask_upload,
     resize_data,
     reset_session,
-    signed_upload_url,
+    signed_upload_urls,
+    signed_download_urls,
     uploaded_file_names,
 )
 
@@ -25,10 +27,12 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(directory_management)
-    app.register_blueprint(signed_upload_url)
+    app.register_blueprint(signed_upload_urls)
+    app.register_blueprint(signed_download_urls)
     app.register_blueprint(image_upload)
     app.register_blueprint(mask_upload)
     app.register_blueprint(download_data_from_gcs)
+    app.register_blueprint(transfer_data_to_gcs)
     app.register_blueprint(resize_data)
     app.register_blueprint(image_mask_metadata)
     app.register_blueprint(uploaded_file_names)
