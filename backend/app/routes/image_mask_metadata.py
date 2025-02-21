@@ -17,54 +17,55 @@ RESIZED_VAL_MASK_DIR = directory_store.resized_val_mask_dir
 RESIZED_TEST_IMAGE_DIR = directory_store.resized_test_image_dir
 RESIZED_TEST_MASK_DIR = directory_store.resized_test_mask_dir
 
+
 # Route to serve image files
 
 def get_scheme():
     """Detect whether the app is running on Cloud Run or locally."""
-    # if os.getenv("K_SERVICE"):  # This environment variable exists in Cloud Run
-    #     return "https"
-    return "https"
+    if os.getenv("K_SERVICE"):  # This environment variable exists in Cloud Run
+        return "https"
+    return "http"
 
 
 @image_mask_metadata.route('/images/<filename>')
 def serve_image(filename):
-    return send_from_directory(IMAGE_DIR, filename, mimetype='image/*')
+    return send_from_directory(IMAGE_DIR, filename, mimetype='image/png')
 
 
 @image_mask_metadata.route('/train_images/<filename>')
 def serve_train_image(filename):
-    return send_from_directory(RESIZED_TRAIN_IMAGE_DIR, filename, mimetype='image/*')
+    return send_from_directory(RESIZED_TRAIN_IMAGE_DIR, filename, mimetype='image/png')
 
 
 @image_mask_metadata.route('/val_images/<filename>')
 def serve_val_image(filename):
-    return send_from_directory(RESIZED_VAL_IMAGE_DIR, filename, mimetype='image/*')
+    return send_from_directory(RESIZED_VAL_IMAGE_DIR, filename, mimetype='image/png')
 
 
 @image_mask_metadata.route('/test_images/<filename>')
 def serve_test_image(filename):
-    return send_from_directory(RESIZED_TEST_IMAGE_DIR, filename, mimetype='image/*')
+    return send_from_directory(RESIZED_TEST_IMAGE_DIR, filename, mimetype='image/png')
 
 
 # Route to serve mask files
 @image_mask_metadata.route('/masks/<filename>')
 def serve_mask(filename):
-    return send_from_directory(MASK_DIR, filename, mimetype='image/*')
+    return send_from_directory(MASK_DIR, filename, mimetype='image/png')
 
 
 @image_mask_metadata.route('/train_masks/<filename>')
 def serve_train_mask(filename):
-    return send_from_directory(RESIZED_TRAIN_MASK_DIR, filename, mimetype='image/*')
+    return send_from_directory(RESIZED_TRAIN_MASK_DIR, filename, mimetype='image/png')
 
 
 @image_mask_metadata.route('/val_masks/<filename>')
 def serve_val_mask(filename):
-    return send_from_directory(RESIZED_VAL_MASK_DIR, filename, mimetype='image/*')
+    return send_from_directory(RESIZED_VAL_MASK_DIR, filename, mimetype='image/png')
 
 
 @image_mask_metadata.route('/test_masks/<filename>')
 def serve_test_mask(filename):
-    return send_from_directory(RESIZED_TEST_MASK_DIR, filename, mimetype='image/*')
+    return send_from_directory(RESIZED_TEST_MASK_DIR, filename, mimetype='image/png')
 
 
 @image_mask_metadata.route('/metadata/uploaded_image_mask', methods=['GET'])
