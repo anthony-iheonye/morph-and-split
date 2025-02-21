@@ -9,11 +9,11 @@ from google.oauth2 import service_account
 from app.config import google_cloud_config
 from app.utils import current_directory
 
-signed_upload_url = Blueprint('signed_upload_url', __name__)
+signed_upload_urls = Blueprint('signed_upload_urls', __name__)
 service_account_path = os.path.join(current_directory(), 'morph-and-split-key.json')
 
-@signed_upload_url.route('/generate-signed-upload-url', methods=['POST'])
-def generate_signed_upload_url():
+@signed_upload_urls.route('/generate-signed-upload-url', methods=['POST'])
+def generate_signed_upload_urls():
     """
     Generates a v4 signed URL for uploading data files to Google Cloud Storage, using HTTP PUT request.
     """
