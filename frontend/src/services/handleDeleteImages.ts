@@ -19,16 +19,22 @@ const handleDeleteImages = async ({
   toast,
   setBackendResponseLog,
 }: Props) => {
-  const deleteDirectoryClient = new APIClient(
+  const deleteImageDirectoryClient = new APIClient(
     "/project_directory/images/delete"
   );
-  const createDirectoryClient = new APIClient(
+
+  const createImageDirectoryClient = new APIClient(
     "project_directory/images/create"
+  );
+
+  const recreatResizeImageDirectoryClient = new APIClient(
+    "/gcs/resized_original_images/delete"
   );
 
   try {
     setBackendResponseLog("deletingImages", true);
-    const deletedImages = await deleteDirectoryClient.deleteDirectory();
+    // Delete image from backend storage
+    const deletedImages = await deleteImageDirectoryClient.deleteDirectory();
     if (!deletedImages.success) {
       throw new CustomError(
         "Image Deletion failed",
@@ -36,11 +42,23 @@ const handleDeleteImages = async ({
       );
     }
 
-    const createdImageDirectory = await createDirectoryClient.executeAction();
+    // Recreate image directory in backend
+    const createdImageDirectory =
+      await createImageDirectoryClient.executeAction();
     if (!createdImageDirectory.success) {
       throw new CustomError(
         "Directory Creation Failed",
         "Failed to create new images directory."
+      );
+    }
+
+    // Delete and recreate resized image directory on Gooogle cloud bucket.
+    const recreatResizedDirectory =
+      await recreatResizeImageDirectoryClient.deleteDirectory();
+    if (!recreatResizedDirectory.success) {
+      throw new CustomError(
+        "Resized Image Directory Creation Failed",
+        "Failed to create new resized images directory."
       );
     } else {
       invalidateQueries(queryClient, ["imageNames"]);
