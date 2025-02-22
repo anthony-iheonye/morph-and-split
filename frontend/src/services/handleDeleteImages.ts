@@ -27,7 +27,7 @@ const handleDeleteImages = async ({
     "project_directory/images/create"
   );
 
-  const recreatResizeImageDirectoryClient = new APIClient(
+  const recreatResizedImageDirectoryClient = new APIClient(
     "/gcs/resized_original_images/delete"
   );
 
@@ -54,7 +54,7 @@ const handleDeleteImages = async ({
 
     // Delete and recreate resized image directory on Gooogle cloud bucket.
     const recreatResizedDirectory =
-      await recreatResizeImageDirectoryClient.deleteDirectory();
+      await recreatResizedImageDirectoryClient.deleteDirectory();
     if (!recreatResizedDirectory.success) {
       throw new CustomError(
         "Resized Image Directory Creation Failed",

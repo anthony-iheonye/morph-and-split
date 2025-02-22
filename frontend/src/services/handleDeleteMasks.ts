@@ -19,14 +19,20 @@ const handleDeleteUploadedMasks = async ({
   toast,
   setBackendResponseLog,
 }: Props) => {
-  const deleteDirectoryClient = new APIClient(
+  const deleteMaskDirectoryClient = new APIClient(
     "/project_directory/masks/delete"
   );
-  const createDirectoryClient = new APIClient("project_directory/masks/create");
+  const createMaskDirectoryClient = new APIClient(
+    "project_directory/masks/create"
+  );
+
+  const recreatResizedMaskDirectoryClient = new APIClient(
+    "/gcs/resized_original_masks/delete"
+  );
 
   try {
     setBackendResponseLog("deletingMasks", true);
-    const deletedMasks = await deleteDirectoryClient.deleteDirectory();
+    const deletedMasks = await deleteMaskDirectoryClient.deleteDirectory();
     if (!deletedMasks.success) {
       throw new CustomError(
         "Masks Deletion failed",
@@ -34,11 +40,22 @@ const handleDeleteUploadedMasks = async ({
       );
     }
 
-    const createdImageDirectory = await createDirectoryClient.executeAction();
+    const createdImageDirectory =
+      await createMaskDirectoryClient.executeAction();
     if (!createdImageDirectory.success) {
       throw new CustomError(
         "Directory Creation Failed",
         "Failed to create new masks directory."
+      );
+    }
+
+    // Delete and recreate resized image directory on Gooogle cloud bucket.
+    const recreatResizedDirectory =
+      await recreatResizedMaskDirectoryClient.deleteDirectory();
+    if (!recreatResizedDirectory.success) {
+      throw new CustomError(
+        "Resized Mask Directory Creation Failed",
+        "Failed to create new resized mask directory."
       );
     } else {
       invalidateQueries(queryClient, ["maskNames"]);
