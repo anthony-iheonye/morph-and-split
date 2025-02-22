@@ -1,12 +1,15 @@
 import { FaDownload } from "react-icons/fa6";
 import IconButtonWithToolTip from "./IconButtonWithToolTip";
+import { useBackendResponse } from "../../hooks";
+import { Spinner } from "@chakra-ui/react";
 
 interface DownloadFileProps {
-  filename: string;
-  onDownload: (filename: string) => void;
+  onDownload: () => void;
 }
 
-const DownloadButton = ({ filename, onDownload }: DownloadFileProps) => {
+const DownloadButton = ({ onDownload }: DownloadFileProps) => {
+  const { isDownloading } = useBackendResponse();
+
   return (
     <IconButtonWithToolTip
       aria-label="Click to download augmented result."
@@ -14,8 +17,8 @@ const DownloadButton = ({ filename, onDownload }: DownloadFileProps) => {
       tooltipLabel="Download augmented result"
       color="teal.500"
       backgroundColor="transparent"
-      onClick={() => onDownload(filename)}
-      icon={<FaDownload />}
+      onClick={onDownload}
+      icon={!isDownloading ? <FaDownload /> : <Spinner />}
       iconHoverColor="teal.200"
     />
   );

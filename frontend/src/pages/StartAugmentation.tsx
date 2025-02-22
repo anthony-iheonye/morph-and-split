@@ -11,12 +11,12 @@ import { SaveSuffixInput } from "../components/inputFields";
 import { PageTitle } from "../components/miscellaneous";
 import { useBackendResponse } from "../hooks";
 import useAugmentationIsComplete from "../hooks/useAugmentationIsComplete";
-import { APIClient } from "../services";
+import { handleDownloadGCSFiles } from "../services";
+// import { handleDownloadLocalFiles } from "../services";
 
 const StartAugmentation = () => {
-  const DownloadAPI = new APIClient<Blob>("/download/augmentation_results");
   const { data: augmentationCompleted } = useAugmentationIsComplete();
-  const { augmentationIsRunning } = useBackendResponse();
+  const { augmentationIsRunning, setBackendResponseLog } = useBackendResponse();
 
   return (
     <Grid
@@ -44,13 +44,14 @@ const StartAugmentation = () => {
         <BoundingBox
           display="flex"
           flexDirection="column"
-          flex="1"
+          // flex="1"
           overflow="hidden"
         >
           <Text color={"gray.400"} mb={4} fontSize="sm">
-            Augmented images and masks are named as 'img-1.jpg' and
-            'mask-1.jpg'. Enter the starting numerical suffixes for the first
-            augmented training, validation, and test data.
+            Augmented images and masks are named with an 'img' or 'mask' prefix
+            followed by a numerical suffix (e.g., 'img_1.png', 'mask_1.png').
+            Enter the starting suffix for the first augmented training,
+            validation, and test sets.
           </Text>
 
           <VStack
@@ -64,7 +65,7 @@ const StartAugmentation = () => {
             <SaveSuffixInput
               title={{
                 base: "Training set",
-                md: "Training Set Initial Save Suffix",
+                md: "Numerical suffix for Training Set",
               }}
               setName="training"
               icon={TbNumbers}
@@ -73,7 +74,7 @@ const StartAugmentation = () => {
             <SaveSuffixInput
               title={{
                 base: "Validation set",
-                md: "Validation Set Initial Save Suffix",
+                md: "Numerical suffix for Validation Set",
               }}
               setName="validation"
               icon={TbNumbers}
@@ -82,7 +83,7 @@ const StartAugmentation = () => {
             <SaveSuffixInput
               title={{
                 base: "Test set",
-                md: "Test Set Initial Save Suffix",
+                md: "Numerical suffix for Test Set",
               }}
               setName="testing"
               icon={TbNumbers}
@@ -107,8 +108,12 @@ const StartAugmentation = () => {
             />
             {!augmentationIsRunning && augmentationCompleted?.success && (
               <DownloadButton
-                filename="augmented_data.zip"
-                onDownload={DownloadAPI.downloadFile}
+                onDownload={() =>
+                  handleDownloadGCSFiles(
+                    ["augmented_data.zip"],
+                    setBackendResponseLog
+                  )
+                }
               />
             )}
           </HStack>

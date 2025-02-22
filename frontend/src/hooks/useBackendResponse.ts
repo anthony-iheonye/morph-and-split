@@ -10,6 +10,7 @@ const useBackendResponse = () => {
     backendResponseLog,
     isResetting,
     isShuttingDown,
+    isDownloading,
     setBackendResponseLog,
     resetBackendResponseLog,
   } = useBackendResponseStore((store) => ({
@@ -20,6 +21,7 @@ const useBackendResponse = () => {
     deletingMasks: store.backendResponseLog.deletingMasks,
     isResetting: store.backendResponseLog.isResetting,
     isShuttingDown: store.backendResponseLog.isShuttingDown,
+    isDownloading: store.backendResponseLog.isDownloading,
     backendResponseLog: store.backendResponseLog,
     setBackendResponseLog: store.setBackendResponseLog,
     resetBackendResponseLog: store.resetBackendResponseLog,
@@ -33,6 +35,7 @@ const useBackendResponse = () => {
     deletingMasks,
     isResetting,
     isShuttingDown,
+    isDownloading,
     backendResponseLog,
     setBackendResponseLog,
     resetBackendResponseLog,

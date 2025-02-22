@@ -8,6 +8,7 @@ export interface BackendResponseLog {
   deletingMasks: boolean;
   isResetting: boolean;
   isShuttingDown: boolean;
+  isDownloading: boolean;
 }
 
 const initialBackendResponseLog: BackendResponseLog = {
@@ -18,6 +19,7 @@ const initialBackendResponseLog: BackendResponseLog = {
   deletingMasks: false,
   isResetting: false,
   isShuttingDown: false,
+  isDownloading: false,
 };
 interface BackendResponseStore {
   backendResponseLog: BackendResponseLog;

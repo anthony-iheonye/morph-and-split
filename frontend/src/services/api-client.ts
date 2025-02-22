@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { BackendResponse, SignedUploadUrls } from "../entities";
+import { BackendResponse, SignedUrls } from "../entities";
+import { useAugConfigAndSetter, useBackendResponse } from "../hooks";
+import { BackendResponseLog } from "../store";
 
 export interface FetchResponse<T> {
   success?: boolean;
@@ -9,9 +11,11 @@ export interface FetchResponse<T> {
   results: T[];
 }
 
+export const baseURL = "http://127.0.0.1:5000"; // Local backend base URL
+// export const  baseURL =  "https://morph-and-split-backend-1055861427938.us-south1.run.app" // Google cloud run backend base URL
+
 const axiosInstance = axios.create({
-  // baseURL: "http://127.0.0.1:5000", // Local backend base URL
-  baseURL: "https://morph-and-split-backend-1055861427938.us-south1.run.app", // Google cloud run backend base URL
+  baseURL: baseURL,
 });
 
 class APIClient<T> {
@@ -47,23 +51,29 @@ class APIClient<T> {
       .get<T>(`${this.endpoint}/${id}`, requestConfig)
       .then((res) => res.data);
 
-  downloadFile = async (
-    filename: string,
+  downloadLocalFiles = async (
+    filenames: string[],
     requestConfig?: AxiosRequestConfig
   ) => {
     try {
-      // send get request download file from server
-      const response = await axiosInstance.get(
-        `${this.endpoint}/${encodeURIComponent(filename)}`,
-        { responseType: "blob", ...requestConfig }
-      );
-      this.handleDownload(response.data, filename);
+      // Create an array of promises for parallel execution
+      const downloadPromises = filenames.map(async (filename) => {
+        const response = await axiosInstance.get(
+          `${this.endpoint}/${encodeURIComponent(filename)}`,
+          { responseType: "blob", ...requestConfig }
+        );
+        console.log(`Downloaded: ${filename}`);
+        this.handleDownloadBlob(response.data, filename);
+      });
+
+      // Wait for all downloads to finish
+      await Promise.all(downloadPromises);
+      console.log("All files downloaded successfully!");
     } catch (error: any) {
-      console.error("Failed to download file: ", error.message);
+      console.error("Failed to download files: ", error.message);
     }
   };
-
-  handleDownload = (data: Blob, filename: string) => {
+  handleDownloadBlob = (data: Blob, filename: string) => {
     const blob = new Blob([data]);
     // create temporary url pointing to the blob
     const url = window.URL.createObjectURL(blob);
@@ -127,7 +137,7 @@ class APIClient<T> {
     try {
       // step 1: Get signed URLs
       const { results: signedUrlsObjs } =
-        await this.getSignedUploadUrls<SignedUploadUrls>(
+        await this.getSignedUploadUrls<SignedUrls>(
           filenames,
           contentTypes,
           folder_path
@@ -175,6 +185,69 @@ class APIClient<T> {
           error.message
         );
       throw error;
+    }
+  };
+
+  /**
+   * Fetch signed download URLs for given filename.
+   * @param filename Name of file to get signed URL for.
+   * @param requestConfig Optional request configurations.
+   * @returns Signed URL for downloading file from GCS.
+   */
+  getSignedDownloadUrl = async (filenames: string[]): Promise<SignedUrls[]> => {
+    try {
+      const response = await axiosInstance.get<{
+        success: boolean;
+        results: SignedUrls[];
+      }>(
+        `${this.endpoint}?${filenames
+          .map((f) => `filenames=${encodeURIComponent(f)}`)
+          .join("&")}`
+      );
+
+      if (response.data.success) {
+        return response.data.results;
+      } else {
+        throw new Error("Failed to get signed download URLs");
+      }
+    } catch (err) {
+      if (err instanceof Error)
+        console.error("Error fetching signed download URLs. ", err.message);
+      throw err;
+    }
+  };
+
+  downloadGCSFiles = async (
+    filenames: string[],
+    setBackendResponseLog: <K extends keyof BackendResponseLog>(
+      key: K,
+      value: BackendResponseLog[K]
+    ) => void
+  ) => {
+    try {
+      setBackendResponseLog("isDownloading", true);
+
+      const signedUrls = await this.getSignedDownloadUrl(filenames);
+      if (!signedUrls.length) throw new Error("No signed URLs found");
+
+      for (const fileObj of signedUrls) {
+        console.log(`Downloading from: ${fileObj.url}`);
+
+        // Fetch the file from the signed URL
+        const response = await fetch(fileObj.url);
+        if (!response.ok)
+          throw new Error(`Failed to fetch file: ${fileObj.filename}`);
+
+        // Convert response to Blob
+        const blob = await response.blob();
+
+        // Trigger download
+        this.handleDownloadBlob(blob, fileObj.filename);
+      }
+    } catch (error) {
+      console.error(`Failed to download file ${filenames[0]}: `, error);
+    } finally {
+      setBackendResponseLog("isDownloading", false);
     }
   };
 
