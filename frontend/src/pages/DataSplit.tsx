@@ -267,7 +267,7 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
           <IconComboControl
             icon={FaLayerGroup}
             title="Augmented Training Set Size"
-            description="Specifies the desired number of training images post-augmentation."
+            description="Set the desired number of training images post-augmentation."
             controlElement={<TotalTrainData />}
             controlElementWidth={8}
           />

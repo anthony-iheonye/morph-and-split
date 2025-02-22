@@ -53,8 +53,7 @@ const AugTransformationsInput = () => {
               lg: "none",
             }}
           >
-            Choose random transformations to apply during image-mask
-            augmentation of the training set.
+            Choose random transformations for augmenting the training set.
           </Text>
           <BoundingBox
             padding={"0"}
