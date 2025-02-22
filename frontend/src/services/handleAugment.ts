@@ -2,7 +2,7 @@ import { ToastId, UseToastOptions } from "@chakra-ui/react";
 import { AugConfig, BackendResponseLog } from "../store";
 import invalidateQueries from "./invalidateQueries";
 import APIClient from "./api-client";
-import { BackendResponse } from "../entities";
+import { BackendResponse, CustomError } from "../entities";
 import { QueryClient } from "@tanstack/react-query";
 
 interface Props {
@@ -27,6 +27,12 @@ const handleAugment = async ({
   setBackendResponseLog("augmentationIsRunning", true);
 
   const AugmentationAPI = new APIClient<BackendResponse>("/augment");
+  const ZippedDataTransferAPI = new APIClient<BackendResponse>(
+    "/gcs/transfer_augmented_result_to_gcs"
+  );
+  const ResizedDataTransferAPI = new APIClient<BackendResponse>(
+    "/gcs/transfer_resized_augmented_data_to_gcs"
+  );
 
   // Prepare FormData
   const formData = new FormData();
@@ -41,11 +47,37 @@ const handleAugment = async ({
   formData.append("config", JSON.stringify(reducedConfig)); // Add only the reduced
 
   try {
-    const response = await AugmentationAPI.postData(formData, {
+    // Augment Images and Masks
+    const augmentation = await AugmentationAPI.postData(formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    if (response.success) {
+    if (!augmentation.success) {
+      throw new CustomError(
+        "Augmentation State",
+        "Failed to complete augmentation."
+      );
+    }
+
+    // Transfer compressed augmented data to Google cloud storage Bucket
+    const zippedDataTransfer = await ZippedDataTransferAPI.postData();
+
+    if (!zippedDataTransfer.success) {
+      throw new CustomError(
+        "Augmented Result Transfer",
+        "Failed to transfer augmented result to GCS bucket."
+      );
+    }
+
+    // Transfer resized augmented data to Google cloud storage bucket
+    const resizeDataTransfer = await ResizedDataTransferAPI.postData();
+
+    if (!resizeDataTransfer.success) {
+      throw new CustomError(
+        "Resized Augmented Data Transfer",
+        "Failed to tranfer resized augmented result to GCS bucket."
+      );
+    } else {
       toast({
         title: "Augmentation completed!",
         status: "success",
