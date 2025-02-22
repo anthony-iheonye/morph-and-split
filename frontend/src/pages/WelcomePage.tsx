@@ -28,7 +28,7 @@ const WelcomePage = () => {
       height="100%"
       overflowY="hidden"
     >
-      <GridItem area="heading">
+      <GridItem area="heading" mb={5}>
         <Heading as="h1" size="2xl" mb={2}>
           Welcome to{" "}
           <Text as="span" color="teal.200">
