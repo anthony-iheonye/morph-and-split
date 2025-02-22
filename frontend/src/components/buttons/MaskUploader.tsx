@@ -7,22 +7,24 @@ import {
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
-import { BackendResponse, CustomError, SignedUploadUrls } from "../../entities";
+import { BackendResponse, CustomError, SignedUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
 
 const MaskUploader = () => {
-  const uploadClient = new APIClient<SignedUploadUrls>(
-    "/generate-signed-upload-url"
-  );
+  const uploadClient = new APIClient<SignedUrls>("/generate-signed-upload-url");
 
   const maskTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_masks_to_backend"
   );
 
   const resizeClient = new APIClient<BackendResponse>("/resize-uploaded-masks");
+
+  const resizedMasksTransferClient = new APIClient<BackendResponse>(
+    "/gcs/transfer_resized_original_masks_to_gcs"
+  );
 
   const buttonText = useBreakpointValue({
     base: "Select",
@@ -63,8 +65,18 @@ const MaskUploader = () => {
             "Resize Failed",
             "Failed to resize uploaded masks."
           );
+        }
+
+        const resizedMasksTransfered =
+          await resizedMasksTransferClient.postData();
+        if (!resizedMasksTransfered.success) {
+          throw new CustomError(
+            "Resized Masks Transfer Failed.",
+            "Faild to transfer resized masks."
+          );
         } else {
-          // Invalidate uploaded image names, uploaded image and mask metadata, and image upload status.
+          // Invalidate uploaded masks names, uploaded image and mask metadata,
+          // mask upload status and image-mask balance.
           invalidateQueries(queryClient, [
             "maskNames",
             "metadata",

@@ -5,7 +5,7 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
-import { BackendResponse, CustomError, SignedUploadUrls } from "../../entities";
+import { BackendResponse, CustomError, SignedUrls } from "../../entities";
 import { useBackendResponse, useFileUploader } from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
@@ -14,9 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 const ImageUploader = () => {
-  const uploadClient = new APIClient<SignedUploadUrls>(
-    "/generate-signed-upload-url"
-  );
+  const uploadClient = new APIClient<SignedUrls>("/generate-signed-upload-url");
 
   const imageTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_images_to_backend"
@@ -24,6 +22,10 @@ const ImageUploader = () => {
 
   const resizeClient = new APIClient<BackendResponse>(
     "/resize-uploaded-images"
+  );
+
+  const resizedImageTransferClient = new APIClient<BackendResponse>(
+    "/gcs/transfer_resized_original_images_to_gcs"
   );
 
   const buttonText = useBreakpointValue({
@@ -64,6 +66,15 @@ const ImageUploader = () => {
           throw new CustomError(
             "Resize Failed",
             "Failed to resize uploaded images."
+          );
+        }
+
+        const resizedImagesTransfered =
+          await resizedImageTransferClient.postData();
+        if (!resizedImagesTransfered.success) {
+          throw new CustomError(
+            "Resized Image Transfer Failed.",
+            "Faild to transfer resized images."
           );
         } else {
           // Invalidate uploaded image names, uploaded image and mask metadata, and image upload status.
