@@ -5,6 +5,7 @@ import { useValidationSet } from "../../hooks";
 import { useAugConfigStore } from "../../store";
 import PreviewCard from "./PreviewCard";
 import PreviewContainer from "./PreviewContainer";
+import PreviewCardSkeleton from "./PreviewCardSkeleton";
 
 const PreviewGridVal = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(
@@ -14,7 +15,10 @@ const PreviewGridVal = () => {
     })
   );
 
-  const { data, error, hasNextPage, fetchNextPage } = useValidationSet();
+  const { data, error, isLoading, hasNextPage, fetchNextPage } =
+    useValidationSet();
+
+  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   if (!previewAugmentedResult || previewedSet != "val") return null;
   if (error) return <Text color="red.500">Failed to load validation set.</Text>;
@@ -37,6 +41,13 @@ const PreviewGridVal = () => {
             spacing={6}
             padding={"10px"}
           >
+            {isLoading &&
+              skeletons.map((skeleton) => (
+                <PreviewContainer key={skeleton}>
+                  <PreviewCardSkeleton />
+                </PreviewContainer>
+              ))}
+
             {data?.pages.map((page, index) => (
               <React.Fragment key={index}>
                 {page.results.map(({ image, mask }) => (
