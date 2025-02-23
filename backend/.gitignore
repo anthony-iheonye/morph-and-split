@@ -80,7 +80,6 @@ fabric.properties
 # Image and masks folders
 
 
-practice.ipynb
 /app-old.py
 /app/aug_config.py
 /assets

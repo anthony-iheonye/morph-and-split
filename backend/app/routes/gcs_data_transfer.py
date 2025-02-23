@@ -5,7 +5,8 @@ from flask import Blueprint, jsonify
 from tensorflow.keras.backend import clear_session
 
 from app.config import google_cloud_config
-from app.utils import download_files_from_gcs_folder, directory_store, upload_file_to_gcs_bucket, \
+from app.utils import directory_store
+from app.services.gcs_client import upload_file_to_gcs_bucket, download_files_from_gcs_folder, \
     upload_files_to_gcs_bucket
 
 transfer_data_to_gcs = Blueprint(name='transfer_data_to_gcs', import_name=__name__)

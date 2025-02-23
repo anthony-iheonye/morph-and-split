@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify
 
 from app.config import google_cloud_config, DIRECTORIES, cors
-from app.utils import create_project_directories, delete_google_cloud_storage_bucket, \
-    create_google_cloud_storage_bucket, create_resized_augmentation_directories
+from app.utils import create_project_directories, create_resized_augmentation_directories
+from app.services.gcs_client import delete_google_cloud_storage_bucket
+from app.services import create_google_cloud_storage_bucket
 
 # Blueprint definition
 reset_session = Blueprint('reset_session', __name__)

@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify
 
 from app.config import google_cloud_config, DIRECTORIES, cors
-from app.utils import create_google_cloud_storage_bucket, \
-    delete_google_cloud_storage_bucket, delete_and_recreate_directories_in_gcs_bucket
+from app.services.gcs_client import delete_and_recreate_directories_in_gcs_bucket, delete_google_cloud_storage_bucket
+from app.services import create_google_cloud_storage_bucket
 
 # Blueprint definition
 gcs_management = Blueprint('gcs_management', __name__)

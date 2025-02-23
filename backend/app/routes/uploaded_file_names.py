@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify
 
 from app.config import google_cloud_config
-from app.utils import list_files_in_bucket_directory, get_sorted_filenames, directory_store
+from app.utils import get_sorted_filenames, directory_store
+from app.services.gcs_client import list_files_in_bucket_directory
 
 uploaded_file_names = Blueprint('uploaded_file_names', __name__)
 
