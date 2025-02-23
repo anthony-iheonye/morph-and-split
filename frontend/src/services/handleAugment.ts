@@ -28,7 +28,7 @@ const handleAugment = async ({
 
   const AugmentationAPI = new APIClient<BackendResponse>("/augment");
   const ZippedDataTransferAPI = new APIClient<BackendResponse>(
-    "/gcs/transfer_augmented_result_to_gcs"
+    "/gcs/transfer_augmented_zip_to_gcs"
   );
   const ResizedDataTransferAPI = new APIClient<BackendResponse>(
     "/gcs/transfer_resized_augmented_data_to_gcs"

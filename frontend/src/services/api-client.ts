@@ -1,14 +1,12 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { BackendResponse, SignedUrls } from "../entities";
-import { useAugConfigAndSetter, useBackendResponse } from "../hooks";
 import { BackendResponseLog } from "../store";
 
 export interface FetchResponse<T> {
-  success?: boolean;
   count: number;
   next: string | null;
-
   results: T[];
+  success?: boolean;
 }
 
 export const baseURL = "http://127.0.0.1:5000"; // Local backend base URL
@@ -127,6 +125,37 @@ class APIClient<T> {
     }
   };
 
+  /**
+   * Fetch signed download URLs for given filenames.
+   * @param filename Name of file to get signed URL for.
+   * @param requestConfig Optional request configurations.
+   * @returns Signed URL for downloading file from GCS.
+   */
+  getSignedDownloadUrls = async (
+    filenames: string[]
+  ): Promise<SignedUrls[]> => {
+    try {
+      const response = await axiosInstance.get<{
+        success: boolean;
+        results: SignedUrls[];
+      }>(
+        `${this.endpoint}?${filenames
+          .map((f) => `filenames=${encodeURIComponent(f)}`)
+          .join("&")}`
+      );
+
+      if (response.data.success) {
+        return response.data.results;
+      } else {
+        throw new Error("Failed to get signed download URLs");
+      }
+    } catch (err) {
+      if (err instanceof Error)
+        console.error("Error fetching signed download URLs. ", err.message);
+      throw err;
+    }
+  };
+
   uploadToGoogleCloudBucket = async (
     files: File[],
     folder_path: string = ""
@@ -188,35 +217,6 @@ class APIClient<T> {
     }
   };
 
-  /**
-   * Fetch signed download URLs for given filename.
-   * @param filename Name of file to get signed URL for.
-   * @param requestConfig Optional request configurations.
-   * @returns Signed URL for downloading file from GCS.
-   */
-  getSignedDownloadUrl = async (filenames: string[]): Promise<SignedUrls[]> => {
-    try {
-      const response = await axiosInstance.get<{
-        success: boolean;
-        results: SignedUrls[];
-      }>(
-        `${this.endpoint}?${filenames
-          .map((f) => `filenames=${encodeURIComponent(f)}`)
-          .join("&")}`
-      );
-
-      if (response.data.success) {
-        return response.data.results;
-      } else {
-        throw new Error("Failed to get signed download URLs");
-      }
-    } catch (err) {
-      if (err instanceof Error)
-        console.error("Error fetching signed download URLs. ", err.message);
-      throw err;
-    }
-  };
-
   downloadGCSFiles = async (
     filenames: string[],
     setBackendResponseLog: <K extends keyof BackendResponseLog>(
@@ -227,7 +227,7 @@ class APIClient<T> {
     try {
       setBackendResponseLog("isDownloading", true);
 
-      const signedUrls = await this.getSignedDownloadUrl(filenames);
+      const signedUrls = await this.getSignedDownloadUrls(filenames);
       if (!signedUrls.length) throw new Error("No signed URLs found");
 
       for (const fileObj of signedUrls) {
