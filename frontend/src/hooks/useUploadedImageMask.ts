@@ -4,7 +4,7 @@ import UploadedImageMask from "../entities/UploadedImageMask";
 import APIClient, { FetchResponse } from "../services/api-client";
 
 const apiClient = new APIClient<UploadedImageMask>(
-  "/metadata/uploaded_image_mask"
+  "/metadata/gcs/resized_original_images_masks"
 );
 
 /**
@@ -44,10 +44,12 @@ const apiClient = new APIClient<UploadedImageMask>(
 const useUploadedImageMask = () =>
   useInfiniteQuery<FetchResponse<UploadedImageMask>, Error>({
     queryKey: ["metadata"],
-    queryFn: ({ pageParam = 1 }) =>
-      apiClient.getAll({
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await apiClient.getAll({
         params: { page: pageParam, page_size: 10 },
-      }),
+      });
+      return response;
+    },
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next ? allPages.length + 1 : undefined;
     },
