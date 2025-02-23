@@ -4,16 +4,18 @@ import { FetchResponse, UploadedImageMask } from "../entities";
 import { APIClient } from "../services";
 
 const apiClient = new APIClient<UploadedImageMask>(
-  "/metadata/train_images_masks"
+  "/metadata/gcs/resized-train-set"
 );
 
 const useTrainingSet = () =>
   useInfiniteQuery<FetchResponse<UploadedImageMask>, Error>({
     queryKey: ["trainingSet"],
-    queryFn: ({ pageParam = 1 }) =>
-      apiClient.getAll({
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await apiClient.getAll({
         params: { page: pageParam, page_size: 10 },
-      }),
+      });
+      return response;
+    },
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next ? allPages.length + 1 : undefined;
     },

@@ -4,16 +4,18 @@ import { FetchResponse, UploadedImageMask } from "../entities";
 import { APIClient } from "../services";
 
 const apiClient = new APIClient<UploadedImageMask>(
-  "/metadata/val_images_masks"
+  "/metadata/gcs/resized-val-set"
 );
 
 const useValidationSet = () =>
   useInfiniteQuery<FetchResponse<UploadedImageMask>, Error>({
     queryKey: ["validationSet"],
-    queryFn: ({ pageParam = 1 }) =>
-      apiClient.getAll({
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await apiClient.getAll({
         params: { page: pageParam, page_size: 10 },
-      }),
+      });
+      return response;
+    },
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next ? allPages.length + 1 : undefined;
     },
