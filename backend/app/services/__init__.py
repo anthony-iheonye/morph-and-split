@@ -12,5 +12,5 @@ from .gcs_client import (storage_client,
                          upload_file_to_gcs_bucket,
                          upload_files_to_gcs_bucket,
                          download_files_from_gcs_folder,
-                         )
+                         get_bucket)
 from .resize_augmented_data import resize_augmented_data

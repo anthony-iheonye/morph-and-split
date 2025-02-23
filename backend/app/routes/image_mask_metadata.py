@@ -9,7 +9,7 @@ from app.config import google_cloud_config
 from app.routes.signed_download_urls import generate_signed_urls_for_resized_images_and_masks, \
     generate_signed_urls_for_resized_train_set, generate_signed_urls_for_resized_validation_set, \
     generate_signed_urls_for_resized_test_set
-from app.services import bucket
+from app.services import get_bucket
 from app.utils import get_sorted_filenames, directory_store
 
 # Blueprint definition
@@ -42,7 +42,7 @@ def generate_signed_url(blob_name: str, method: str ='GET'):
     :param blob_name: The name of the blob.
     :param method: The HTTP method to use (e.g. 'PUT', 'GET').
     """
-    blob = bucket.blob(blob_name)
+    blob = get_bucket().blob(blob_name)
     return blob.generate_signed_url(version="v4",
                                     expiration=timedelta(minutes=60),
                                     method=method,

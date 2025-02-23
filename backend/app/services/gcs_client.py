@@ -87,6 +87,21 @@ def create_google_cloud_storage_bucket(bucket_name: str,
         print(f"An error occurred: {e}")
         return None
 
+def get_bucket():
+    """Get the existing bucket."""
+    global bucket
+
+    if bucket is not None:
+        return bucket
+
+    try:
+        bucket = storage_client.get_bucket(google_cloud_config.bucket_name)
+        print(f"Refetched bucket {google_cloud_config.bucket_name} ...")
+        return bucket
+    except NotFound:
+        print(f'Bucket {google_cloud_config.bucket_name} does not exist.')
+        return None
+
 
 def generate_signed_url(blob_name: str,
                         method: str ='GET',
@@ -100,7 +115,7 @@ def generate_signed_url(blob_name: str,
     :param expiration: The expiration of the URL in minutes.
     :param content_type: The content type of the URL, (e.g. 'application/octet-stream').
     """
-    blob = bucket.blob(blob_name)
+    blob = get_bucket().blob(blob_name)
     return blob.generate_signed_url(version="v4",
                                     expiration=timedelta(minutes=expiration),
                                     method=method,
@@ -308,11 +323,8 @@ def upload_file_to_gcs_bucket(bucket_name:str, source_file_name:str, destination
     :param destination_blob_name: Name of the blob object in the bucket.
     """
 
-    # Initialize the storage client
-    storage_client = storage.Client()
-
     # Instantiate bucket object linked to the client
-    bucket = storage_client.bucket(bucket_name=bucket_name)
+    bucket = get_bucket()
 
     # Instantiate existing blob
     blob = bucket.blob(destination_blob_name)
