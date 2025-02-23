@@ -1,21 +1,19 @@
 import attr
 
-from app.aug_config import aug_config
-from app.utils import directory_store
-
 
 @attr.s
 class GoogleCloudStorageConfig:
     project_name = attr.ib(type=str, default='morph-and-split')
-    bucket_name = attr.ib(type=str, default='morph-and-split-assets')
     origin = attr.ib(type=list, default=["*"])
     responseHeader = attr.ib(type=list, default=["Content-Type", "x-goog-content-resumable"])
     method = attr.ib(type=list, default=['PUT', 'POST', 'GET'])
     maxAgeSeconds = attr.ib(type=int, default=3600)
 
-    # Bucket details
+    # Bucket and service account details
+    bucket_name = attr.ib(type=str, default='morph-and-split-assets')
     location = attr.ib(type=str, default='us-south1')
     storage_class = attr.ib(type=str, default='STANDARD')
+    service_account_file_name = attr.ib(type=str, default='morph-and-split-key.json')
 
     image_dir = attr.ib(type=str, default='images')
     mask_dir = attr.ib(type=str, default='masks')
@@ -29,6 +27,7 @@ class GoogleCloudStorageConfig:
     resized_test_images_dir = attr.ib(type=str, default='resized_augmented/test/images')
     resized_test_masks_dir = attr.ib(type=str, default='resized_augmented/test/masks')
     augmented_dir = attr.ib(type=str, default='augmented/combined')
+
 
 google_cloud_config = GoogleCloudStorageConfig()
 
@@ -51,8 +50,3 @@ cors = [{
     "method": google_cloud_config.method,
     "maxAgeSeconds": google_cloud_config.maxAgeSeconds,
 }]
-
-
-if __name__ == '__main__':
-    config = GoogleCloudStorageConfig()
-    print(config.resized_image_dir, directory_store.resized_image_dir)
