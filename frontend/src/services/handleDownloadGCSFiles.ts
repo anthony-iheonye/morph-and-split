@@ -20,7 +20,7 @@ const handleDownloadGCSFiles = async (
     setBackendResponseLog("isDownloading", true);
 
     // Get signed download URLs
-    const signedUrls = await gcsDownloadAPI.getSignedDownloadUrl(filenames);
+    const signedUrls = await gcsDownloadAPI.getSignedDownloadUrls(filenames);
     if (!signedUrls.length) throw new Error("No signed URLs found.");
 
     for (const fileObj of signedUrls) {
