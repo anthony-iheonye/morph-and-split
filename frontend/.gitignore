@@ -27,3 +27,4 @@ src/components/Augment2.tsx
 .vercel
 src/pages/Practice.tsx
 src/pages/ImageUpload copy.tsx
+src/components/buttons/SignedUrl.tsx

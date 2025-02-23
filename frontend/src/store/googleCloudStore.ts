@@ -3,12 +3,12 @@ const bucketFolders = {
   masks: "masks",
   resized_images: "resized_images",
   resized_masks: "resized_masks",
-  train_images: "augmented/train/images",
-  train_masks: "augmented/train/masks",
-  val_images: "augmented/val/images",
-  val_masks: "augmented/val/masks",
-  test_images: "augmented/test/images",
-  test_masks: "augmented/test/masks",
+  resized_train_images: "resized_augmented/train/images",
+  resized_train_masks: "resized_augmented/train/masks",
+  resized_val_images: "resized_augmented/val/images",
+  resized_val_masks: "resized_augmented/val/masks",
+  resized_test_images: "resized_augmented/test/images",
+  resized_test_masks: "resized_augmented/test/masks",
 };
 
 export default bucketFolders;
