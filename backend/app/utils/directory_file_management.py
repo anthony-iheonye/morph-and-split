@@ -398,7 +398,19 @@ def delete_google_cloud_storage_bucket(bucket_name: str):
             return False
 
         # Delete the bucket
-        bucket.delete(force=True)
+        # bucket.delete(force=True)
+
+        gcloud_command = [
+            "gcloud",
+            "storage",
+            "rm",
+            f"gs://{bucket_name}",
+            "--recursive"# Destination in GCS
+        ]
+
+        result = subprocess.run(gcloud_command, check=True, capture_output=True)
+
+        print({result.stdout.decode('utf-8')})
         print(f"Successfully deleted bucket {bucket_name}.")
         return True
 
@@ -515,7 +527,7 @@ def upload_files_to_gcs_bucket(bucket_name: str, source_folder_path: str, destin
     """
     try:
         upload_mode = 'cp' if copy else 'mv'  # Choose between copy or move
-        source_directory = source_folder_path.rstrip("/")  # Ensure no trailing slash
+        source_directory = source_folder_path.rstrip("/") + "/*"  # Ensure no trailing slash
         destination_directory = destination_folder_path.rstrip("/")  # Ensure no trailing slash
 
         gcloud_command = [
@@ -523,8 +535,7 @@ def upload_files_to_gcs_bucket(bucket_name: str, source_folder_path: str, destin
             "storage",
             upload_mode,
             source_directory,  # Local source folder
-            f"gs://{bucket_name}/",  # Destination in GCS
-            "--recursive"
+            f"gs://{bucket_name}/{destination_directory}/",  # Destination in GCS
         ]
 
         result = subprocess.run(gcloud_command, check=True, capture_output=True)

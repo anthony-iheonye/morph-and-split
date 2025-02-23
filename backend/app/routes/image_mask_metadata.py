@@ -1,8 +1,16 @@
 import os
+from datetime import timedelta
 
-from flask import Blueprint, jsonify, send_from_directory, url_for, request
+from flask import Blueprint, jsonify, request
+from flask import send_from_directory, url_for
+from werkzeug.utils import secure_filename
 
-from app.utils import directory_store, get_sorted_filenames
+from app.config import google_cloud_config
+from app.routes.signed_download_urls import generate_signed_urls_for_resized_images_and_masks, \
+    generate_signed_urls_for_resized_train_set, generate_signed_urls_for_resized_validation_set, \
+    generate_signed_urls_for_resized_test_set
+from app.services import bucket
+from app.utils import get_sorted_filenames, directory_store
 
 # Blueprint definition
 image_mask_metadata = Blueprint('image_mask_metadata', __name__)
@@ -25,6 +33,20 @@ def get_scheme():
     if os.getenv("K_SERVICE"):  # This environment variable exists in Cloud Run
         return "https"
     return "http"
+
+
+def generate_signed_url(blob_name: str, method: str ='GET'):
+    """
+    Generate a signed URL for a GCS blob.
+
+    :param blob_name: The name of the blob.
+    :param method: The HTTP method to use (e.g. 'PUT', 'GET').
+    """
+    blob = bucket.blob(blob_name)
+    return blob.generate_signed_url(version="v4",
+                                    expiration=timedelta(minutes=60),
+                                    method=method,
+    )
 
 
 @image_mask_metadata.route('/images/<filename>')
@@ -235,3 +257,156 @@ def get_test_images_masks():
                         'results': metadata}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@image_mask_metadata.route('/metadata/gcs/resized_original_images_masks_old', methods=['GET'])
+def get_image_mask_metadata_from_gcs_old():
+    """Fetch the metadata of the resized original images and masks in GCS bucket."""
+    try:
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
+        image_names = get_sorted_filenames(directory_path=directory_store.image_dir)
+        mask_names = get_sorted_filenames(directory_path=directory_store.mask_dir)
+
+        # Ensure the number of images and mask align
+        if len(image_names) != len(mask_names):
+            return jsonify({'error': "Mismatch between number of original images and masks."}), 400
+
+        # Paginate the data
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_images = image_names[start:end]
+        paginated_masks = mask_names[start:end]
+
+        # Generate signed URLs for each image/mask pair
+        metadata = []
+        for image_name, mask_name in zip(paginated_images, paginated_masks):
+            secure_image_name = secure_filename(image_name)
+            secure_mask_name = secure_filename(mask_name)
+
+            image_url = generate_signed_url(f"{google_cloud_config.resized_image_dir}/{secure_image_name}")
+            mask_url = generate_signed_url(f"{google_cloud_config.resized_mask_dir}/{secure_mask_name}")
+
+            metadata.append({"image": {"name": image_name, "url": image_url},
+                             "mask": {"name": mask_name, "url": mask_url}
+                             })
+        print(f"start: {start}\tend: {end}\t next: {len(image_names)}\tpaginated_metadata (length): {len(metadata)}")
+
+        return jsonify({'count': len(metadata),
+                        'next': end < len(image_names),
+                        'results': metadata}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@image_mask_metadata.route('/metadata/gcs/resized_original_images_masks', methods=['GET'])
+def get_image_mask_metadata_from_gcs():
+    """Fetch the metadata of the resized original images and masks in GCS bucket."""
+    try:
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
+        # Get signed URLs (cached)
+        all_metadata = generate_signed_urls_for_resized_images_and_masks(refresh=False)
+
+        if not all_metadata:
+            return jsonify({'success': False, 'error': "No images/masks found."}), 400
+
+        # Paginate results
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_metadata = all_metadata[start:end]
+
+        return jsonify({'count': len(paginated_metadata),
+                        'next': end < len(all_metadata),
+                        'results': paginated_metadata}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@image_mask_metadata.route('/metadata/gcs/resized-train-set', methods=['GET'])
+def get_resized_training_image_mask_metadata_from_gcs():
+    """Fetch the metadata of the resized training images and masks from GCS bucket."""
+    try:
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
+        # Get signed URLs (cached)
+        all_metadata = generate_signed_urls_for_resized_train_set(refresh=False)
+
+        if not all_metadata:
+            return jsonify({'success': False, 'error': "No images/masks found."}), 400
+
+        # Paginate results
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_metadata = all_metadata[start:end]
+
+        return jsonify({'count': len(paginated_metadata),
+                        'next': end < len(all_metadata),
+                        'results': paginated_metadata}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@image_mask_metadata.route('/metadata/gcs/resized-val-set', methods=['GET'])
+def get_resized_validation_image_mask_metadata_from_gcs():
+    """Fetch the metadata of the resized validation images and masks from GCS bucket."""
+    try:
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
+        # Get signed URLs (cached)
+        all_metadata = generate_signed_urls_for_resized_validation_set(refresh=False)
+
+        if not all_metadata:
+            return jsonify({'success': False, 'error': "No images/masks found."}), 400
+
+        # Paginate results
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_metadata = all_metadata[start:end]
+
+        return jsonify({'count': len(paginated_metadata),
+                        'next': end < len(all_metadata),
+                        'results': paginated_metadata}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@image_mask_metadata.route('/metadata/gcs/resized-test-set', methods=['GET'])
+def get_resized_test_image_mask_metadata_from_gcs():
+    """Fetch the metadata of the resized testing images and masks from GCS bucket."""
+    try:
+        # Pagination parameters
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+
+        # Get signed URLs (cached)
+        all_metadata = generate_signed_urls_for_resized_test_set(refresh=False)
+
+        if not all_metadata:
+            return jsonify({'success': False, 'error': "No images/masks found."}), 400
+
+        # Paginate results
+        start = (page - 1) * page_size
+        end = start + page_size
+        paginated_metadata = all_metadata[start:end]
+
+        return jsonify({'count': len(paginated_metadata),
+                        'next': end < len(all_metadata),
+                        'results': paginated_metadata}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
