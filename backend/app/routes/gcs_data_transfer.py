@@ -72,7 +72,7 @@ def transfer_resized_original_images():
         upload_files_to_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
                                    source_folder_path=directory_store.resized_image_dir,
                                    destination_folder_path=google_cloud_config.resized_image_dir,
-                                   copy=True)
+                                   copy=False)
 
         return jsonify({'success': True, 'message': "Successfully transferred resized original images to bucket."}), 200
     except Exception as e:
