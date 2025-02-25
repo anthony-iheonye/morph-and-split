@@ -10,8 +10,8 @@ uploaded_file_names = Blueprint('uploaded_file_names', __name__)
 @uploaded_file_names.route('/upload/gcs/image_names', methods=['GET'])
 def get_uploaded_image_names_from_gcs():
     try:
-        image_files = list_files_in_bucket_directory(bucket_name=google_cloud_config.bucket_name,
-                                                     directory_path=f"{google_cloud_config.image_dir}/")
+        image_files = list_files_in_bucket_directory(directory_path=f"{google_cloud_config.image_dir}/",
+                                                     google_cloud_config=google_cloud_config)
 
         return jsonify({'success': True, 'count': len(image_files), 'results': image_files }), 200
     except Exception as e:
@@ -21,8 +21,8 @@ def get_uploaded_image_names_from_gcs():
 @uploaded_file_names.route('/upload/gcs/mask_names', methods=['GET'])
 def get_uploaded_mask_names_from_gcs():
     try:
-        mask_files = list_files_in_bucket_directory(bucket_name=google_cloud_config.bucket_name,
-                                                    directory_path=f"{google_cloud_config.mask_dir}/")
+        mask_files = list_files_in_bucket_directory(directory_path=f"{google_cloud_config.mask_dir}/",
+                                                    google_cloud_config=google_cloud_config)
 
         return jsonify({'success': True, 'count': len(mask_files), 'results': mask_files}), 200
     except Exception as e:

@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 
 from flask import Blueprint, jsonify, request
 from flask import send_from_directory, url_for
@@ -9,7 +8,7 @@ from app.config import google_cloud_config
 from app.routes.signed_download_urls import generate_signed_urls_for_resized_images_and_masks, \
     generate_signed_urls_for_resized_train_set, generate_signed_urls_for_resized_validation_set, \
     generate_signed_urls_for_resized_test_set
-from app.services import get_bucket
+from app.services import generate_signed_url
 from app.utils import get_sorted_filenames, directory_store
 
 # Blueprint definition
@@ -27,26 +26,11 @@ RESIZED_TEST_MASK_DIR = directory_store.resized_test_mask_dir
 
 
 # Route to serve image files
-
 def get_scheme():
     """Detect whether the app is running on Cloud Run or locally."""
     if os.getenv("K_SERVICE"):  # This environment variable exists in Cloud Run
         return "https"
     return "http"
-
-
-def generate_signed_url(blob_name: str, method: str ='GET'):
-    """
-    Generate a signed URL for a GCS blob.
-
-    :param blob_name: The name of the blob.
-    :param method: The HTTP method to use (e.g. 'PUT', 'GET').
-    """
-    blob = get_bucket().blob(blob_name)
-    return blob.generate_signed_url(version="v4",
-                                    expiration=timedelta(minutes=60),
-                                    method=method,
-    )
 
 
 @image_mask_metadata.route('/images/<filename>')
@@ -286,8 +270,14 @@ def get_image_mask_metadata_from_gcs_old():
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
 
-            image_url = generate_signed_url(f"{google_cloud_config.resized_image_dir}/{secure_image_name}")
-            mask_url = generate_signed_url(f"{google_cloud_config.resized_mask_dir}/{secure_mask_name}")
+            image_url = generate_signed_url(
+                blob_name=f"{google_cloud_config.resized_image_dir}/{secure_image_name}",
+                google_cloud_config=google_cloud_config
+            )
+            mask_url = generate_signed_url(
+                blob_name=f"{google_cloud_config.resized_mask_dir}/{secure_mask_name}",
+                google_cloud_config=google_cloud_config
+            )
 
             metadata.append({"image": {"name": image_name, "url": image_url},
                              "mask": {"name": mask_name, "url": mask_url}
@@ -311,7 +301,7 @@ def get_image_mask_metadata_from_gcs():
         page_size = int(request.args.get('page_size', 10))
 
         # Get signed URLs (cached)
-        all_metadata = generate_signed_urls_for_resized_images_and_masks(refresh=False)
+        all_metadata = generate_signed_urls_for_resized_images_and_masks()
 
         if not all_metadata:
             return jsonify({'success': False, 'error': "No images/masks found."}), 400
@@ -338,7 +328,7 @@ def get_resized_training_image_mask_metadata_from_gcs():
         page_size = int(request.args.get('page_size', 10))
 
         # Get signed URLs (cached)
-        all_metadata = generate_signed_urls_for_resized_train_set(refresh=False)
+        all_metadata = generate_signed_urls_for_resized_train_set()
 
         if not all_metadata:
             return jsonify({'success': False, 'error': "No images/masks found."}), 400
@@ -365,7 +355,7 @@ def get_resized_validation_image_mask_metadata_from_gcs():
         page_size = int(request.args.get('page_size', 10))
 
         # Get signed URLs (cached)
-        all_metadata = generate_signed_urls_for_resized_validation_set(refresh=False)
+        all_metadata = generate_signed_urls_for_resized_validation_set()
 
         if not all_metadata:
             return jsonify({'success': False, 'error': "No images/masks found."}), 400
@@ -392,7 +382,7 @@ def get_resized_test_image_mask_metadata_from_gcs():
         page_size = int(request.args.get('page_size', 10))
 
         # Get signed URLs (cached)
-        all_metadata = generate_signed_urls_for_resized_test_set(refresh=False)
+        all_metadata = generate_signed_urls_for_resized_test_set()
 
         if not all_metadata:
             return jsonify({'success': False, 'error': "No images/masks found."}), 400

@@ -29,9 +29,9 @@ def transfer_augmented_zip_to_gcs():
             destination_blob_name = google_cloud_config.augmented_dir + '/' + filename
             source_file_name = os.path.join(AUGMENTED_DIR, filename)
 
-            upload_file_to_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
-                                      source_file_name= source_file_name,
-                                      destination_blob_name=destination_blob_name)
+            upload_file_to_gcs_bucket(source_file_name= source_file_name,
+                                      destination_blob_name=destination_blob_name,
+                                      google_cloud_config=google_cloud_config)
 
             return jsonify({'success': True,
                             'message': f"{source_file_name} uploaded to GCS bucket as {destination_blob_name}"}), 200

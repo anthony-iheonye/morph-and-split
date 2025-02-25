@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify
 
-from app.config import google_cloud_config, DIRECTORIES, cors
-from app.services.gcs_client import delete_and_recreate_directories_in_gcs_bucket, delete_google_cloud_storage_bucket
+from app.config import google_cloud_config, DIRECTORIES
 from app.services import create_google_cloud_storage_bucket
+from app.services.gcs_client import delete_and_recreate_directories_in_gcs_bucket, delete_google_cloud_storage_bucket
 
 # Blueprint definition
 gcs_management = Blueprint('gcs_management', __name__)
@@ -12,12 +12,9 @@ def create_bucket():
     try:
 
         # Create Google Cloud Storage
-        create_google_cloud_storage_bucket(bucket_name=google_cloud_config.bucket_name,
-                                           project=google_cloud_config.project_name,
-                                           location=google_cloud_config.location,
-                                           storage_class=google_cloud_config.storage_class,
-                                           cors=cors,
-                                           directories=DIRECTORIES)
+        create_google_cloud_storage_bucket(directories=DIRECTORIES,
+                                           google_cloud_config=google_cloud_config,
+                                           )
 
         return jsonify({'success': True,
                         'message': f"Google cloud Storage bucket "
@@ -31,10 +28,10 @@ def create_bucket():
 def delete_bucket():
     try:
         # Delete Google cloud storage bucket.
-        delete_google_cloud_storage_bucket(bucket_name=google_cloud_config.bucket_name)
+        delete_google_cloud_storage_bucket(google_cloud_config=google_cloud_config)
         return jsonify({'success': True,
                         'message': f"Google Cloud Storage bucket "
-                                   f"{google_cloud_config.bucket_name} deleted successfully. "}), 201
+                                   f"{google_cloud_config.bucket_name} deleted successfully. "}), 200
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
@@ -47,8 +44,8 @@ def delete_uploaded_images():
     """
 
     try:
-        delete_and_recreate_directories_in_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
-                                                    directories=[google_cloud_config.resized_image_dir,])
+        delete_and_recreate_directories_in_gcs_bucket(directories=[google_cloud_config.resized_image_dir,],
+                                                      google_cloud_config=google_cloud_config,)
 
         return jsonify({'success': True,
                         'message': 'Successfully deleted uploaded images in Google Cloud Storage Bucket'}), 200
@@ -64,8 +61,8 @@ def delete_uploaded_masks():
     """
 
     try:
-        delete_and_recreate_directories_in_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
-                                                    directories=[google_cloud_config.resized_mask_dir,])
+        delete_and_recreate_directories_in_gcs_bucket(directories=[google_cloud_config.resized_mask_dir, ],
+                                                      google_cloud_config=google_cloud_config,)
 
         return jsonify({'success': True,
                         'message': 'Successfully deleted uploaded masks in Google Cloud Storage Bucket'}), 200

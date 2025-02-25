@@ -13,7 +13,7 @@ def create_all_directories():
         create_project_directories(return_dir=False, overwrite_if_existing=True)
         create_resized_augmentation_directories(return_dir=False, overwrite_if_existing=True)
 
-        return jsonify({'success': True, 'message': "Project directories created successfully" }), 201
+        return jsonify({'success': True, 'message': "Project directories created successfully" }), 200
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
@@ -40,7 +40,6 @@ def create_mask_directories():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-
 @directory_management.route('/project_directories/delete', methods=['DELETE'])
 def delete_all_directories():
     """
@@ -62,6 +61,7 @@ def delete_uploaded_images():
         return jsonify({'success': True, 'message': "Successfully deleted uploaded images." }), 201
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
 
 @directory_management.route('/project_directory/masks/delete', methods=['DELETE'])
 def delete_uploaded_masks():
