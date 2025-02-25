@@ -1,10 +1,8 @@
 from .augment import DataSplitterAugmenterAndSaver
 from .data_preprocessing import resize_image, resize_images_and_masks, ImageAndMaskCropperResizerAndSaver, \
     ImageCropperResizerAndSaver
-from .gcs_client import (storage_client,
-                         bucket, generate_signed_url,
+from .gcs_client import (generate_signed_url,
                          create_google_cloud_storage_bucket,
-                         delete_files_in_google_cloud_storage_bucket,
                          delete_google_cloud_storage_bucket,
                          delete_and_recreate_directories_in_gcs_bucket,
                          bucket_exists,

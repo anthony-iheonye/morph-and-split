@@ -1,250 +1,340 @@
-import os
+import logging
 import subprocess
 from datetime import timedelta
-from typing import Union
+from typing import Union, Optional
 
 from google.api_core.exceptions import NotFound, GoogleAPIError
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
 from google.oauth2 import service_account
 
-from app.config import google_cloud_config
-from app.utils import current_directory
+from app.config.google_cloud_storage import GoogleCloudStorageConfig
 from app.utils.directory_file_management import sort_filenames
 
-# Path to the service account key
-service_account_path = os.path.join(current_directory(), str(google_cloud_config.service_account_file_name))
+logger = logging.getLogger(__name__)
 
-# Load the service account credentials
-credentials = service_account.Credentials.from_service_account_file(service_account_path)
+# Global bucket variable
+GLOBAL_BUCKET: Optional[storage.Bucket] = None
 
-# Initialize Google Cloud Storage client with service account.
-storage_client = storage.Client(credentials=credentials)
-
-# Get bucket
-bucket = None
-
-
-def create_google_cloud_storage_bucket(bucket_name: str,
-                                       project: str = None,
-                                       location: str = 'us-south1',
-                                       storage_class='STANDARD',
+def create_google_cloud_storage_bucket(bucket_name: Optional[str] = None,
+                                       project: Optional[str] = None,
+                                       location: Optional[str] = None,
+                                       storage_class: Optional[str] = None,
                                        enable_uniform_bucket_level_access: bool = True,
-                                       cors: list = None,
-                                       directories: list = None
-                                       ) -> Union[storage.Bucket, Exception, None]:
+                                       service_account_file_path: Optional[str] =None,
+                                       cors: Optional[list[dict]] = None,
+                                       directories: Optional[list[str]] = None,
+                                       google_cloud_config: Optional[GoogleCloudStorageConfig] = None,
+                                       ) -> Union[storage.Bucket, None]:
     """
-    Create a new Google Cloud Storage (GCS) bucket.
+    Create or update a Google Cloud Storage (GCS) bucket with the given configuration.
 
-    :param directories: List of directories (blob paths) that will be created in the bucket.
-    :param cors: JSON containing the CORS headers
-    :param bucket_name: The bucket name
-    :param project: (str) The project under which the bucket is to be created. If not passed, uses the project set on the client.
-    :param location: (str) Location where the bucket is stored
-    :param storage_class: (str) The storage class. Can either be STANDARD (standard storage),
-        `NEARLINE` (nearline storage), `COLDLINE` (coldline storage) or `ARCHIVE` (archive storage). View detailed description of each storage class visit: https://cloud.google.com/storage/docs/storage-classes#descriptions.
-    :param enable_uniform_bucket_level_access:
-    :return: The GCS bucket
+    If the bucket exists, its configuration is updated; if not, a new bucket is created.
+    Optionally creates empty blobs representing directories in the bucket.
+
+    :param google_cloud_config:
+    :param bucket_name: The bucket name.
+    :param project: The project under which the bucket is to be created.
+    :param location: Location where the bucket is stored.
+    :param storage_class: The storage class, e.g., STANDARD, NEARLINE, COLDLINE, or ARCHIVE.
+    :param enable_uniform_bucket_level_access: Whether to enable uniform bucket-level access.
+    :param service_account_file_path: Path to the service account JSON key file.
+    :param cors: List of dictionaries containing CORS configuration.
+    :param directories: List of directory names (blob paths) to be created in the bucket.
+    :return: The configured GCS bucket or None if an error occurs.
     """
-    global bucket
+    global GLOBAL_BUCKET
+
     try:
+        # Use Google Cloud configuration defaults if provided and parameters are not set.
+        if google_cloud_config:
+            bucket_name = bucket_name or google_cloud_config.bucket_name
+            project = project or google_cloud_config.project_name
+            location = location or google_cloud_config.location
+            storage_class = storage_class or google_cloud_config.storage_class
 
-        # Check if bucket already exists
-        try:
-            bucket = storage_client.get_bucket(bucket_name)
-            print(f"Bucket {bucket_name} already exists. Updating configuration...")
-        except NotFound:
-            print(f"Bucket {bucket_name} does not exist. Creating bucket...")
+            enable_uniform_bucket_level_access = (enable_uniform_bucket_level_access or
+                                                  google_cloud_config.enable_uniform_bucket_level_access or False)
+
+            service_account_file_path = service_account_file_path or google_cloud_config.service_account_file_path
+            cors = cors or google_cloud_config.cors
+            directories = directories or []
+
+        # Prepare credentials if provided; otherwise use default credentials.
+        if service_account_file_path:
+            credentials = service_account.Credentials.from_service_account_file(service_account_file_path)
+            logger.info('Using provided service account credentials.')
+        else:
+            credentials = None
+            logger.info('Using default credentials.')
+
+        storage_client = storage.Client(credentials=credentials, project=project)
+
+        # Check if bucket exist using lookup_bucket
+        bucket = storage_client.lookup_bucket(bucket_name)
+
+        if bucket:
+            logger.info(f"Bucket '{bucket_name}' already exists. Updating configuration...")
+        else:
+            logger.info(f"Bucket '{bucket_name}' does not exist. Creating bucket...")
             # Instantiate a bucket object to be owned by the 'storage_client'.
             bucket = storage_client.bucket(bucket_name)
-            bucket = storage_client.create_bucket(bucket, location=location, project=project)
+            bucket = storage_client.create_bucket(bucket_or_name=bucket,
+                                                  location=location,
+                                                  project=project,
+                                                  timeout=120)
 
+            # Refresh bucket metadata after creation.
+            # The refresh will ensure that the bucket is fully created before creating folders/blobs.
+            #TODO: check it we need to remove the relaod step
+            # bucket.reload()
+            # # time.sleep(3)
+            # #
+
+            # Create directories if provided
             if directories:
                 for directory in directories:
-                    # Add a trailing '/' to signify a folder and create an empty blob
+                    # Append a trailing '/' to signify a folder and create an empty blob
                     blob = bucket.blob(f"{directory}/")
                     blob.upload_from_string("")
+                    logger.info(f"Created directory '{directory}'/ in bucket '{bucket_name}'")
 
         # Update the bucket's storage_class
         if bucket.storage_class != storage_class:
             bucket.storage_class = storage_class
+            logging.info(f"Updated storage class to '{storage_class}'.")
 
         # Update uniform bucket-level access status
         current_access_setting = bucket.iam_configuration.uniform_bucket_level_access_enabled
         if current_access_setting != enable_uniform_bucket_level_access:
             bucket.iam_configuration.uniform_bucket_level_access_enabled = enable_uniform_bucket_level_access
+            logger.info(f"Updated uniform bucket-level access to '{enable_uniform_bucket_level_access}'.")
 
-        # Set the CORS
-        bucket.cors = cors
+        # Update CORS configuraion if provided
+        if cors is not None:
+            bucket.cors = cors
+            logger.info(f"Updated cors configuration to '{cors}'.")
+
 
         # Save changes to the bucket
         bucket.patch()
-        print(f"bucket {bucket_name} is now configured.")
+        logger.info(f"bucket '{bucket_name}' is now configured successfully.")
 
+        GLOBAL_BUCKET = bucket
         return bucket
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.exception(f"An error occurred while creating/updating bucket '{bucket_name}': {e}")
         return None
 
-def get_bucket():
-    """Get the existing bucket."""
-    global bucket
+def get_bucket(bucket_name: Optional[str] = None,
+               project: Optional[str] = None,
+               location: Optional[str] = None,
+               storage_class: Optional[str] = None,
+               enable_uniform_bucket_level_access: bool = True,
+               service_account_file_path: Optional[str] = None,
+               cors: Optional[list[dict]] = None,
+               google_cloud_config: Optional[GoogleCloudStorageConfig] = None,
+               ) -> Union[storage.Bucket, None]:
+    """
+        Retrieves a Google Cloud Storage (GCS) bucket with the given configuration.
+        If the bucket exists, its configuration is updated if needed.
 
-    if bucket is not None:
-        return bucket
+        Defaults for bucket name, project, location, storage class, uniform access,
+        service account file, and CORS configuration are taken from google_cloud_config
+        if provided.
+
+        :param bucket_name: The bucket name (default from config if not provided).
+        :param project: The GCP project (default from config if not provided).
+        :param location: The bucket location (default from config if not provided).
+        :param storage_class: The desired storage class (default from config if not provided).
+        :param enable_uniform_bucket_level_access: Whether to enable uniform bucket-level access.
+        :param service_account_file_path: Path to the service account key file.
+               (default from config if not provided).
+        :param cors: List of CORS configurations (default from config if not provided).
+        :param google_cloud_config: A GoogleCloudStorageConfig instance for defaults.
+        :return: The configured bucket or None if the bucket does not exist.
+    """
+    global GLOBAL_BUCKET
+
+    # Return the cached bucket if already retrieved.
+    if GLOBAL_BUCKET is not None:
+        print(f"Returning cached bucket '{GLOBAL_BUCKET.name}'.")
+        return GLOBAL_BUCKET
 
     try:
-        bucket = storage_client.get_bucket(google_cloud_config.bucket_name)
-        print(f"Refetched bucket {google_cloud_config.bucket_name} ...")
+        # Use Google Cloud configuration defaults if provided and parameters are not set.
+        if google_cloud_config:
+            bucket_name = bucket_name or google_cloud_config.bucket_name
+            project = project or google_cloud_config.project_name
+            location = location or google_cloud_config.location
+            storage_class = storage_class or google_cloud_config.storage_class
+
+            enable_uniform_bucket_level_access = (enable_uniform_bucket_level_access or
+                                                  google_cloud_config.enable_uniform_bucket_level_access or False)
+
+            service_account_file_path = service_account_file_path or google_cloud_config.service_account_file_path
+            cors = cors or google_cloud_config.cors
+
+        # Prepare credentials if provided; otherwise use default credentials.
+        if service_account_file_path:
+            credentials = service_account.Credentials.from_service_account_file(service_account_file_path)
+            logger.info(f"Using provided service account credentials from '{service_account_file_path}'.")
+        else:
+            credentials = None
+            logger.info('Using default credentials.')
+
+        # Initialize the storage client.
+        storage_client = storage.Client(credentials=credentials, project=project)
+
+        # Check if bucket exist using lookup_bucket
+        bucket = storage_client.lookup_bucket(bucket_name)
+
+        if not bucket:
+            print(f"Bucket '{bucket_name}' does not exist.")
+            return None
+
+        # Update configuration if needed.
+        needs_update = False
+
+        # Check and Update the bucket's storage_class
+        if bucket.storage_class != storage_class:
+            bucket.storage_class = storage_class
+            logging.info(f"Updated storage class to '{storage_class}'.")
+            needs_update = True
+
+        # Update uniform bucket-level access status
+        current_access_setting = bucket.iam_configuration.uniform_bucket_level_access_enabled
+        if current_access_setting != enable_uniform_bucket_level_access:
+            bucket.iam_configuration.uniform_bucket_level_access_enabled = enable_uniform_bucket_level_access
+            logger.info(f"Updated uniform bucket-level access to '{enable_uniform_bucket_level_access}'.")
+            needs_update = True
+
+        # Update CORS configuration if provided
+        if cors is not None:
+            if bucket.cors != cors:
+                bucket.cors = cors
+                logger.info(f"Updated cors configuration to '{cors}'.")
+                needs_update = True
+
+
+        # Save changes to the bucket
+        if needs_update:
+            bucket.patch()
+            logger.info(f"bucket '{bucket_name}' is now configured successfully.")
+        else:
+            logger.info(f"No configuration changes needed for bucket '{bucket_name}'.")
+
+        # Cache the bucket for future calls.
+        GLOBAL_BUCKET = bucket
         return bucket
-    except NotFound:
-        print(f'Bucket {google_cloud_config.bucket_name} does not exist.')
+
+    except Exception as e:
+        logger.exception(f"An error occurred while retrieving bucket '{bucket_name}': {e}")
         return None
+
+
+def create_directories_in_bucket(bucket_name: str,
+                                 directories: list[str],
+                                 project: Optional[str] = None,
+                                 location: Optional[str] = None,
+                                 storage_class: Optional[str] = None,
+                                 enable_uniform_bucket_level_access: bool = True,
+                                 service_account_file_path: Optional[str] = None,
+                                 cors: Optional[list[dict]] = None,
+                                 google_cloud_config: Optional[GoogleCloudStorageConfig] = None,
+                                 ) -> Union[storage.Bucket, None]:
+    """
+    Add directories to a Google Cloud Storage (GCS) bucket with the given configuration.
+
+    If the bucket exists, its configuration is updated.
+
+    :param bucket_name: The name of the GCS bucket. If not provided, the value from google_cloud_config.bucket_name is used.
+    :param directories: A list of directory names (blob paths) to be created in the bucket. Each directory is simulated
+                        by creating an empty blob with a trailing '/'.
+    :param project: The GCP project under which the bucket is to be created. Defaults to google_cloud_config.project_name
+                    if not provided.
+    :param location: The geographic location where the bucket is stored. Defaults to google_cloud_config.location if not provided.
+    :param storage_class: The desired storage class for the bucket (e.g., STANDARD, NEARLINE, COLDLINE, ARCHIVE).
+                          Defaults to google_cloud_config.storage_class if not provided.
+    :param enable_uniform_bucket_level_access: Whether to enable uniform bucket-level access. Defaults to True or the
+                                                 value specified in google_cloud_config.enable_uniform_bucket_level_access.
+    :param service_account_file_path: The file path to the service account JSON key. If not provided, the value from
+                                      google_cloud_config.service_account_file_path is used.
+    :param cors: A list of dictionaries defining the CORS configuration for the bucket.
+                 Defaults to google_cloud_config.cors if not provided.
+    :param google_cloud_config: An optional configuration object containing default values for bucket name, project,
+                                location, storage class, uniform bucket-level access, service account file path, and CORS settings.
+                                Any parameter not explicitly provided will fall back to the corresponding attribute from this object.
+
+    :return: The configured GCS bucket if the operation is successful; if the bucket does not exist, returns None.    """
+    try:
+        bucket = get_bucket(bucket_name=bucket_name,
+                            project=project,
+                            location=location,
+                            storage_class=storage_class,
+                            enable_uniform_bucket_level_access=enable_uniform_bucket_level_access,
+                            service_account_file_path=service_account_file_path,
+                            cors=cors,
+                            google_cloud_config=google_cloud_config)
+
+        if bucket is not None:
+            if directories:
+                for directory in directories:
+                    # Append a trailing '/' to signify a folder and create an empty blob
+                    blob = bucket.blob(f"{directory}/")
+                    blob.upload_from_string("")
+                    logger.info(f"Created directory '{directory}'/ in bucket '{bucket_name}'")
+        return bucket
+
+    except Exception as e:
+        print(e)
 
 
 def generate_signed_url(blob_name: str,
+                        google_cloud_config: GoogleCloudStorageConfig,
                         method: str ='GET',
                         expiration: int =60,
-                        content_type: str=None):
+                        content_type: Optional[str]=None,
+                        ):
     """
     Generate a signed URL for a GCS blob.
 
     :param blob_name: The name of the blob.
+    :param google_cloud_config: A GoogleCloudStorageConfig instance for defaults.
     :param method: The HTTP method to use (e.g. 'PUT', 'GET').
     :param expiration: The expiration of the URL in minutes.
     :param content_type: The content type of the URL, (e.g. 'application/octet-stream').
+    :return: A secure signed url
     """
-    blob = get_bucket().blob(blob_name)
+    bucket = get_bucket(google_cloud_config=google_cloud_config)
+    blob = bucket.blob(blob_name)
+
     return blob.generate_signed_url(version="v4",
                                     expiration=timedelta(minutes=expiration),
                                     method=method,
-                                    content_type=content_type
-    )
+                                    content_type=content_type)
 
 
-def delete_files_in_google_cloud_storage_bucket(bucket_name: str,
-                                                project: str = None,
-                                                location: str = 'us-south1',
-                                                storage_class='STANDARD',
-                                                enable_uniform_bucket_level_access: bool = True,
-                                                cors: list = None,
-                                                directories: list = None
-                                                ) -> Union[storage.Bucket, Exception, None]:
-    """
-    Delete files in the Google Cloud Bucket folders.
-
-    :param directories:
-    :param cors:
-    :param bucket_name: The bucket name
-    :param project: (str) The project under which the bucket is to be created. If not passed, uses the project set on the client.
-    :param location: (str) Location where the bucket is stored
-    :param storage_class: (str) The storage class. Can either be STANDARD (standard storage),
-        `NEARLINE` (nearline storage), `COLDLINE` (coldline storage) or `ARCHIVE` (archive storage).
-        View detailed description of each storage class visit: https://cloud.google.com/storage/docs/storage-classes#descriptions.
-    :param enable_uniform_bucket_level_access:
-    :return: The GCS bucket
-    """
-
-    try:
-        # Initialize the storage client
-        storage_client = storage.Client()
-
-        # Check if bucket already exists
-        try:
-            bucket = storage_client.get_bucket(bucket_name)
-            print(f"Bucket {bucket_name} already exists. Updating configuration...")
-        except NotFound:
-            print(f"Bucket {bucket_name} does not exist. Creating bucket...")
-            # Instantiate a bucket object to be owned by the 'storage_client'.
-            bucket = storage_client.bucket(bucket_name)
-            bucket = storage_client.create_bucket(bucket, location=location, project=project)
-
-        if directories:
-            for directory in directories:
-                # Add a trailing '/' to signify a folder and create an empty blob
-                blob = bucket.blob(f"{directory}/")
-                blob.upload_from_string("")
-
-        # Update the bucket's storage_class
-        if bucket.storage_class != storage_class:
-            bucket.storage_class = storage_class
-
-        # Update uniform bucket-level access status
-        current_access_setting = bucket.iam_configuration.uniform_bucket_level_access_enabled
-        if current_access_setting != enable_uniform_bucket_level_access:
-            bucket.iam_configuration.uniform_bucket_level_access_enabled = enable_uniform_bucket_level_access
-
-        # Set the CORS
-        bucket.cors = cors
-
-        # Save changes to the bucket
-        bucket.patch()
-        print(f"bucket {bucket_name} is now configured.")
-
-        return bucket
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
-
-
-def delete_and_recreate_directories_in_gcs_bucket(bucket_name: str, directories: list):
-    """
-    Deletes a directory (and all its contents) in a Google Cloud Storage bucket
-    and recreates the directory.
-
-    :param bucket_name: (str) The name of the GCS bucket.
-    :param directories: (list) A list containing the directories to delete and recreate.
-    :return: Success or Failure message
-    """
-
-    try:
-        # Initialize the storage client
-        # storage_client = storage.Client()
-
-        # Get the bucket
-        bucket = storage_client.get_bucket(bucket_name)
-
-        for directory in directories:
-            # List all blobs in the directory
-            blobs = list(bucket.list_blobs(prefix=f"{directory}/"))
-
-            if not blobs:
-                raise FileNotFoundError(f"Directory '{directory}' does not exist in bucket {bucket_name}.")
-
-            # Delete all blobs in the directory
-            bucket.delete_blobs(blobs)
-            print(f"Deleted all contents of directory '{directory}'.")
-
-            # Recreate the directory by uploading an empty blob
-            empty_blob = bucket.blob(f"{directory}/")
-            empty_blob.upload_from_string("")
-            print(f"Recreated empty directory '{directory}'.")
-
-
-    except NotFound:
-        print(f"Bucket '{bucket_name}' does not exist.")
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        raise
-
-
-def delete_google_cloud_storage_bucket(bucket_name: str):
+def delete_google_cloud_storage_bucket(google_cloud_config: Optional[GoogleCloudStorageConfig] ):
     """
     Deletes a new bucket in the US region with the STANDARD storage class.
     """
+    global GLOBAL_BUCKET
 
+    bucket_name = google_cloud_config.bucket_name
     try:
+
         # Initialize storage client
-        storage_client = storage.Client()
+        credentials = service_account.Credentials.from_service_account_file(google_cloud_config.service_account_file_path)
+        storage_client = storage.Client(project=google_cloud_config.project_name,
+                                        credentials=credentials)
 
         # Check if the bucket exists
         bucket = storage_client.lookup_bucket(bucket_name)
 
         if bucket is None:
-            print(f"Bucket {bucket_name} does not exist.")
+            logger.info(f"Bucket {bucket_name} does not exist.")
             return False
 
         # Delete the bucket
@@ -261,12 +351,59 @@ def delete_google_cloud_storage_bucket(bucket_name: str):
         result = subprocess.run(gcloud_command, check=True, capture_output=True)
 
         print({result.stdout.decode('utf-8')})
-        print(f"Successfully deleted bucket {bucket_name}.")
+        logging.info(f"Successfully deleted bucket {bucket_name}.")
+
+        GLOBAL_BUCKET = None
         return True
 
     except GoogleAPIError as e:
         print(f"An error occurred while deleting the bucket: {e}")
         return False
+
+
+def delete_and_recreate_directories_in_gcs_bucket(directories: list,
+                                                  google_cloud_config: GoogleCloudStorageConfig,
+                                                  ):
+    """
+    Deletes a directory (and all its contents) in a Google Cloud Storage bucket
+    and recreates the directory.
+
+    :param directories: (list) A list containing the directories to delete and recreate.
+    :param google_cloud_config: An optional configuration object containing default values for bucket name, project,
+                                location, storage class, uniform bucket-level access, service account file path, and CORS settings.
+                                Any parameter not explicitly provided will fall back to the corresponding attribute from this object.
+    :return: Success or Failure message
+    """
+
+    bucket_name = google_cloud_config.bucket_name
+    try:
+        # Use Google Cloud configuration defaults if provided and parameters are not set.
+
+        # Get the bucket
+        bucket = get_bucket(google_cloud_config=google_cloud_config)
+
+        for directory in directories:
+            # List all blobs in the directory
+            blobs = list(bucket.list_blobs(prefix=f"{directory}/"))
+
+            if not blobs:
+                raise FileNotFoundError(f"Directory '{directory}' does not exist in bucket {bucket_name}.")
+
+            # Delete all blobs in the directory
+            bucket.delete_blobs(blobs)
+            logging.info(f"Deleted all contents of directory '{directory}'.")
+
+            # Recreate the directory by uploading an empty blob
+            empty_blob = bucket.blob(f"{directory}/")
+            empty_blob.upload_from_string("")
+            logging.info(f"Recreated empty directory '{directory}'.")
+
+    except NotFound:
+        logging.info(f"Bucket '{bucket_name}' does not exist.")
+
+    except Exception as e:
+        logger.info(f"An error occurred: {e}")
+        raise
 
 
 def bucket_exists(bucket_name: str) -> bool:
@@ -296,45 +433,55 @@ def bucket_exists(bucket_name: str) -> bool:
         return False
 
 
-def list_files_in_bucket_directory(bucket_name: str, directory_path:str) -> list:
+def list_files_in_bucket_directory(directory_path:str,
+                                   google_cloud_config: GoogleCloudStorageConfig) -> list:
     """
     List the names of specific files within a directory in a Google Cloud Storage bucket.
 
-    :param bucket_name: (str) The bucket name
+    :param google_cloud_config:
     :param directory_path: (str) Path to the directory whose files should be listed.
     :return: List of file names.
     """
+    project_name = google_cloud_config.project_name or None
+    credentials = service_account.Credentials.from_service_account_file(google_cloud_config.service_account_file_path) or None
+    bucket_name = google_cloud_config.bucket_name
 
-    storage_client = storage.Client()
+    storage_client = storage.Client(project=project_name, credentials=credentials)
 
     # list all blobs (files) in teh specific directory
     blobs = storage_client.list_blobs(bucket_or_name=bucket_name,
                                       prefix=directory_path,
                                       delimiter='/')
+
     return sort_filenames([blob.name.split('/')[-1] for blob in blobs if not blob.name.endswith("/")])
 
 
-def upload_file_to_gcs_bucket(bucket_name:str, source_file_name:str, destination_blob_name:str):
+def upload_file_to_gcs_bucket(source_file_name:str,
+                              destination_blob_name:str,
+                              google_cloud_config: GoogleCloudStorageConfig):
     """
     Uploads a file to blob within a Google Cloud Storage bucket.
 
-    :param bucket_name: (str) The name of the GCS bucket.
+    :param google_cloud_config:
     :param source_file_name: (str) Path to the file to be uploaded.
     :param destination_blob_name: Name of the blob object in the bucket.
     """
 
     # Instantiate bucket object linked to the client
-    bucket = get_bucket()
+    bucket = get_bucket(google_cloud_config=google_cloud_config)
 
     # Instantiate existing blob
     blob = bucket.blob(destination_blob_name)
 
     # upload file to blob
     blob.upload_from_filename(source_file_name)
-    print(f"File {source_file_name} uploaded to {destination_blob_name}.")
+    logging.info(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
 
-def download_files_from_gcs_folder(bucket_name: str, source_folder_path: str, destination_folder_path: str, copy= True):
+def download_files_from_gcs_folder(bucket_name: str,
+                                   source_folder_path: str,
+                                   destination_folder_path: str,
+                                   copy= True):
     """
     Copies or moves files/folder from a Google Cloud Storage bucket to a local directory
 
@@ -363,7 +510,10 @@ def download_files_from_gcs_folder(bucket_name: str, source_folder_path: str, de
         return e.stderr
 
 
-def upload_files_to_gcs_bucket(bucket_name: str, source_folder_path: str, destination_folder_path: str, copy=True):
+def upload_files_to_gcs_bucket(bucket_name: str,
+                               source_folder_path: str,
+                               destination_folder_path: str,
+                               copy=True):
     """
     Copies or moves files/folder from a local directory to a Google Cloud Storage bucket.
 
