@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+import logging
 
 from app.routes import (
     augment,
@@ -21,6 +22,9 @@ from app.routes import (
 
 
 def create_app():
+    # Set up logging to DEBUG mode
+    # logging.basicConfig(level=logging.INFO)
+
     # Flask app setup
     app = Flask(__name__)
     CORS(app)

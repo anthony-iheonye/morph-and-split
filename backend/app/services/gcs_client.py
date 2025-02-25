@@ -84,13 +84,6 @@ def create_google_cloud_storage_bucket(bucket_name: Optional[str] = None,
                                                   project=project,
                                                   timeout=120)
 
-            # Refresh bucket metadata after creation.
-            # The refresh will ensure that the bucket is fully created before creating folders/blobs.
-            #TODO: check it we need to remove the relaod step
-            # bucket.reload()
-            # # time.sleep(3)
-            # #
-
             # Create directories if provided
             if directories:
                 for directory in directories:
@@ -110,7 +103,7 @@ def create_google_cloud_storage_bucket(bucket_name: Optional[str] = None,
             bucket.iam_configuration.uniform_bucket_level_access_enabled = enable_uniform_bucket_level_access
             logger.info(f"Updated uniform bucket-level access to '{enable_uniform_bucket_level_access}'.")
 
-        # Update CORS configuraion if provided
+        # Update CORS configuration if provided
         if cors is not None:
             bucket.cors = cors
             logger.info(f"Updated cors configuration to '{cors}'.")
