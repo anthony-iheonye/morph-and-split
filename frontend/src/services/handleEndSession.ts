@@ -30,6 +30,18 @@ const handleEndSession = async ({
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "/project_directories/delete"
   );
+  const resetUploadedDataURLClient = new APIClient<BackendResponse>(
+    "reset-signed-urls-for-resized-images-and-masks"
+  );
+  const resetTrainSetURLClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-train-set"
+  );
+  const resetValSetURLClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-validation-set"
+  );
+  const resetTestSetURLClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-test-set"
+  );
 
   try {
     setBackendResponseLog("isShuttingDown", true);
@@ -39,6 +51,40 @@ const handleEndSession = async ({
       throw new CustomError(
         "Bucket Deletion Failed",
         "Failed to delete Google Cloud Storage Bucket"
+      );
+    }
+
+    const resetUploadedDataSignedUrls =
+      await resetUploadedDataURLClient.executeAction();
+    if (!resetUploadedDataSignedUrls.success) {
+      throw new CustomError(
+        "Resetting signed URLs",
+        "Failed to reset signed urls for resized images and mask."
+      );
+    }
+
+    const resetTrainSetSignedUrls =
+      await resetTrainSetURLClient.executeAction();
+    if (!resetTrainSetSignedUrls.success) {
+      throw new CustomError(
+        "Resetting Training Set Signed URLs",
+        "Failed to reset signed urls for training set."
+      );
+    }
+
+    const resetValSetSignedUrls = await resetValSetURLClient.executeAction();
+    if (!resetValSetSignedUrls.success) {
+      throw new CustomError(
+        "Resetting Validation Set Signed URLs",
+        "Failed to reset signed urls for validation set."
+      );
+    }
+
+    const resetTestSetSignedUrls = await resetTestSetURLClient.executeAction();
+    if (!resetTestSetSignedUrls.success) {
+      throw new CustomError(
+        "Resetting Testing Set Signed URLs",
+        "Failed to reset signed urls for testing set."
       );
     }
 

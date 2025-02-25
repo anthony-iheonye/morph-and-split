@@ -1,6 +1,6 @@
 import { ToastId, UseToastOptions } from "@chakra-ui/react";
 import { QueryClient } from "@tanstack/react-query";
-import { CustomError } from "../entities";
+import { BackendResponse, CustomError } from "../entities";
 import { BackendResponseLog } from "../store";
 import APIClient from "./api-client";
 import invalidateQueries from "./invalidateQueries";
@@ -31,6 +31,10 @@ const handleDeleteImages = async ({
     "/gcs/resized_original_images/delete"
   );
 
+  const resetURLsClient = new APIClient<BackendResponse>(
+    "reset-signed-urls-for-resized-images-and-masks"
+  );
+
   try {
     setBackendResponseLog("deletingImages", true);
     // Delete image from backend storage
@@ -59,6 +63,15 @@ const handleDeleteImages = async ({
       throw new CustomError(
         "Resized Image Directory Creation Failed",
         "Failed to create new resized images directory."
+      );
+    }
+
+    // reset signed URLs for uploaded images and masks.
+    const resetSignedUrls = await resetURLsClient.executeAction();
+    if (!resetSignedUrls.success) {
+      throw new CustomError(
+        "Resetting signed URLs",
+        "Failed to reset signed urls for resized images and mask ."
       );
     } else {
       invalidateQueries(queryClient, ["imageNames"]);

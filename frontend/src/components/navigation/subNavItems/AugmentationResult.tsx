@@ -3,6 +3,7 @@ import {
   subParentNames,
   useActiveNavColor,
   useActiveSubParent,
+  useAugmentationIsComplete,
   useBackendResponse,
 } from "../../../hooks";
 import SubNavBarItem from "./SubNavBarItem";
@@ -12,6 +13,7 @@ const AugmentationResult = () => {
   const activeSubParent = useActiveSubParent();
   const { previewResult } = subParentNames;
   const { augmentationIsRunning } = useBackendResponse();
+  const { data: augmentationCompleted } = useAugmentationIsComplete();
 
   return (
     <SubNavBarItem
@@ -23,7 +25,7 @@ const AugmentationResult = () => {
         activeSubParent === previewResult ? subParentColor : "transparent"
       }
       tooltipLabel="Preveiw augmentation data"
-      disabled={augmentationIsRunning}
+      disabled={augmentationIsRunning || !augmentationCompleted?.success}
     />
   );
 };

@@ -34,6 +34,16 @@ const handleAugment = async ({
     "/gcs/transfer_resized_augmented_data_to_gcs"
   );
 
+  const resetTrainSetURLClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-train-set"
+  );
+  const resetValSetURLClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-validation-set"
+  );
+  const resetTestSetURLClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-test-set"
+  );
+
   // Prepare FormData
   const formData = new FormData();
   if (augConfig.visualAttributesJSONFile?.file)
@@ -69,9 +79,33 @@ const handleAugment = async ({
       );
     }
 
+    const resetTrainSetSignedUrls =
+      await resetTrainSetURLClient.executeAction();
+    if (!resetTrainSetSignedUrls.success) {
+      throw new CustomError(
+        "Resetting Training Set Signed URLs",
+        "Failed to reset signed urls for training set."
+      );
+    }
+
+    const resetValSetSignedUrls = await resetValSetURLClient.executeAction();
+    if (!resetValSetSignedUrls.success) {
+      throw new CustomError(
+        "Resetting Validation Set Signed URLs",
+        "Failed to reset signed urls for validation set."
+      );
+    }
+
+    const resetTestSetSignedUrls = await resetTestSetURLClient.executeAction();
+    if (!resetTestSetSignedUrls.success) {
+      throw new CustomError(
+        "Resetting Testing Set Signed URLs",
+        "Failed to reset signed urls for testing set."
+      );
+    }
+
     // Transfer resized augmented data to Google cloud storage bucket
     const resizeDataTransfer = await ResizedDataTransferAPI.postData();
-
     if (!resizeDataTransfer.success) {
       throw new CustomError(
         "Resized Augmented Data Transfer",
