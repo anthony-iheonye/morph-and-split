@@ -1,8 +1,7 @@
-from datetime import timedelta
-
 from flask import Blueprint, request, jsonify
 
-from app.services import bucket, generate_signed_url
+from app.config import google_cloud_config
+from app.services import generate_signed_url
 
 signed_upload_urls = Blueprint('signed_upload_urls', __name__)
 
@@ -25,7 +24,8 @@ def generate_signed_upload_urls():
 
             url = generate_signed_url(blob_name=f"{folder_path}/{filename}",
                                       method="PUT",
-                                      content_type=content_type)
+                                      content_type=content_type,
+                                      google_cloud_config=google_cloud_config)
 
             signed_urls.append({"filename": filename, "url": url, "content_type": content_type})
 

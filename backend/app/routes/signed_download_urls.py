@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from flask import Blueprint, jsonify, request
 from werkzeug.utils import secure_filename
 
@@ -10,10 +8,10 @@ from app.utils import get_sorted_filenames, directory_store
 signed_download_urls = Blueprint('signed_download_urls', __name__)
 
 # Global Cache to store signed URLs
-cached_signed_urls_for_uploaded_data = None
-cached_signed_urls_for_train_set = None
-cached_signed_urls_for_val_set = None
-cached_signed_urls_for_test_set = None
+SIGNED_RESIZED_IMAGE_MASK_URLS = None
+SIGNED_TRAINING_SET_URLS = None
+SIGNED_VALIDATION_SET_URLS = None
+SIGNED_TESTING_SET_URLS = None
 
 
 @signed_download_urls.route('/generate-signed-download-url', methods=['GET'])
@@ -31,7 +29,9 @@ def generate_signed_download_urls():
         signed_urls = []
         for filename in filenames:
             secure_file = secure_filename(filename)
-            url = generate_signed_url(f"{google_cloud_config.augmented_dir}/{secure_file}")
+            url = generate_signed_url(
+                blob_name = f"{google_cloud_config.augmented_dir}/{secure_file}",
+                google_cloud_config = google_cloud_config,)
 
             signed_urls.append({"filename": filename, "url": url})
 
@@ -44,12 +44,14 @@ def generate_signed_download_urls():
 
 
 @signed_download_urls.route('/generate-signed-urls-for-resized-images-and-masks', methods=['GET'])
-def generate_signed_urls_for_resized_images_and_masks(refresh=True):
+def generate_signed_urls_for_resized_images_and_masks():
     """Generate signed url for downloading the resized uploaded images and masks from GCS bucket."""
 
-    global cached_signed_urls_for_uploaded_data
-    if cached_signed_urls_for_uploaded_data and not refresh:
-        return cached_signed_urls_for_uploaded_data  # Return cached URLs if already generated
+    global SIGNED_RESIZED_IMAGE_MASK_URLS
+
+    if SIGNED_RESIZED_IMAGE_MASK_URLS is not None:
+        print(f"Returning signed URLs for resized images and masks")
+        return SIGNED_RESIZED_IMAGE_MASK_URLS  # Return cached URLs if already generated
 
     try:
         image_names = get_sorted_filenames(directory_path=directory_store.image_dir)
@@ -63,14 +65,18 @@ def generate_signed_urls_for_resized_images_and_masks(refresh=True):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
 
-            image_url = generate_signed_url(f"{google_cloud_config.resized_image_dir}/{secure_image_name}")
-            mask_url = generate_signed_url(f"{google_cloud_config.resized_mask_dir}/{secure_mask_name}")
+            image_url = generate_signed_url(
+                blob_name = f"{google_cloud_config.resized_image_dir}/{secure_image_name}",
+                google_cloud_config=google_cloud_config)
+            mask_url = generate_signed_url(
+                blob_name = f"{google_cloud_config.resized_mask_dir}/{secure_mask_name}",
+                google_cloud_config=google_cloud_config)
 
             signed_urls.append({"image": {"name": image_name, "url": image_url},
                                 "mask": {"name": mask_name, "url": mask_url}})
 
         # Store in cache
-        cached_signed_urls_for_uploaded_data = signed_urls
+        SIGNED_RESIZED_IMAGE_MASK_URLS = signed_urls
 
         return signed_urls
 
@@ -80,13 +86,14 @@ def generate_signed_urls_for_resized_images_and_masks(refresh=True):
 
 
 @signed_download_urls.route('/generate-signed-urls-for-resized-augmented-train-set', methods=['GET'])
-def generate_signed_urls_for_resized_train_set(refresh=True):
+def generate_signed_urls_for_resized_train_set():
     """Generate signed url for downloading the resized training images and masks from GCS bucket."""
 
-    global cached_signed_urls_for_train_set
+    global SIGNED_TRAINING_SET_URLS
 
-    if cached_signed_urls_for_train_set and not refresh:
-        return cached_signed_urls_for_train_set  # Return cached URLs if already generated
+    if SIGNED_TRAINING_SET_URLS and not None:
+        print(f"Returning signed URLs for resized training images and masks")
+        return SIGNED_TRAINING_SET_URLS  # Return cached URLs if already generated
 
     try:
         image_names = get_sorted_filenames(directory_path=directory_store.train_image_dir)
@@ -100,14 +107,18 @@ def generate_signed_urls_for_resized_train_set(refresh=True):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
 
-            image_url = generate_signed_url(f"{google_cloud_config.resized_train_images_dir}/{secure_image_name}")
-            mask_url = generate_signed_url(f"{google_cloud_config.resized_train_masks_dir}/{secure_mask_name}")
+            image_url = generate_signed_url(
+                blob_name = f"{google_cloud_config.resized_train_images_dir}/{secure_image_name}",
+                google_cloud_config=google_cloud_config)
+            mask_url = generate_signed_url(
+                blob_name = f"{google_cloud_config.resized_train_masks_dir}/{secure_mask_name}",
+                google_cloud_config=google_cloud_config)
 
             signed_urls.append({"image": {"name": image_name, "url": image_url},
                                 "mask": {"name": mask_name, "url": mask_url}})
 
         # Store in cache
-        cached_signed_urls_for_train_set = signed_urls
+        SIGNED_TRAINING_SET_URLS = signed_urls
 
         return signed_urls
 
@@ -117,12 +128,13 @@ def generate_signed_urls_for_resized_train_set(refresh=True):
 
 
 @signed_download_urls.route('/generate-signed-urls-for-resized-augmented-validation-set', methods=['GET'])
-def generate_signed_urls_for_resized_validation_set(refresh=True):
+def generate_signed_urls_for_resized_validation_set():
     """Generate signed url for downloading the resized augmented validation images and masks from GCS bucket."""
-    global cached_signed_urls_for_val_set
+    global SIGNED_VALIDATION_SET_URLS
 
-    if cached_signed_urls_for_val_set and not refresh:
-        return cached_signed_urls_for_val_set  # Return cached URLs if already generated
+    if SIGNED_VALIDATION_SET_URLS and not None:
+        print(f"Returning signed URLs for resized validation images and masks")
+        return SIGNED_VALIDATION_SET_URLS  # Return cached URLs if already generated
 
     try:
         image_names = get_sorted_filenames(directory_path=directory_store.val_image_dir)
@@ -136,14 +148,18 @@ def generate_signed_urls_for_resized_validation_set(refresh=True):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
 
-            image_url = generate_signed_url(f"{google_cloud_config.resized_val_images_dir}/{secure_image_name}")
-            mask_url = generate_signed_url(f"{google_cloud_config.resized_val_masks_dir}/{secure_mask_name}")
+            image_url = generate_signed_url(
+                blob_name=f"{google_cloud_config.resized_val_images_dir}/{secure_image_name}",
+                google_cloud_config=google_cloud_config)
+            mask_url = generate_signed_url(
+                blob_name=f"{google_cloud_config.resized_val_masks_dir}/{secure_mask_name}",
+                google_cloud_config=google_cloud_config)
 
             signed_urls.append({"image": {"name": image_name, "url": image_url},
                                 "mask": {"name": mask_name, "url": mask_url}})
 
         # Store in cache
-        cached_signed_urls_for_val_set = signed_urls
+        SIGNED_VALIDATION_SET_URLS = signed_urls
 
         return signed_urls
 
@@ -153,12 +169,13 @@ def generate_signed_urls_for_resized_validation_set(refresh=True):
 
 
 @signed_download_urls.route('/generate-signed-urls-for-resized-augmented-test-set', methods=['GET'])
-def generate_signed_urls_for_resized_test_set(refresh=True):
+def generate_signed_urls_for_resized_test_set():
     """Generate signed url for downloading the resized augmented test images and masks from GCS bucket."""
-    global cached_signed_urls_for_test_set
+    global SIGNED_TESTING_SET_URLS
 
-    if cached_signed_urls_for_test_set and not refresh:
-        return cached_signed_urls_for_test_set  # Return cached URLs if already generated
+    if SIGNED_TESTING_SET_URLS and not None:
+        print(f"Returning signed URLs for resized test images and masks")
+        return SIGNED_TESTING_SET_URLS  # Return cached URLs if already generated
 
     try:
         image_names = get_sorted_filenames(directory_path=directory_store.test_image_dir)
@@ -172,19 +189,71 @@ def generate_signed_urls_for_resized_test_set(refresh=True):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
 
-            image_url = generate_signed_url(f"{google_cloud_config.resized_test_images_dir}/{secure_image_name}")
-            mask_url = generate_signed_url(f"{google_cloud_config.resized_test_masks_dir}/{secure_mask_name}")
+            image_url = generate_signed_url(
+                blob_name=f"{google_cloud_config.resized_test_images_dir}/{secure_image_name}",
+                google_cloud_config=google_cloud_config)
+            mask_url = generate_signed_url(
+                blob_name=f"{google_cloud_config.resized_test_masks_dir}/{secure_mask_name}",
+                google_cloud_config=google_cloud_config)
 
             signed_urls.append({"image": {"name": image_name, "url": image_url},
                                 "mask": {"name": mask_name, "url": mask_url}})
 
         # Store in cache
-        cached_signed_urls_for_test_set = signed_urls
+        SIGNED_TESTING_SET_URLS = signed_urls
 
         return signed_urls
 
     except Exception as e:
         print(f"Error generating signed urls for resized testing set: {e}")
         return []
+
+
+@signed_download_urls.route('/reset-signed-urls-for-resized-images-and-masks', methods=['POST'])
+def reset_signed_urls_for_resized_images_and_masks():
+    global SIGNED_RESIZED_IMAGE_MASK_URLS
+
+    try:
+        SIGNED_RESIZED_IMAGE_MASK_URLS = None
+        return jsonify({'success': True, 'message': f"Success resetting signed urls for resized images and masks"})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': f"Error resetting signed urls for resized images and masks: {e}"})
+
+
+@signed_download_urls.route('/reset-signed-urls-for-resized-train-set', methods=['POST'])
+def reset_signed_urls_for_resized_train_set():
+    global SIGNED_TRAINING_SET_URLS
+
+    try:
+        SIGNED_TRAINING_SET_URLS = None
+        return jsonify({'success': True, 'message': f"Success resetting signed urls for resized training set"})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': f"Error resetting signed urls for resized training set: {e}"})
+
+
+@signed_download_urls.route('/reset-signed-urls-for-resized-validation-set', methods=['POST'])
+def reset_signed_urls_for_resized_validation_set():
+    global SIGNED_VALIDATION_SET_URLS
+
+    try:
+        SIGNED_VALIDATION_SET_URLS = None
+        return jsonify({'success': True, 'message': f"Success resetting signed urls for resized validation set."})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': f"Error resetting signed urls for resized validation set.: {e}"})
+
+
+@signed_download_urls.route('/reset-signed-urls-for-resized-test-set', methods=['POST'])
+def reset_signed_urls_for_resized_test_set():
+    global SIGNED_TESTING_SET_URLS
+
+    try:
+        SIGNED_TESTING_SET_URLS = None
+        return jsonify({'success': True, 'message': f"Success resetting signed urls for resized testing set"})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': f"Error resetting signed urls for resized testing set: {e}"})
 
 
