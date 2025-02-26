@@ -1,4 +1,4 @@
-export default interface VisualAttributeJSONFile {
+export default interface StratificationDataFile {
   name: string;
   file: File | null;
 }

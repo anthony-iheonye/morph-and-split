@@ -3,7 +3,7 @@ import { useVisualAttributesFile } from "../../hooks";
 
 const VisualAttributeFilePicker = () => {
   const { error, augConfig, handleFileChange } = useVisualAttributesFile();
-  const fileName = augConfig.visualAttributesJSONFile?.name;
+  const fileName = augConfig.stratificationDataFile?.name;
 
   return (
     <VStack>

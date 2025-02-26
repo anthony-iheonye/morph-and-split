@@ -46,14 +46,14 @@ const handleAugment = async ({
 
   // Prepare FormData
   const formData = new FormData();
-  if (augConfig.visualAttributesJSONFile?.file)
+  if (augConfig.stratificationDataFile?.file)
     formData.append(
-      "visualAttributesJSONFile",
-      augConfig.visualAttributesJSONFile.file
+      "stratificationDataFile",
+      augConfig.stratificationDataFile.file
     );
 
-  // Exclude visual attribute file from config and add reduced config
-  const { visualAttributesJSONFile, ...reducedConfig } = augConfig; // Destruture to exclude
+  // Exclude stratification data file from config and add reduced config
+  const { stratificationDataFile, ...reducedConfig } = augConfig; // Destruture to exclude
   formData.append("config", JSON.stringify(reducedConfig)); // Add only the reduced
 
   try {

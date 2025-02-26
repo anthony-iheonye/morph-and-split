@@ -8,7 +8,7 @@ const useVisualAttributesFile = () => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const curFiles = event.target.files;
-    const previousFile = augConfig.visualAttributesJSONFile?.name || "";
+    const previousFile = augConfig.stratificationDataFile?.name || "";
 
     if (curFiles && getFileExt(curFiles[0]) !== "csv") {
       setError(`Files most be in JSON format. Selected ${curFiles[0].name}`);
@@ -23,7 +23,7 @@ const useVisualAttributesFile = () => {
     setError(null);
     const result = Array.from(curFiles)[0];
 
-    setAugConfig("visualAttributesJSONFile", {
+    setAugConfig("stratificationDataFile", {
       name: result.name,
       file: result,
     });

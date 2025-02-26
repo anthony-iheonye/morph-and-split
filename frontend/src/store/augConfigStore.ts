@@ -4,13 +4,13 @@ import AugImage from "../entities/AugImage";
 import ImgDimension from "../entities/ImgDimension";
 import ImgMaskChannels from "../entities/ImgMaskChannels";
 import AugMask from "../entities/AugMask";
-import VisualAttributeJSONFile from "../entities/VisualAttributeFile";
+import StratificationDataFile from "../entities/VisualAttributeFile";
 
 export interface AugConfig {
   initialTrainSaveId?: number;
   initialValSaveId?: number;
   initialTestSaveId?: number;
-  visualAttributesJSONFile?: VisualAttributeJSONFile;
+  stratificationDataFile?: StratificationDataFile;
   splitParameter: string;
   imageMaskChannels?: ImgMaskChannels;
   augImageDimension?: ImgDimension;
@@ -70,7 +70,7 @@ const initialAugConfig: AugConfig = {
   initialTrainSaveId: 1,
   initialValSaveId: 1,
   initialTestSaveId: 1,
-  visualAttributesJSONFile: { name: "", file: null },
+  stratificationDataFile: { name: "", file: null },
   splitParameter: "a",
   imageMaskChannels: { imgChannels: 3, maskChannels: 3 },
   resizeAugImage: false,
