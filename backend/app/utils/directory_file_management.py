@@ -35,7 +35,7 @@ class DirectoryStore:
     resized_test_image_dir = attr.ib(type=str, init=False)
     resized_test_mask_dir = attr.ib(type=str, init=False)
 
-    visual_attributes_dir = attr.ib(type=str, init=False)
+    stratification_data_file_dir = attr.ib(type=str, init=False)
 
     def __attrs_post_init__(self):
         # Set the paths that depend on other attributes
@@ -64,7 +64,7 @@ class DirectoryStore:
         self.resized_test_image_dir = os.path.join(self.resized_augmented, 'test', 'images')
         self.resized_test_mask_dir = os.path.join(self.resized_augmented, 'test', 'masks')
 
-        self.visual_attributes_dir = os.path.join(self.asset_dir, 'visual_attributes')
+        self.stratification_data_file_dir = os.path.join(self.asset_dir, 'visual_attributes')
 
 
 # Initialize DirectoryStore instance

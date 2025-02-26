@@ -35,7 +35,7 @@ class DataSplitterAugmenterAndSaver:
                  test_size: float = 0.2,
                  seed: int = None,
                  crop_image_and_mask: bool = False,
-                 crop_dimension: Tuple[int, int, int, int] = None,
+                 crop_dimension: Tuple[int] = None,
                  augmentation_prob: int = 6,
                  augment_validation_data: bool = False,
                  random_crop: bool = True,

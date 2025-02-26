@@ -14,7 +14,7 @@ from app.utils import directory_store
 
 augment = Blueprint('augment', __name__)
 
-VISUAL_ATTRIBUTES = directory_store.visual_attributes_dir
+STRATIFICATION_DATA_DIR = directory_store.stratification_data_file_dir
 AUGMENTED_DIR = directory_store.augmented
 
 channels = aug_config['imageMaskChannels']
@@ -44,18 +44,18 @@ def save_aug_config(aug_config: dict, target_file: str):
 @augment.route('/augment', methods=['POST'])
 def augment_data():
     try:
-        visual_attributes_file = request.files.getlist("visualAttributesJSONFile")
+        stratification_data_file = request.files.getlist("stratificationDataFile")
         config = request.form.get("config")
 
         # Parse the config JSON string into a dictionary
-        aug_config: dict = json.loads(config)
+        aug_config_data: dict = json.loads(config)
 
-        if visual_attributes_file:
-            filename = secure_filename(visual_attributes_file[0].filename)
-            visual_attributes_filepath = os.path.join(VISUAL_ATTRIBUTES, filename)
-            visual_attributes_file[0].save(visual_attributes_filepath)
+        if stratification_data_file:
+            filename = secure_filename(stratification_data_file[0].filename)
+            stratification_data_filepath = os.path.join(STRATIFICATION_DATA_DIR, filename)
+            stratification_data_file[0].save(stratification_data_filepath)
         else:
-            visual_attributes_filepath = None
+            stratification_data_filepath = None
 
         # Define the path to the parent 'app' package
         current_dir = os.path.dirname(__file__)
@@ -64,7 +64,7 @@ def augment_data():
 
 
         # Save the aug_config as a python script in the 'app' package
-        save_aug_config(aug_config, config_filepath)
+        save_aug_config(aug_config_data, config_filepath)
 
         # set augmentation status to running
         is_augmenting.set()
@@ -77,7 +77,7 @@ def augment_data():
                                                   initial_save_id_train=aug_config.get("initialTrainSaveId"),
                                                   initial_save_id_val=aug_config.get("initialValSaveId"),
                                                   initial_save_id_test=aug_config.get("initialTestSaveId"),
-                                                  visual_attributes_json_path=visual_attributes_filepath,
+                                                  visual_attributes_json_path=stratification_data_filepath,
                                                   image_mask_channels=tuple(aug_config.get("imageMaskChannels").values()),
                                                   final_image_shape=tuple(aug_config.get("augImageDimension").values()),
                                                   image_save_format='png',
@@ -110,7 +110,7 @@ def augment_data():
             for root, _, files in os.walk(AUGMENTED_DIR):
                 for file in files:
                     if file != 'augmented_data.zip':  # Avoid including the ZIP file itself
-                        file_path = os.path.join(root, file)
+                        file_path = str(os.path.join(root, file))
                         zipf.write(filename=file_path,
                                    arcname=os.path.relpath(file_path, AUGMENTED_DIR))
 
