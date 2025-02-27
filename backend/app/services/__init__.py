@@ -12,3 +12,4 @@ from .gcs_client import (generate_signed_url,
                          download_files_from_gcs_folder,
                          get_bucket)
 from .resize_augmented_data import resize_augmented_data
+from .validation import validate_stratification_data_file

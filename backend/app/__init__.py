@@ -18,6 +18,7 @@ from app.routes import (
     signed_upload_urls,
     signed_download_urls,
     uploaded_file_names,
+    upload_stratification_data_file
 )
 
 
@@ -44,6 +45,7 @@ def create_app():
     app.register_blueprint(download_file)
     app.register_blueprint(augment)
     app.register_blueprint(status_checks)
+    app.register_blueprint(upload_stratification_data_file)
     app.register_blueprint(gcs_management)
 
     return app
