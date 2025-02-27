@@ -1,7 +1,9 @@
+import os
+
 from flask import Blueprint, jsonify
 
 from app.utils import create_project_directories, create_resized_augmentation_directories, delete_directory, \
-    directory_store, create_directory
+    directory_store, create_directory, delete_file, list_filenames
 
 # Blueprint definition
 directory_management = Blueprint('directory_management', __name__)
@@ -72,3 +74,20 @@ def delete_uploaded_masks():
         return jsonify({'success': True, 'message': "Successfully deleted uploaded images." }), 201
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@directory_management.route('/project_directory/stratification_data_file/delete', methods=['DELETE'])
+def delete_stratification_data_file():
+    """Delete the stratification data file."""
+    try:
+        file_name = list_filenames(directory_store.stratification_data_file_dir)
+        if not file_name:
+            return jsonify({'success': True, 'message': "No stratification data file exist."}), 200
+        else:
+            file_path = os.path.join(directory_store.stratification_data_file, file_name[0])
+            os.remove(file_path)
+            delete_directory(directory_store.resized_mask_dir)
+            return jsonify({'success': True, 'message': f"Successfully deleted the stratification data file '{file_name}'." }), 201
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
