@@ -1,7 +1,9 @@
+from fileinput import filename
+
 from flask import Blueprint, jsonify
 
 from app.config import google_cloud_config
-from app.utils import get_sorted_filenames, directory_store
+from app.utils import get_sorted_filenames, directory_store, list_filenames
 from app.services.gcs_client import list_files_in_bucket_directory
 
 uploaded_file_names = Blueprint('uploaded_file_names', __name__)
@@ -45,6 +47,21 @@ def get_uploaded_mask_names_from_backend():
         mask_files = get_sorted_filenames(directory_path=directory_store.mask_dir)
 
         return jsonify({'success': True, 'count': len(mask_files), 'results': mask_files}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@uploaded_file_names.route('/upload/backend/stratification_data_filename', methods=['GET'])
+def get_name_of_stratification_data_file():
+    """Fetch the name of the stratification data file."""
+    try:
+        file_names = list_filenames(directory_path=directory_store.stratification_data_file_dir)
+
+        if file_names:
+            return jsonify({'success': True, 'results': file_names}), 200
+        else:
+            return jsonify({'success': False, 'results': file_names}), 200
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

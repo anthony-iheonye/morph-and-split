@@ -93,3 +93,5 @@ requirements_old.txt
 Dockerfile.2
 practice.py
 /Dockerfile.3
+/practice.ipynb
+/mean_visual_properties.csv

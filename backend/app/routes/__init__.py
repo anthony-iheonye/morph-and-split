@@ -1,6 +1,6 @@
 # import Blueprints
 from .augment import augment
-from .directory_management import directory_management
+from .project_directory_management import directory_management
 from .download_file import download_file
 from .gcs_data_transfer import download_data_from_gcs, transfer_data_to_gcs
 from .gcs_managment import gcs_management
@@ -13,3 +13,4 @@ from .signed_upload_urls import signed_upload_urls
 from .signed_download_urls import signed_download_urls
 from .status_check import status_checks
 from .uploaded_file_names import uploaded_file_names
+from .stratification_file_upload import upload_stratification_data_file
