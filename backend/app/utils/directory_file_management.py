@@ -64,7 +64,7 @@ class DirectoryStore:
         self.resized_test_image_dir = os.path.join(self.resized_augmented, 'test', 'images')
         self.resized_test_mask_dir = os.path.join(self.resized_augmented, 'test', 'masks')
 
-        self.stratification_data_file_dir = os.path.join(self.asset_dir, 'visual_attributes')
+        self.stratification_data_file_dir = os.path.join(self.asset_dir, 'stratification')
 
 
 # Initialize DirectoryStore instance
@@ -152,7 +152,8 @@ def create_project_directories(return_dir=True, overwrite_if_existing=False):
                                 return_dir=True,
                                 overwrite_if_existing=overwrite_if_existing)
 
-    visual_attribute_dir = create_directory(dir_name=directory_store.visual_attributes_dir, return_dir=True,
+    visual_attribute_dir = create_directory(dir_name=directory_store.stratification_data_file_dir,
+                                            return_dir=True,
                                             overwrite_if_existing=overwrite_if_existing)
 
     if return_dir:
@@ -260,3 +261,9 @@ def directory_exit(dir_path):
     :return: True, if directory exists, else False.
     """
     return os.path.exists(dir_path)
+
+
+def delete_file(filepath):
+    if os.path.exists(filepath):
+        os.remove(filepath)
+
