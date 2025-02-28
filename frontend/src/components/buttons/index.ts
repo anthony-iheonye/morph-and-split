@@ -5,6 +5,7 @@ export { default as EndSession } from "./EndSession";
 export { default as ImageUploader } from "./ImageUploader";
 export { default as MaskUploader } from "./MaskUploader";
 export { default as PreviousBtn } from "./PreviousBtn";
-export { default as VisualAttributeFilePicker } from "./VisualAttributeFilePicker";
+export { default as StratifiedDataFileUploader } from "./StratifiedDataFileUploader";
 export { default as IconButtonWithToolTip } from "./IconButtonWithToolTip";
 export { default as DeleteImages } from "./DeleteImages";
+export { default as DeleteStratDataFile } from "./DeleteStratDataFile";
