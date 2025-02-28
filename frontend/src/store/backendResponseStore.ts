@@ -6,6 +6,7 @@ export interface BackendResponseLog {
   augmentationIsRunning: boolean;
   deletingImages: boolean;
   deletingMasks: boolean;
+  deletingStratDataFile: boolean;
   isResetting: boolean;
   isShuttingDown: boolean;
   isDownloading: boolean;
@@ -17,6 +18,7 @@ const initialBackendResponseLog: BackendResponseLog = {
   augmentationIsRunning: false,
   deletingImages: false,
   deletingMasks: false,
+  deletingStratDataFile: false,
   isResetting: false,
   isShuttingDown: false,
   isDownloading: false,

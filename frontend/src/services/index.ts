@@ -6,6 +6,7 @@ export { default as handleAugment } from "./handleAugment";
 export { default as handleDownloadBlob } from "./handleDownloadBlob";
 export { default as handleDownloadGCSFiles } from "./handleDownloadGCSFiles";
 export { default as handleDownloadLocalFiles } from "./handleDownloadLocalFiles";
+export { default as handleDeleteStratDataFile } from "./handleDeleteStratDataFile";
 
 export { getFileExt, getFileSize, validFileType } from "./fileUtils";
 export { default as sortByName } from "./sortByName";

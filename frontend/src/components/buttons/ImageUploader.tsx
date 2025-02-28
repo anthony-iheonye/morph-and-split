@@ -28,6 +28,10 @@ const ImageUploader = () => {
     "/gcs/transfer_resized_original_images_to_gcs"
   );
 
+  const deleteStratificationFileClient = new APIClient(
+    "/stratification_data_file/delete"
+  );
+
   const buttonText = useBreakpointValue({
     base: "Select",
     md: "Select Images",
@@ -74,8 +78,21 @@ const ImageUploader = () => {
         if (!resizedImagesTransfered.success) {
           throw new CustomError(
             "Resized Image Transfer Failed.",
-            "Faild to transfer resized images."
+            "Failed to transfer resized images."
           );
+        }
+
+        // Delete stratification data file from backend storage
+        const response =
+          await deleteStratificationFileClient.deleteFileOrDirectory();
+        if (!response.success) {
+          toast({
+            title: response.error,
+            description: response.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
         } else {
           // Invalidate uploaded image names, uploaded image and mask metadata, and image upload status.
           invalidateQueries(queryClient, [
@@ -83,6 +100,8 @@ const ImageUploader = () => {
             "metadata",
             "imageUploadStatus",
             "imageMaskBalanceStatus",
+            "stratificationFileName",
+            "strafied_split_parameters",
           ]);
         }
       } catch (error: any) {
