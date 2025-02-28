@@ -4,4 +4,5 @@ export default interface BackendResponse {
   count?: number;
   error?: string;
   message?: string;
+  results?: string[] | null;
 }

@@ -12,6 +12,7 @@ export interface AugConfig {
   initialTestSaveId?: number;
   stratificationDataFile?: StratificationDataFile;
   splitParameter: string;
+  splitParameters: string[];
   imageMaskChannels?: ImgMaskChannels;
   augImageDimension?: ImgDimension;
   resizeAugImage: boolean;
@@ -71,7 +72,8 @@ const initialAugConfig: AugConfig = {
   initialValSaveId: 1,
   initialTestSaveId: 1,
   stratificationDataFile: { name: "", file: null },
-  splitParameter: "a",
+  splitParameter: "",
+  splitParameters: [],
   imageMaskChannels: { imgChannels: 3, maskChannels: 3 },
   resizeAugImage: false,
   augImageDimension: { width: 1024, height: 1024 },

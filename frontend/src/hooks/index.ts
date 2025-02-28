@@ -21,6 +21,7 @@ export { default as useMaskUploadStatus } from "./useMaskUploadStatus";
 export { default as useImageMaskBalanceStatus } from "./useImageMaskBalanceStatus";
 export { default as useIsBackendRunning } from "./useIsBackendRunning";
 export { default as useAugmentationIsComplete } from "./useAugmentationIsComplete";
+export { default as useStratifiedSplitParameters } from "./useStratifiedSplitParameters";
 
 export { parentNames } from "./useActiveParent";
 export { subParentNames } from "./useActiveSubParent";

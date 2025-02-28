@@ -11,12 +11,12 @@ const useVisualAttributesFile = () => {
     const previousFile = augConfig.stratificationDataFile?.name || "";
 
     if (curFiles && getFileExt(curFiles[0]) !== "csv") {
-      setError(`Files most be in JSON format. Selected ${curFiles[0].name}`);
+      setError(`File most be in CSV format. Selected ${curFiles[0].name}`);
       return;
     }
 
-    if (!curFiles || (curFiles.length == 0 && previousFile === "")) {
-      setError("No file on visual attribute was selected.");
+    if (!curFiles || (curFiles.length === 0 && previousFile === "")) {
+      setError("No file was selected.");
       return;
     }
 
