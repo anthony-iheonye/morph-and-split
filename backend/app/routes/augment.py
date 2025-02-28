@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 
 from app.aug_config import aug_config
 from app.services import DataSplitterAugmenterAndSaver, resize_augmented_data
-from app.utils import directory_store
+from app.utils import directory_store, list_filenames
 
 augment = Blueprint('augment', __name__)
 
@@ -44,16 +44,14 @@ def save_aug_config(aug_config: dict, target_file: str):
 @augment.route('/augment', methods=['POST'])
 def augment_data():
     try:
-        stratification_data_file = request.files.getlist("stratificationDataFile")
         config = request.form.get("config")
 
         # Parse the config JSON string into a dictionary
         aug_config_data: dict = json.loads(config)
+        stratification_data_filename = list_filenames(STRATIFICATION_DATA_DIR)[0]
 
-        if stratification_data_file:
-            filename = secure_filename(stratification_data_file[0].filename)
-            stratification_data_filepath = os.path.join(STRATIFICATION_DATA_DIR, filename)
-            stratification_data_file[0].save(stratification_data_filepath)
+        if stratification_data_filename:
+            stratification_data_filepath = str(os.path.join(STRATIFICATION_DATA_DIR, stratification_data_filename))
         else:
             stratification_data_filepath = None
 
