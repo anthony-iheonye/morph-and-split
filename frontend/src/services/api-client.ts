@@ -277,13 +277,13 @@ class APIClient<T> {
     }
   };
 
-  deleteDirectory = async (
-    directoryPath?: string,
+  deleteFileOrDirectory = async (
+    path?: string,
     requestConfig?: AxiosRequestConfig
   ): Promise<BackendResponse> => {
     try {
-      const endpoint = directoryPath
-        ? `${this.endpoint}/${encodeURIComponent(directoryPath)}`
+      const endpoint = path
+        ? `${this.endpoint}/${encodeURIComponent(path)}`
         : this.endpoint;
 
       const response = await axiosInstance.delete<BackendResponse>(

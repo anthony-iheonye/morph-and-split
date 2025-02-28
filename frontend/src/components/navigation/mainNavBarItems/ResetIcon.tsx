@@ -86,7 +86,7 @@ const ResetIcon = () => {
         );
       }
 
-      const gcsBucketDeletion = await GCSDeleteClient.deleteDirectory();
+      const gcsBucketDeletion = await GCSDeleteClient.deleteFileOrDirectory();
       if (!gcsBucketDeletion) {
         throw new CustomError(
           "GCS Storage Deletion  Failed.",

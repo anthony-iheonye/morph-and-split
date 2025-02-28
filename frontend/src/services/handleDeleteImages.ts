@@ -38,7 +38,8 @@ const handleDeleteImages = async ({
   try {
     setBackendResponseLog("deletingImages", true);
     // Delete image from backend storage
-    const deletedImages = await deleteImageDirectoryClient.deleteDirectory();
+    const deletedImages =
+      await deleteImageDirectoryClient.deleteFileOrDirectory();
     if (!deletedImages.success) {
       throw new CustomError(
         "Image Deletion failed",
@@ -58,7 +59,7 @@ const handleDeleteImages = async ({
 
     // Delete and recreate resized image directory on Gooogle cloud bucket.
     const recreatResizedDirectory =
-      await recreatResizedImageDirectoryClient.deleteDirectory();
+      await recreatResizedImageDirectoryClient.deleteFileOrDirectory();
     if (!recreatResizedDirectory.success) {
       throw new CustomError(
         "Resized Image Directory Creation Failed",

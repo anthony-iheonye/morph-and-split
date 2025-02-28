@@ -36,7 +36,8 @@ const handleDeleteUploadedMasks = async ({
 
   try {
     setBackendResponseLog("deletingMasks", true);
-    const deletedMasks = await deleteMaskDirectoryClient.deleteDirectory();
+    const deletedMasks =
+      await deleteMaskDirectoryClient.deleteFileOrDirectory();
     if (!deletedMasks.success) {
       throw new CustomError(
         "Masks Deletion failed",
@@ -55,7 +56,7 @@ const handleDeleteUploadedMasks = async ({
 
     // Delete and recreate resized image directory on Gooogle cloud bucket.
     const recreatResizedDirectory =
-      await recreatResizedMaskDirectoryClient.deleteDirectory();
+      await recreatResizedMaskDirectoryClient.deleteFileOrDirectory();
     if (!recreatResizedDirectory.success) {
       throw new CustomError(
         "Resized Mask Directory Creation Failed",

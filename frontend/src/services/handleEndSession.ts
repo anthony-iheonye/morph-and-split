@@ -45,7 +45,7 @@ const handleEndSession = async ({
 
   try {
     setBackendResponseLog("isShuttingDown", true);
-    const gcsBucketDeletion = await GCSClient.deleteDirectory();
+    const gcsBucketDeletion = await GCSClient.deleteFileOrDirectory();
 
     if (!gcsBucketDeletion.success) {
       throw new CustomError(
@@ -89,7 +89,7 @@ const handleEndSession = async ({
     }
 
     const projectDirectoryDeletion =
-      await projectDirectoryClient.deleteDirectory();
+      await projectDirectoryClient.deleteFileOrDirectory();
 
     if (!projectDirectoryDeletion.success) {
       throw new CustomError(
