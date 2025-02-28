@@ -12,20 +12,21 @@ import { TbOvalVertical, TbTexture } from "react-icons/tb";
 import {
   ContinueBtn,
   PreviousBtn,
-  VisualAttributeFilePicker,
+  StratifiedDataFileUploader,
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
 import { IconComboControl, PageTitle } from "../components/miscellaneous";
 import { VisualAttributeSwitch } from "../components/switches";
+import SignedUrl from "../components/buttons/SignedUrl";
 
-const VisualAttributes = () => {
+const StratifiedSplitting = () => {
   return (
     <Grid
       templateAreas={{
         base: `"title"
-               "splitParameter"
                "csvFile"
+               "splitParameter"
                "attributes"
                "navBtn"`,
       }}
@@ -35,7 +36,20 @@ const VisualAttributes = () => {
       maxHeight="100%"
     >
       <GridItem area="title">
-        <PageTitle title="Visual Attributes" />
+        <PageTitle title="Stratified Splitting" />
+      </GridItem>
+
+      <GridItem area="csvFile">
+        <BoundingBox>
+          <IconComboControl
+            icon={BsFiletypeCsv}
+            title="Upload Visual Attribute Data"
+            description={{
+              md: "Select the CSV file containing the visual attributes of the food in the image.",
+            }}
+            controlElement={<StratifiedDataFileUploader />}
+          />
+        </BoundingBox>
       </GridItem>
 
       <GridItem area="splitParameter">
@@ -47,20 +61,7 @@ const VisualAttributes = () => {
               base: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
             }}
             controlElement={<SplitParameterSelector />}
-            controlElementWidth="100px"
-          />
-        </BoundingBox>
-      </GridItem>
-
-      <GridItem area="csvFile">
-        <BoundingBox>
-          <IconComboControl
-            icon={BsFiletypeCsv}
-            title="Upload Visual Attribute Data"
-            description={{
-              md: "Select the CSV file containing the visual attributes of the food in the image.",
-            }}
-            controlElement={<VisualAttributeFilePicker />}
+            controlElementWidth="auto"
           />
         </BoundingBox>
       </GridItem>
@@ -169,4 +170,4 @@ const VisualAttributes = () => {
   );
 };
 
-export default VisualAttributes;
+export default StratifiedSplitting;

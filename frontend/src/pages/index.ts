@@ -10,4 +10,4 @@ export { default as PreviewAugmentedResults } from "./PreviewAugmentedResults";
 export { default as StartAugmentation } from "./StartAugmentation";
 export { default as Transformations } from "./Transformations";
 export { default as UploadData } from "./UploadData";
-export { default as VisualAttributes } from "./VisualAttributes";
+export { default as StratifiedSplitting } from "./StratifiedSplitting";

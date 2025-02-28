@@ -11,7 +11,7 @@ import PreviewAugmentedResults from "./pages/PreviewAugmentedResults";
 import StartAugmentation from "./pages/StartAugmentation";
 import AugTransformationsInput from "./pages/Transformations";
 import UploadData from "./pages/UploadData";
-import VisualAttributes from "./pages/VisualAttributes";
+import StratifiedSplitting from "./pages/StratifiedSplitting";
 
 const router = createBrowserRouter([
   {
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
             path: "select_transformation",
             element: <AugTransformationsInput />,
           },
-          { path: "visual_attributes", element: <VisualAttributes /> },
+          { path: "visual_attributes", element: <StratifiedSplitting /> },
           { path: "pre_processing", element: <PreProcessing /> },
           // { path: "practice", element: <Practice /> },
         ],
