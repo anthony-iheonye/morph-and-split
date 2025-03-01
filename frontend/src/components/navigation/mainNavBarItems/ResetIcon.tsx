@@ -159,6 +159,8 @@ const ResetIcon = () => {
           "trainingSet",
           "validationSet",
           "testingSet",
+          "stratificationFileName",
+          "strafied_split_parameters",
         ]);
 
         navigate("/upload_data/images");

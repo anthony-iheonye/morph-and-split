@@ -92,16 +92,6 @@ const handleEndSession = async ({
       );
     }
 
-    const projectDirectoryDeletion =
-      await projectDirectoryClient.deleteFileOrDirectory();
-
-    if (!projectDirectoryDeletion.success) {
-      throw new CustomError(
-        "Project Directory Deletion Failed",
-        "Failed to delete project directories."
-      );
-    }
-
     // Delete stratification data file from backend storage
     const deletedFile =
       await deleteStratificationFileClient.deleteFileOrDirectory();
@@ -113,6 +103,16 @@ const handleEndSession = async ({
         duration: 5000,
         isClosable: true,
       });
+    }
+
+    const projectDirectoryDeletion =
+      await projectDirectoryClient.deleteFileOrDirectory();
+
+    if (!projectDirectoryDeletion.success) {
+      throw new CustomError(
+        "Project Directory Deletion Failed",
+        "Failed to delete project directories."
+      );
     } else {
       // Reset local configurations
       resetAugConfig();
