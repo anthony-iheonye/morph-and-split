@@ -43,6 +43,10 @@ const handleEndSession = async ({
     "/reset-signed-urls-for-resized-test-set"
   );
 
+  const deleteStratificationFileClient = new APIClient(
+    "/stratification_data_file/delete"
+  );
+
   try {
     setBackendResponseLog("isShuttingDown", true);
     const gcsBucketDeletion = await GCSClient.deleteFileOrDirectory();
@@ -96,6 +100,19 @@ const handleEndSession = async ({
         "Project Directory Deletion Failed",
         "Failed to delete project directories."
       );
+    }
+
+    // Delete stratification data file from backend storage
+    const deletedFile =
+      await deleteStratificationFileClient.deleteFileOrDirectory();
+    if (!deletedFile.success) {
+      toast({
+        title: deletedFile.error,
+        description: deletedFile.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     } else {
       // Reset local configurations
       resetAugConfig();
@@ -114,6 +131,8 @@ const handleEndSession = async ({
         "validationSet",
         "testingSet",
         "backendIsRunning",
+        "stratificationFileName",
+        "strafied_split_parameters",
       ]);
     }
   } catch (error: any) {

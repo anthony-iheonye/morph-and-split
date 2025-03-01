@@ -18,7 +18,6 @@ import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
 import { IconComboControl, PageTitle } from "../components/miscellaneous";
 import { VisualAttributeSwitch } from "../components/switches";
-import SignedUrl from "../components/buttons/SignedUrl";
 
 const StratifiedSplitting = () => {
   return (
