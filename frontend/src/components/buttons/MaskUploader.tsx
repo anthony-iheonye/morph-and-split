@@ -26,6 +26,10 @@ const MaskUploader = () => {
     "/gcs/transfer_resized_original_masks_to_gcs"
   );
 
+  const deleteStratificationFileClient = new APIClient(
+    "/stratification_data_file/delete"
+  );
+
   const buttonText = useBreakpointValue({
     base: "Select",
     md: "Select Masks",
@@ -74,6 +78,19 @@ const MaskUploader = () => {
             "Resized Masks Transfer Failed.",
             "Faild to transfer resized masks."
           );
+        }
+
+        // Delete stratification data file from backend storage
+        const response =
+          await deleteStratificationFileClient.deleteFileOrDirectory();
+        if (!response.success) {
+          toast({
+            title: response.error,
+            description: response.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
         } else {
           // Invalidate uploaded masks names, uploaded image and mask metadata,
           // mask upload status and image-mask balance.
@@ -82,6 +99,8 @@ const MaskUploader = () => {
             "metadata",
             "maskUploadStatus",
             "imageMaskBalanceStatus",
+            "stratificationFileName",
+            "strafied_split_parameters",
           ]);
         }
       } catch (error: any) {
