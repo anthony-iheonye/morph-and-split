@@ -22,6 +22,7 @@ export { default as useImageMaskBalanceStatus } from "./useImageMaskBalanceStatu
 export { default as useIsBackendRunning } from "./useIsBackendRunning";
 export { default as useAugmentationIsComplete } from "./useAugmentationIsComplete";
 export { default as useStratifiedSplitParameters } from "./useStratifiedSplitParameters";
+export { default as useStratificationDataFileName } from "./useStratificationDataFileName";
 
 export { parentNames } from "./useActiveParent";
 export { subParentNames } from "./useActiveSubParent";

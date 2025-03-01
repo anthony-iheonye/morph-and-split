@@ -1,4 +1,4 @@
-import { Spinner, useToast } from "@chakra-ui/react";
+import { PlacementWithLogical, Spinner, useToast } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdDeleteForever } from "react-icons/md";
 import { useBackendResponse } from "../../hooks";
@@ -9,7 +9,10 @@ import IconButtonWithToolTip from "./IconButtonWithToolTip";
  * Delete uploaded stratified splitting datafile.
  * @returns
  */
-const DeleteStratDataFile = () => {
+interface Props {
+  tooltipPlacment?: PlacementWithLogical;
+}
+const DeleteStratDataFile = ({ tooltipPlacment = "left-start" }: Props) => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { setBackendResponseLog, imageIsUploading, deletingStratDataFile } =
@@ -18,7 +21,7 @@ const DeleteStratDataFile = () => {
   return (
     <IconButtonWithToolTip
       aria-label="Click to delete uploaded stratification data file."
-      tooltipLabel="Delete stratification data file."
+      tooltipLabel="Delete the stratification data file"
       icon={
         deletingStratDataFile ? <Spinner /> : <MdDeleteForever size="1.5rem" />
       }
@@ -29,7 +32,7 @@ const DeleteStratDataFile = () => {
           toast,
         })
       }
-      placement="left-start"
+      placement={tooltipPlacment}
       isDisabled={imageIsUploading}
     />
   );
