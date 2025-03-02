@@ -151,8 +151,8 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
   const mb = "3px";
 
   const splitDetail = useBreakpointValue({
-    base: "Set split ratios for train, validation and test sets.",
-    md: "Set split ratios for the training, validation and test sets.",
+    base: "Set the split ratios to distribute data across training, validation, and test sets effectively.",
+    // md: "Set split ratios for the training, validation and test sets.",
   });
 
   return (
@@ -176,15 +176,9 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
         area="splitSlider"
         display="flex"
         flexDirection="column"
-        // flex="1"
         overflowY="hidden"
       >
-        <BoundingBox
-          overflowY="hidden"
-          display="flex"
-          flexDirection="column"
-          // flex="1"
-        >
+        <BoundingBox overflowY="hidden" display="flex" flexDirection="column">
           <Text color={"gray.400"} mb={4} fontSize="md">
             {splitDetail}
           </Text>

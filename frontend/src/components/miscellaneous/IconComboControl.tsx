@@ -14,6 +14,7 @@ interface IconComboControlProps extends Omit<GridProps, "title"> {
   title: string | { base?: string; md?: string; lg?: string };
   titleFontSize?: number | { base?: number; md?: number; lg?: number };
   description?: string | { base?: string; md?: string; lg?: string };
+  leftAlignDescription?: boolean;
   icon?: IconType | undefined;
   controlElement?: ReactNode;
   controlElementWidth?: number | string | {};
@@ -22,6 +23,7 @@ const IconComboControl = ({
   icon,
   title,
   description = "",
+  leftAlignDescription = true,
   titleFontSize = 16,
   controlElement,
   controlElementWidth = "auto",
@@ -35,13 +37,16 @@ const IconComboControl = ({
     typeof description === "string" ? { base: description } : description
   );
 
+  const cell = leftAlignDescription ? "." : "description";
+
   return (
     <Grid
       templateAreas={{
         base: `"iconHeading switch"
-                   "description description"`,
+               "description description"`,
+
         md: `"iconHeading switch"
-                   "description ."`,
+             "description ${cell}"`,
       }}
       templateColumns={{
         base: `1fr ${controlElementWidth}`,
@@ -77,6 +82,7 @@ const IconComboControl = ({
           lineHeight="17px"
           color="gray.400"
           marginRight={{ base: 2, md: 6 }}
+          marginTop={1}
         >
           {responsiveDescription}
         </Text>

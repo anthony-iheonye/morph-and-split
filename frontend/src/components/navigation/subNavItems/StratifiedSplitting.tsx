@@ -15,7 +15,7 @@ const StratifiedSplitting = () => {
     <SubNavBarItem
       icon={<IoIosColorPalette />}
       iconLabel="Select visual attributes JSON file"
-      text={{ md: "Visual attributes" }}
+      text={{ md: "Stratified Splitting" }}
       to={"/settings/visual_attributes"}
       backgroundColor={
         activeSubParent === visualAtttributes ? subParentColor : "transparent"

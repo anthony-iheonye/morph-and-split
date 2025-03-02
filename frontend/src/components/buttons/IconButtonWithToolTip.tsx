@@ -29,6 +29,8 @@ const IconButtonWithToolTip = ({
   return (
     <Tooltip label={tooltipLabel} placement={placement}>
       <IconButton
+        height="auto"
+        minWidth={2}
         aria-label={ariaLabel} // Explicitly passed
         icon={icon}
         variant={variant}
