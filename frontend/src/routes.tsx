@@ -53,7 +53,7 @@ const router = createBrowserRouter([
             path: "select_transformation",
             element: <AugTransformationsInput />,
           },
-          { path: "visual_attributes", element: <StratifiedSplitting /> },
+          { path: "stratified_splitting", element: <StratifiedSplitting /> },
           { path: "pre_processing", element: <PreProcessing /> },
           // { path: "practice", element: <Practice /> },
         ],

@@ -25,8 +25,8 @@ const AugSettingBar = () => {
       </Heading>
 
       <Splitting />
-      <Transform />
       <StratifiedSplitting />
+      <Transform />
       <Preprocess />
     </Flex>
   );

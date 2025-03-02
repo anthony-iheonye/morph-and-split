@@ -149,7 +149,7 @@ const PreProcessing = () => {
       <GridItem area="navBtn">
         <BoundingBox transparent padding={0} mt={0}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
-            <PreviousBtn to="/settings/visual_attributes" />
+            <PreviousBtn to="/settings/select_transformation" />
             <ContinueBtn to="/augment/start_augmentation" />
           </HStack>
         </BoundingBox>

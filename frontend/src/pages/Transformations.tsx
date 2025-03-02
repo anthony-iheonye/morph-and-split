@@ -130,8 +130,8 @@ const AugTransformationsInput = () => {
       <GridItem area="navBtn">
         <BoundingBox transparent padding={0} mt={0}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
-            <PreviousBtn to="/settings/data_split" />
-            <ContinueBtn to="/settings/visual_attributes" />
+            <PreviousBtn to="/settings/stratified_splitting" />
+            <ContinueBtn to="/settings/pre_processing" />
           </HStack>
         </BoundingBox>
       </GridItem>

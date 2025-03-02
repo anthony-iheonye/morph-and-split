@@ -40,7 +40,7 @@ const useActiveSubParent = () => {
       ? dataSplit
       : location.pathname === "/settings/select_transformation"
       ? transformation
-      : location.pathname === "/settings/visual_attributes"
+      : location.pathname === "/settings/stratified_splitting"
       ? visualAtttributes
       : location.pathname === "/settings/pre_processing"
       ? preProcessing

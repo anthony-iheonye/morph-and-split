@@ -16,7 +16,7 @@ const StratifiedSplitting = () => {
       icon={<IoIosColorPalette />}
       iconLabel="Select visual attributes JSON file"
       text={{ md: "Stratified Splitting" }}
-      to={"/settings/visual_attributes"}
+      to={"/settings/stratified_splitting"}
       backgroundColor={
         activeSubParent === visualAtttributes ? subParentColor : "transparent"
       }

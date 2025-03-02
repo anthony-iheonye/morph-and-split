@@ -104,8 +104,8 @@ const StratifiedSplitting = () => {
       <GridItem area="navBtn">
         <BoundingBox transparent padding={0}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
-            <PreviousBtn to="/settings/select_transformation" />
-            <ContinueBtn to="/settings/pre_processing" />
+            <PreviousBtn to="/settings/data_split" />
+            <ContinueBtn to="/settings/select_transformation" />
           </HStack>
         </BoundingBox>
       </GridItem>
