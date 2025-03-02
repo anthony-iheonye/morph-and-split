@@ -42,64 +42,76 @@ const StratifiedSplitting = () => {
                "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
-      templateRows={{ base: "auto auto auto auto auto" }}
+      templateRows={{ base: "auto auto auto auto 1fr" }}
       overflowY="hidden"
-      maxHeight="100vh"
+      maxHeight="100%"
     >
       <GridItem area="title">
         <PageTitle title="Stratified Splitting" />
       </GridItem>
 
-      <GridItem area="description">
-        <BoundingBox paddingBottom={{ base: 0, md: 0 }} transparent padding={2}>
-          <Text color={"gray.400"} mb={4} fontSize="md" marginBottom={0}>
-            {splitDetail1}
-          </Text>
-          <Text color={"gray.400"} mb={0} fontSize="md" mt={2}>
-            {splitDetail2}
-          </Text>
-        </BoundingBox>
-      </GridItem>
+      <BoundingBox
+        transparent={true}
+        padding="0"
+        overflowY="auto"
+        marginLeft={0}
+        marginRight={0}
+      >
+        <GridItem area="description">
+          <BoundingBox
+            paddingBottom={{ base: 0, md: 0 }}
+            transparent
+            padding={2}
+          >
+            <Text color={"gray.400"} mb={4} fontSize="md" marginBottom={0}>
+              {splitDetail1}
+            </Text>
+            <Text color={"gray.400"} mb={0} fontSize="md" mt={2}>
+              {splitDetail2}
+            </Text>
+          </BoundingBox>
+        </GridItem>
 
-      <GridItem area="csvFile">
-        <BoundingBox mt={0}>
-          <IconComboControl
-            icon={BsFiletypeCsv}
-            title="Stratifed Split Data"
-            description={{
-              md: "Select the CSV file containing the parameters for stratified splitting.",
-            }}
-            controlElement={<StratifiedDataFileUploader />}
-            leftAlignDescription={false}
-          />
-          <HStack justifySelf={"start"} mt={2}>
-            {fileName && (
-              <Text fontWeight="thin" fontSize="sm" color="pink.100">
-                {fileName}
-              </Text>
-            )}
-            {fileName && <DeleteStratDataFile tooltipPlacment="top-end" />}
-          </HStack>
-        </BoundingBox>
-      </GridItem>
+        <GridItem area="csvFile">
+          <BoundingBox mt={0}>
+            <IconComboControl
+              icon={BsFiletypeCsv}
+              title="Stratifed Split Data"
+              description={{
+                md: "Select the CSV file containing the parameters for stratified splitting.",
+              }}
+              controlElement={<StratifiedDataFileUploader />}
+              leftAlignDescription={false}
+            />
+            <HStack justifySelf={"start"} mt={2}>
+              {fileName && (
+                <Text fontWeight="thin" fontSize="sm" color="pink.100">
+                  {fileName}
+                </Text>
+              )}
+              {fileName && <DeleteStratDataFile tooltipPlacment="top-end" />}
+            </HStack>
+          </BoundingBox>
+        </GridItem>
 
-      <GridItem area="splitParameter">
-        <BoundingBox mt={0}>
-          <IconComboControl
-            icon={HiOutlineArrowsExpand}
-            title={{
-              base: "Split Parameter",
-              md: "Stratified Split Parameter",
-            }}
-            description={{
-              base: "Choose a split parameter — often a skewed or underrepresented one — to ensure balanced class distribution across training, validation, and test sets.",
-            }}
-            controlElement={<SplitParameterSelector />}
-            controlElementWidth="auto"
-            leftAlignDescription={false}
-          />
-        </BoundingBox>
-      </GridItem>
+        <GridItem area="splitParameter">
+          <BoundingBox mt={0}>
+            <IconComboControl
+              icon={HiOutlineArrowsExpand}
+              title={{
+                base: "Split Parameter",
+                md: "Stratified Split Parameter",
+              }}
+              description={{
+                base: "Choose a split parameter — often a skewed or underrepresented one — to ensure balanced class distribution across training, validation, and test sets.",
+              }}
+              controlElement={<SplitParameterSelector />}
+              controlElementWidth="auto"
+              leftAlignDescription={false}
+            />
+          </BoundingBox>
+        </GridItem>
+      </BoundingBox>
 
       <GridItem area="navBtn">
         <BoundingBox transparent padding={0}>
