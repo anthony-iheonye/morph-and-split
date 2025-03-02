@@ -1,159 +1,103 @@
-import { Grid, GridItem, HStack, SimpleGrid } from "@chakra-ui/react";
-import { BiSolidArea } from "react-icons/bi";
+import {
+  Grid,
+  GridItem,
+  HStack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { BsFiletypeCsv } from "react-icons/bs";
-import { FaCircleNotch } from "react-icons/fa6";
-import { GiRollingEnergy } from "react-icons/gi";
-import { GoCircleSlash } from "react-icons/go";
 import { HiOutlineArrowsExpand } from "react-icons/hi";
-import { IoColorPaletteSharp } from "react-icons/io5";
-import { MdOutlineContrast } from "react-icons/md";
-import { RxDimensions } from "react-icons/rx";
-import { TbOvalVertical, TbTexture } from "react-icons/tb";
 import {
   ContinueBtn,
+  DeleteStratDataFile,
   PreviousBtn,
   StratifiedDataFileUploader,
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
 import { IconComboControl, PageTitle } from "../components/miscellaneous";
-import { VisualAttributeSwitch } from "../components/switches";
+import { useStratificationDataFileName } from "../hooks";
 
 const StratifiedSplitting = () => {
+  const { data } = useStratificationDataFileName();
+  const fileName = data?.results[0];
+
+  const splitDetail1 = useBreakpointValue({
+    base: "Stratified splitting prevents class imbalance by ensuring that each set (training, validation, and test) maintains the same distribution of classes as the full dataset.",
+    // md: "Set split ratios for the training, validation and test sets.",
+  });
+
+  const splitDetail2 = useBreakpointValue({
+    base: "Upload a CSV file with parameters for each image to guide the split, keeping subsets representative of the full dataset. This improves model generalization by maintaining consistent class proportions.",
+    // md: "Set split ratios for the training, validation and test sets.",
+  });
+
   return (
     <Grid
       templateAreas={{
         base: `"title"
+               "description"
                "csvFile"
                "splitParameter"
-               "attributes"
                "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
-      templateRows={{ base: "auto 1fr auto auto" }}
-      overflow="hidden"
-      maxHeight="100%"
+      templateRows={{ base: "auto auto auto auto auto" }}
+      overflowY="hidden"
+      maxHeight="100vh"
     >
       <GridItem area="title">
         <PageTitle title="Stratified Splitting" />
       </GridItem>
 
+      <GridItem area="description">
+        <BoundingBox paddingBottom={{ base: 0, md: 0 }} transparent padding={2}>
+          <Text color={"gray.400"} mb={4} fontSize="md" marginBottom={0}>
+            {splitDetail1}
+          </Text>
+          <Text color={"gray.400"} mb={0} fontSize="md" mt={2}>
+            {splitDetail2}
+          </Text>
+        </BoundingBox>
+      </GridItem>
+
       <GridItem area="csvFile">
-        <BoundingBox>
+        <BoundingBox mt={0}>
           <IconComboControl
             icon={BsFiletypeCsv}
-            title="Upload Visual Attribute Data"
+            title="Stratifed Split Data"
             description={{
-              md: "Select the CSV file containing the visual attributes of the food in the image.",
+              md: "Select the CSV file containing the parameters for stratified splitting.",
             }}
             controlElement={<StratifiedDataFileUploader />}
+            leftAlignDescription={false}
           />
+          <HStack justifySelf={"start"} mt={2}>
+            {fileName && (
+              <Text fontWeight="thin" fontSize="sm" color="pink.100">
+                {fileName}
+              </Text>
+            )}
+            {fileName && <DeleteStratDataFile tooltipPlacment="top-end" />}
+          </HStack>
         </BoundingBox>
       </GridItem>
 
       <GridItem area="splitParameter">
-        <BoundingBox>
+        <BoundingBox mt={0}>
           <IconComboControl
             icon={HiOutlineArrowsExpand}
-            title="Stratified Split Parameter"
+            title={{
+              base: "Split Parameter",
+              md: "Stratified Split Parameter",
+            }}
             description={{
-              base: "Select the split parameter to ensure consistent class distribution across training, validation, and test sets.",
+              base: "Choose a split parameter — often a skewed or underrepresented one — to ensure balanced class distribution across training, validation, and test sets.",
             }}
             controlElement={<SplitParameterSelector />}
             controlElementWidth="auto"
+            leftAlignDescription={false}
           />
-        </BoundingBox>
-      </GridItem>
-
-      <GridItem
-        area="attributes"
-        display="flex"
-        flexDirection="column"
-        overflow="hidden"
-      >
-        <BoundingBox
-          display="flex"
-          flexDirection="column"
-          flex="1"
-          overflowY="hidden"
-        >
-          <SimpleGrid
-            columns={{ base: 1 }}
-            spacing={{ base: 8, md: 8 }}
-            overflow="auto"
-          >
-            <VisualAttributeSwitch
-              attributeName="l"
-              icon={IoColorPaletteSharp}
-              title="L (Lightness)"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="a"
-              icon={IoColorPaletteSharp}
-              title="a (Green-Red Index)"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="b"
-              icon={IoColorPaletteSharp}
-              title="b (Blue-Yellow index)"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="contrast"
-              icon={MdOutlineContrast}
-              title="Contrast"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="correlation"
-              icon={TbTexture}
-              title="Correlation"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="energy"
-              icon={GiRollingEnergy}
-              title="Energy"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="feretDiameterMax"
-              icon={GoCircleSlash}
-              title="Ferret Diameter"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="filledArea"
-              icon={BiSolidArea}
-              title="Filled Area"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="perimeter"
-              icon={RxDimensions}
-              title="Perimeter"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="eccentricity"
-              icon={TbOvalVertical}
-              title="Eccentricity"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="feretDiameterMax"
-              icon={GoCircleSlash}
-              title="Ferret Diameter"
-            />
-
-            <VisualAttributeSwitch
-              attributeName="roundness"
-              icon={FaCircleNotch}
-              title="Roundness"
-            />
-          </SimpleGrid>
         </BoundingBox>
       </GridItem>
 
