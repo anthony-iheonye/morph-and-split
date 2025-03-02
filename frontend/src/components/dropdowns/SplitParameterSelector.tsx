@@ -14,7 +14,7 @@ const SplitParameterSelector = () => {
       <MenuButton as={Button} rightIcon={<BsChevronDown />}>
         {augConfig.splitParameter ? augConfig.splitParameter : "Parameters"}
       </MenuButton>
-      <MenuList>
+      <MenuList maxHeight="50vh" overflowY="auto">
         {data?.results.map((parameter, index) => (
           <MenuItem
             key={index}

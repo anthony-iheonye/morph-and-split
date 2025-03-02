@@ -1,12 +1,10 @@
-import { Button, Input, Text, useToast, VStack } from "@chakra-ui/react";
+import { Button, Input, useToast, VStack } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { ChangeEvent, useState } from "react";
 import { BackendResponse, CustomError } from "../../entities";
-import useStratificationDataFileName from "../../hooks/useStratificationDataFileName";
-import { APIClient, getFileExt } from "../../services";
 import { useAugConfigAndSetter } from "../../hooks";
-import { useQueryClient } from "@tanstack/react-query";
+import { APIClient, getFileExt } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
-import DeleteStratDataFile from "./DeleteStratDataFile";
 
 const StratifiedDataFileUploader = () => {
   const [uploading, setIsUploading] = useState(false);
@@ -17,8 +15,6 @@ const StratifiedDataFileUploader = () => {
   const uploadClient = new APIClient<BackendResponse>(
     "/upload/backend/stratification_file"
   );
-  const { data } = useStratificationDataFileName();
-  const fileName = data?.results[0];
 
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.target.value = "";
@@ -121,12 +117,6 @@ const StratifiedDataFileUploader = () => {
           }}
         />
       </Button>
-      {fileName ? (
-        <Text fontWeight="thin" fontSize="sm">
-          {fileName}
-        </Text>
-      ) : null}
-      <DeleteStratDataFile />
     </VStack>
   );
 };
