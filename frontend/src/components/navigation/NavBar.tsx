@@ -7,7 +7,7 @@ import {
   ColorModeSwitch,
   ImageMaskUploader,
   ResetIcon,
-  ViewState,
+  // ViewState,
 } from "./mainNavBarItems";
 
 const NavBar = () => {
@@ -31,7 +31,7 @@ const NavBar = () => {
         <AugmentationConfigIcon />
         <AugmentIcon />
         <ResetIcon />
-        <ViewState />
+        {/* <ViewState /> */}
       </Flex>
 
       <Box
