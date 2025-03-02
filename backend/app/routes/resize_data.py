@@ -13,8 +13,8 @@ resize_data = Blueprint(name='resize_data', import_name=__name__)
 def resize_original_images():
     """Resizes uploaded images."""
     try:
-        sample_img_name = list_filenames(directory_store.train_image_dir)[0]
-        sample_img_path = str(os.path.join(directory_store.train_image_dir, sample_img_name))
+        sample_img_name = list_filenames(directory_store.image_dir)[0]
+        sample_img_path = str(os.path.join(directory_store.image_dir, sample_img_name))
 
         resize_width, resize_height = get_resized_dimension(sample_img_path)
 
@@ -36,8 +36,8 @@ def resize_original_images():
 def resize_original_masks():
     """Resizes uploaded images."""
     try:
-        sample_img_name = list_filenames(directory_store.train_image_dir)[0]
-        sample_img_path = str(os.path.join(directory_store.train_image_dir, sample_img_name))
+        sample_img_name = list_filenames(directory_store.mask_dir)[0]
+        sample_img_path = str(os.path.join(directory_store.mask_dir, sample_img_name))
 
         resize_width, resize_height = get_resized_dimension(sample_img_path)
 
