@@ -48,10 +48,12 @@ def augment_data():
 
         # Parse the config JSON string into a dictionary
         aug_config_data: dict = json.loads(config)
-        stratification_data_filename = list_filenames(STRATIFICATION_DATA_DIR)[0]
+        print("hello")
 
-        if stratification_data_filename:
-            stratification_data_filepath = str(os.path.join(STRATIFICATION_DATA_DIR, stratification_data_filename))
+        stratification_data_filenames = list_filenames(STRATIFICATION_DATA_DIR)
+
+        if len(stratification_data_filenames) > 0:
+            stratification_data_filepath = str(os.path.join(STRATIFICATION_DATA_DIR, stratification_data_filenames[0]))
         else:
             stratification_data_filepath = None
 

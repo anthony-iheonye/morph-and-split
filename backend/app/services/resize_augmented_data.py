@@ -40,10 +40,11 @@ def get_resized_dimension(image_path: str):
 
 
 def resize_augmented_data():
-    sample_img_name = list_filenames(ds.train_image_dir)[0]
-    sample_img_path = str(os.path.join(ds.train_image_dir, sample_img_name))
+    sample_img_name = list_filenames(ds.image_dir)[0]
+    sample_img_path = str(os.path.join(ds.image_dir, sample_img_name))
 
     resize_width, resize_height = get_resized_dimension(sample_img_path)
+    print(sample_img_name)
 
     train_resizer = ImageAndMaskCropperResizerAndSaver(
         images_directory=ds.train_image_dir,
