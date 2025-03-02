@@ -287,7 +287,7 @@ def create_directories_in_bucket(bucket_name: str,
 def generate_signed_url(blob_name: str,
                         google_cloud_config: GoogleCloudStorageConfig,
                         method: str ='GET',
-                        expiration: int =60,
+                        expiration: int =720,
                         content_type: Optional[str]=None,
                         ):
     """
