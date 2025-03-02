@@ -13,4 +13,4 @@ from .signed_upload_urls import signed_upload_urls
 from .signed_download_urls import signed_download_urls
 from .status_check import status_checks
 from .uploaded_file_names import uploaded_file_names
-from .stratification_file_upload import upload_stratification_data_file
+from .stratification_file import stratification_data_file_processing

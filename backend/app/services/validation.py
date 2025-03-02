@@ -8,7 +8,7 @@ from app.utils import delete_file
 from app.utils.directory_file_management import sort_filenames
 
 
-def validate_stratification_data_file(file_path: str, number_of_image_mask_pairs: int) -> Union[list, ValueError]:
+def validate_stratification_data_file(file_path: str, number_of_image_mask_pairs: int) :
     """
     Function for validating the CSV stratification data file.
 
@@ -58,11 +58,11 @@ def validate_stratification_data_file(file_path: str, number_of_image_mask_pairs
             )
 
         # Ensure column names do not contain spaces and have a length between 1 and 30 characters
-        invalid_columns = [col for col in df.columns if ' ' in col or not (1 <= len(col) <= 30)]
+        invalid_columns = [col for col in df.columns if ' ' in col or not (1 <= len(col) <= 25)]
         if invalid_columns:
             raise ValidationError(
                 error="Invalid column names",
-                description=f"Column names must be between 1 and 30 characters long and cannot contain spaces. "
+                description=f"Column names must be between 1 and 25 characters long and cannot contain spaces. "
                             f"The following invalid columns were found: {invalid_columns}. "
                             "Please rename these columns and try again."
             )
@@ -74,7 +74,7 @@ def validate_stratification_data_file(file_path: str, number_of_image_mask_pairs
         df.to_csv(file_path, index=False)
 
         # Return the remaining column names excluding 'image_id'
-        return [col for col in df.columns if col not in ['image_id', 'validation_status']]
+        return
 
     except Exception as e:
         # if an error occurs delete teh saved file

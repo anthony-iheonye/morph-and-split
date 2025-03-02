@@ -1,15 +1,16 @@
 import os
+import pandas as pd
 
 from flask import Blueprint, request, jsonify
 
 from app.services import validate_stratification_data_file
-from app.utils import directory_store, list_filenames, ValidationError
+from app.utils import directory_store, list_filenames, ValidationError, delete_file
 
-upload_stratification_data_file = Blueprint('upload_stratification_data_file', __name__)
+stratification_data_file_processing = Blueprint('upload_stratification_data_file', __name__)
 STRATIFICATION_DATA_DIR = directory_store.stratification_data_file_dir
 
 
-@upload_stratification_data_file.route('/upload/backend/stratification_file', methods=['POST'])
+@stratification_data_file_processing.route('/upload/backend/stratification_file', methods=['POST'])
 def upload_stratification_file():
     try:
         files = request.files.getlist("stratificationDataFile")
@@ -34,3 +35,41 @@ def upload_stratification_file():
 
     except Exception as e:
         return jsonify({'success': False, 'error': "Internal Server Error", 'message': str(e)}), 500
+
+
+@stratification_data_file_processing.route('/stratification_data_file/parameters', methods=['GET'])
+def get_stratification_parameters():
+    try:
+        file_names = list_filenames(STRATIFICATION_DATA_DIR)
+        if not file_names:
+            return jsonify({'success': True,
+                            'results': [],
+                            'message': 'No stratification data file was found.'}), 200
+
+        filepath = str(os.path.join(STRATIFICATION_DATA_DIR, file_names[0]))
+        df = pd.read_csv(filepath, header=0)
+        parameters = [col for col in df.columns if col != 'image_id']
+
+        return jsonify({'success': True, 'results': parameters}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@stratification_data_file_processing.route('/stratification_data_file/delete', methods=['DELETE'])
+def delete_stratification_data_file():
+    try:
+
+        file_names = list_filenames(STRATIFICATION_DATA_DIR)
+        if not file_names:
+            return jsonify({'success': True,
+                            'error': 'File not Found',
+                            'message': 'No stratification data file was found.'}), 200
+
+        filepath = str(os.path.join(STRATIFICATION_DATA_DIR, file_names[0]))
+        delete_file(filepath)
+        return jsonify({'success': True, 'message': f"Successfully delete stratification data file {file_names[0]}"}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+

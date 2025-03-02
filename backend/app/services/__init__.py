@@ -11,5 +11,5 @@ from .gcs_client import (generate_signed_url,
                          upload_files_to_gcs_bucket,
                          download_files_from_gcs_folder,
                          get_bucket)
-from .resize_augmented_data import resize_augmented_data
+from .resize_augmented_data import resize_augmented_data, get_resized_dimension
 from .validation import validate_stratification_data_file
