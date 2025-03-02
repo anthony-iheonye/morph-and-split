@@ -140,17 +140,29 @@ def create_project_directories(return_dir=True, overwrite_if_existing=False):
                                      return_dir=True,
                                      overwrite_if_existing=overwrite_if_existing)
 
-    train_dir = create_directory(dir_name=directory_store.train_dir,
-                                 return_dir=True,
-                                 overwrite_if_existing=overwrite_if_existing)
+    train_image_dir = create_directory(dir_name=directory_store.train_image_dir,
+                                       return_dir=True,
+                                       overwrite_if_existing=overwrite_if_existing)
 
-    val_dir = create_directory(dir_name=directory_store.val_dir,
-                               return_dir=True,
-                               overwrite_if_existing=overwrite_if_existing)
+    train_mask_dir = create_directory(dir_name=directory_store.train_mask_dir,
+                                      return_dir=True,
+                                      overwrite_if_existing=overwrite_if_existing)
 
-    test_dir = create_directory(dir_name=directory_store.test_dir,
-                                return_dir=True,
-                                overwrite_if_existing=overwrite_if_existing)
+    val_image_dir = create_directory(dir_name=directory_store.val_image_dir,
+                                     return_dir=True,
+                                     overwrite_if_existing=overwrite_if_existing)
+
+    val_mask_dir = create_directory(dir_name=directory_store.val_mask_dir,
+                                    return_dir=True,
+                                    overwrite_if_existing=overwrite_if_existing)
+
+    test_image_dir = create_directory(dir_name=directory_store.test_image_dir,
+                                      return_dir=True,
+                                      overwrite_if_existing=overwrite_if_existing)
+
+    test_mask_dir = create_directory(dir_name=directory_store.test_mask_dir,
+                                     return_dir=True,
+                                     overwrite_if_existing=overwrite_if_existing)
 
     visual_attribute_dir = create_directory(dir_name=directory_store.stratification_data_file_dir,
                                             return_dir=True,
@@ -162,9 +174,12 @@ def create_project_directories(return_dir=True, overwrite_if_existing=False):
                 'resized_image_dir': resized_image_dir,
                 'resized_mask_dir': resized_mask_dir,
                 'augmented_dir': augmented_dir,
-                'train_dir': train_dir,
-                'val_dir': val_dir,
-                'test_dir': test_dir,
+                'train_image_dir': train_image_dir,
+                'train_mask_dir': train_mask_dir,
+                'val_image_dir': val_image_dir,
+                'val_mask_dir': val_mask_dir,
+                'test_image_dir': test_image_dir,
+                'test_mask_dir': test_mask_dir,
                 'visual_attribute_dir': visual_attribute_dir}
 
 
@@ -175,7 +190,7 @@ def create_resized_augmentation_directories(return_dir=True, overwrite_if_existi
     """
     # Directory setup
 
-    resized_augmented_dir = create_directory(dir_name=directory_store.augmented, return_dir=True,
+    resized_augmented_dir = create_directory(dir_name=directory_store.resized_augmented, return_dir=True,
                                              overwrite_if_existing=overwrite_if_existing)
 
     resized_train_image_dir = create_directory(dir_name=directory_store.resized_train_image_dir, return_dir=True,
