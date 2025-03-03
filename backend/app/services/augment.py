@@ -135,8 +135,13 @@ class DataSplitterAugmenterAndSaver:
             adjusted during data augmentation
         """
 
-        apply_data_augmentation = any([random_crop, flip_left_right, flip_up_down, random_rotate,
-                                       corrupt_brightness, corrupt_contrast, corrupt_saturation])
+        apply_data_augmentation = any([random_crop,
+                                       flip_left_right,
+                                       flip_up_down,
+                                       random_rotate,
+                                       corrupt_brightness,
+                                       corrupt_contrast,
+                                       corrupt_saturation])
 
         self.images_directory = images_directory
         self.masks_directory = masks_directory

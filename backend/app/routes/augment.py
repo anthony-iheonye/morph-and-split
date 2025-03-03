@@ -21,7 +21,7 @@ channels = aug_config['imageMaskChannels']
 image_channels = channels['imgChannels']
 mask_channels = channels['maskChannels']
 
-# A global variable to track teh augmentation status
+# A global variable to track augmentation status
 is_augmenting = threading.Event()
 
 
@@ -48,23 +48,21 @@ def augment_data():
 
         # Parse the config JSON string into a dictionary
         aug_config_data: dict = json.loads(config)
-        print("hello")
-
-        stratification_data_filenames = list_filenames(STRATIFICATION_DATA_DIR)
-
-        if len(stratification_data_filenames) > 0:
-            stratification_data_filepath = str(os.path.join(STRATIFICATION_DATA_DIR, stratification_data_filenames[0]))
-        else:
-            stratification_data_filepath = None
 
         # Define the path to the parent 'app' package
         current_dir = os.path.dirname(__file__)
         app_dir = os.path.abspath(os.path.join(current_dir, '..'))
         config_filepath = os.path.join(app_dir, 'aug_config.py')
 
-
         # Save the aug_config as a python script in the 'app' package
         save_aug_config(aug_config_data, config_filepath)
+
+        file_paths = list_filenames(STRATIFICATION_DATA_DIR)
+
+        if file_paths:
+            stratification_data_filepath = str(os.path.join(STRATIFICATION_DATA_DIR, file_paths[0]))
+        else:
+            stratification_data_filepath = None
 
         # set augmentation status to running
         is_augmenting.set()
