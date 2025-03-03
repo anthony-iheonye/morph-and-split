@@ -8,7 +8,7 @@ const AugmentBar = () => {
   return (
     <Flex
       direction={{ base: "row", md: "column" }}
-      height={{ md: "100vh" }}
+      height={{ md: "100dvh" }}
       minHeight={{ md: "100%" }}
       padding="10px"
       gap={{ base: 4, md: 8 }}

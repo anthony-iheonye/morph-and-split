@@ -88,7 +88,7 @@ const MaskUploader = () => {
             title: response.error,
             description: response.message,
             status: "error",
-            duration: 5000,
+            duration: 2000,
             isClosable: true,
           });
         } else {
