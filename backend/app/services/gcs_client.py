@@ -7,6 +7,7 @@ from google.api_core.exceptions import NotFound, GoogleAPIError
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
 from google.oauth2 import service_account
+from google.auth import default
 
 from app.config.google_cloud_storage import GoogleCloudStorageConfig
 from app.utils.directory_file_management import sort_filenames
@@ -57,10 +58,13 @@ def create_google_cloud_storage_bucket(bucket_name: Optional[str] = None,
                                                   google_cloud_config.enable_uniform_bucket_level_access or False)
 
             service_account_file_path = service_account_file_path or google_cloud_config.service_account_file_path
+
             cors = cors or google_cloud_config.cors
             directories = directories or []
 
         # Prepare credentials if provided; otherwise use default credentials.
+        # credentials, project = default()
+
         if service_account_file_path:
             credentials = service_account.Credentials.from_service_account_file(service_account_file_path)
             logger.info('Using provided service account credentials.')
@@ -176,6 +180,9 @@ def get_bucket(bucket_name: Optional[str] = None,
         else:
             credentials = None
             logger.info('Using default credentials.')
+
+        # credentials, project = default()
+
 
         # Initialize the storage client.
         storage_client = storage.Client(credentials=credentials, project=project)
@@ -306,7 +313,9 @@ def generate_signed_url(blob_name: str,
     return blob.generate_signed_url(version="v4",
                                     expiration=timedelta(minutes=expiration),
                                     method=method,
-                                    content_type=content_type)
+                                    content_type=content_type,
+                                    service_account_email="1055861427938-compute@developer.gserviceaccount.com"
+                                    )
 
 
 def delete_google_cloud_storage_bucket(google_cloud_config: Optional[GoogleCloudStorageConfig] ):
@@ -320,6 +329,9 @@ def delete_google_cloud_storage_bucket(google_cloud_config: Optional[GoogleCloud
 
         # Initialize storage client
         credentials = service_account.Credentials.from_service_account_file(google_cloud_config.service_account_file_path)
+
+        # credentials, project = default()
+
         storage_client = storage.Client(project=google_cloud_config.project_name,
                                         credentials=credentials)
 
@@ -435,8 +447,12 @@ def list_files_in_bucket_directory(directory_path:str,
     :param directory_path: (str) Path to the directory whose files should be listed.
     :return: List of file names.
     """
+
     project_name = google_cloud_config.project_name or None
     credentials = service_account.Credentials.from_service_account_file(google_cloud_config.service_account_file_path) or None
+
+    # credentials, project_name = default()
+
     bucket_name = google_cloud_config.bucket_name
 
     storage_client = storage.Client(project=project_name, credentials=credentials)

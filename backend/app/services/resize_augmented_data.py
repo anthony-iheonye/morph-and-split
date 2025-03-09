@@ -4,9 +4,9 @@ from app.aug_config import aug_config
 from PIL import Image
 import os
 
-channels = aug_config['imageMaskChannels']
-image_channels = channels['imgChannels']
-mask_channels = channels['maskChannels']
+# channels = aug_config['imageMaskChannels']
+# image_channels = channels['imgChannels']
+# mask_channels = channels['maskChannels']
 
 
 def get_resized_dimension(image_path: str):
@@ -25,6 +25,7 @@ def get_resized_dimension(image_path: str):
 
     with Image.open(image_path) as img:
         width, height = img.size
+        num_channels = len(img.getbands())
 
         if width <= 256 or height <= 256:
             return width, height
@@ -36,15 +37,18 @@ def get_resized_dimension(image_path: str):
             new_height = 256
             new_width = (256 * width) // height
 
-        return new_width, new_height
+        return new_width, new_height, num_channels
 
 
 def resize_augmented_data():
     sample_img_name = list_filenames(ds.image_dir)[0]
     sample_img_path = str(os.path.join(ds.image_dir, sample_img_name))
 
-    resize_width, resize_height = get_resized_dimension(sample_img_path)
-    print(sample_img_name)
+    sample_mask_name = list_filenames(ds.mask_dir)[0]
+    sample_mask_path = str(os.path.join(ds.mask_dir, sample_mask_name))
+
+    resize_width, resize_height, image_channels = get_resized_dimension(sample_img_path)
+    _, _, mask_channels = get_resized_dimension(sample_mask_path)
 
     train_resizer = ImageAndMaskCropperResizerAndSaver(
         images_directory=ds.train_image_dir,
@@ -78,5 +82,3 @@ def resize_augmented_data():
     test_resizer.process_data()
 
 
-if __name__ == '__main__':
-    resize_augmented_data()
