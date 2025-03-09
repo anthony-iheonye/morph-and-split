@@ -46,8 +46,9 @@ const WelcomePage = () => {
         flexDirection="column"
         flex="1"
         overflow="hidden"
+        mb={0}
       >
-        <BoundingBox overflow="auto" transparent mx={0} mt={0} p={0}>
+        <BoundingBox overflow="auto" transparent mx={0} mt={0} p={0} mb={0}>
           <BoundingBox display="flex" overflow="hidden" mx={0} mt={0}>
             <VStack
               display="flex"
@@ -95,14 +96,14 @@ const WelcomePage = () => {
             </VStack>
           </BoundingBox>
 
-          <BoundingBox display="flex" overflowY="hidden" mx={0} my={0} pb={0}>
+          <BoundingBox display="flex" overflowY="hidden" mx={0} mb={0}>
             <VStack
               display="flex"
               overflow="hidden"
               spacing={4}
               align="start"
               textAlign="left"
-              mb={6}
+              mb={4}
             >
               <Heading as="h2" size="lg" color="teal.500">
                 Why Choose Morph & Split
@@ -138,7 +139,7 @@ const WelcomePage = () => {
         </BoundingBox>
       </GridItem>
 
-      <GridItem area="startSession">
+      <GridItem area="startSession" mt={4}>
         <StartSession to="/upload_data/images" label="Start New Session" />
       </GridItem>
     </Grid>
