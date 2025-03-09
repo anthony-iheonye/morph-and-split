@@ -12,13 +12,17 @@ def create_bucket():
     try:
 
         # Create Google Cloud Storage
-        create_google_cloud_storage_bucket(directories=DIRECTORIES,
-                                           google_cloud_config=google_cloud_config,
-                                           )
+        bucket = create_google_cloud_storage_bucket(directories=DIRECTORIES,
+                                                    google_cloud_config=google_cloud_config)
 
-        return jsonify({'success': True,
-                        'message': f"Google cloud Storage bucket "
-                                   f"{google_cloud_config.bucket_name} created successfully."}), 201
+        if bucket is not None:
+            return jsonify({'success': True,
+                            'message': f"Google cloud Storage bucket "
+                                       f"{google_cloud_config.bucket_name} created successfully."}), 201
+        else:
+            return jsonify({'success': False,
+                            'message': f"Failed to created Storge bucket "
+                                       f"{google_cloud_config.bucket_name} "}), 400
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
