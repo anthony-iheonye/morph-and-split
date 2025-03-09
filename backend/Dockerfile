@@ -74,7 +74,7 @@ COPY . .
 
 # Copy the Google Cloud service account key file into the container
 # Ensure this setp is included to enable authentication
-COPY morph-and-split-key.json /app/morph-and-split-key.json
+#COPY morph-and-split-key.json /app/morph-and-split-key.json
 
 # Change ownership of the app directory to the non-root user
 RUN chown -R appuser:appgroup /app /app/.gcloud
