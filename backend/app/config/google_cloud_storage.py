@@ -8,7 +8,7 @@ from app.utils import current_directory
 
 @attr.s
 class GoogleCloudStorageConfig:
-    project_name: str = attr.ib(default='morph-and-split')
+    project_name: str = attr.ib(default='morph-and-split-tool')
     origin: List[str] = attr.ib(factory=lambda: ["*"])
     responseHeader: List[str] = attr.ib(factory=lambda: ["Content-Type", "x-goog-content-resumable"])
     method: List[str] = attr.ib(factory=lambda: ['PUT', 'POST', 'GET'])
@@ -24,8 +24,8 @@ class GoogleCloudStorageConfig:
     bucket_name: str = attr.ib(default='morph-and-split-assets')
     location: str = attr.ib(default='us-south1')
     storage_class: str = attr.ib(default='STANDARD')
-    service_account_file_name: str = attr.ib(default='morph-and-split-key.json')
     enable_uniform_bucket_level_access: bool = attr.ib(default=True)
+    service_account_file_name: str = attr.ib(default='morph-and-split-key.json')
     service_account_file_path: str = attr.ib(
         factory=lambda: str(os.path.join(current_directory(), 'morph-and-split-key.json')))
 
