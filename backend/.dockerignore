@@ -3,3 +3,5 @@ __pycache__/
 
 # Ignore specific directories or files
 /assets
+
+morph-and-split-key.json
