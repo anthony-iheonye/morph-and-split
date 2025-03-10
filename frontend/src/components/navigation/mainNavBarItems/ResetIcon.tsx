@@ -71,6 +71,10 @@ const ResetIcon = () => {
     "/reset-signed-urls-for-resized-test-set"
   );
 
+  const resetGlobalBucketVariableClient = new APIClient(
+    "/gcs/reset_global_buckets_variables"
+  );
+
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
       setBackendResponseLog("isResetting", true);
@@ -126,6 +130,15 @@ const ResetIcon = () => {
         throw new CustomError(
           "Resetting Testing Set Signed URLs",
           "Failed to reset signed urls for testing set."
+        );
+      }
+
+      const resetBucketVariables =
+        await resetGlobalBucketVariableClient.executeAction();
+      if (!resetBucketVariables.success) {
+        throw new CustomError(
+          "Resetting Global Bucket Variables",
+          "Failed to reset global bucket variables."
         );
       }
 

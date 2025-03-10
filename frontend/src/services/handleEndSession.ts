@@ -47,6 +47,10 @@ const handleEndSession = async ({
     "/stratification_data_file/delete"
   );
 
+  const resetGlobalBucketVariableClient = new APIClient(
+    "/gcs/reset_global_buckets_variables"
+  );
+
   try {
     setBackendResponseLog("isShuttingDown", true);
     const gcsBucketDeletion = await GCSClient.deleteFileOrDirectory();
@@ -55,6 +59,15 @@ const handleEndSession = async ({
       throw new CustomError(
         "Bucket Deletion Failed",
         "Failed to delete Google Cloud Storage Bucket"
+      );
+    }
+
+    const resetBucketVariables =
+      await resetGlobalBucketVariableClient.executeAction();
+    if (!resetBucketVariables.success) {
+      throw new CustomError(
+        "Resetting Global Bucket Variables",
+        "Failed to reset global bucket variables."
       );
     }
 
