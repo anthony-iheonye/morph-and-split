@@ -15,8 +15,7 @@ from app.routes import (
     mask_upload,
     resize_data,
     reset_session,
-    signed_upload_urls,
-    signed_download_urls,
+    google_cloud_signed_urls,
     uploaded_file_names,
     stratification_data_file_processing
 )
@@ -32,8 +31,7 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(directory_management)
-    app.register_blueprint(signed_upload_urls)
-    app.register_blueprint(signed_download_urls)
+    app.register_blueprint(google_cloud_signed_urls)
     app.register_blueprint(image_upload)
     app.register_blueprint(mask_upload)
     app.register_blueprint(download_data_from_gcs)

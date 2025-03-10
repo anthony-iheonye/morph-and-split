@@ -83,8 +83,8 @@ RUN chown -R appuser:appgroup /app /app/.gcloud
 USER appuser
 
 # 🔥🔥 Explicitly Authenticate gcloud inside the Container 🔥🔥
-RUN gcloud auth activate-service-account --key-file=/app/morph-and-split-key.json && \
-    gcloud config set project morph-and-split
+#RUN gcloud auth activate-service-account --key-file=/app/morph-and-split-key.json && \
+#    gcloud config set project morph-and-split
 
 
 # Set Flask environment variables

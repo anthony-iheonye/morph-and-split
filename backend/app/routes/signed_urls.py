@@ -5,7 +5,7 @@ from app.config import google_cloud_config
 from app.services import generate_signed_url
 from app.utils import get_sorted_filenames, directory_store
 
-signed_download_urls = Blueprint('signed_download_urls', __name__)
+google_cloud_signed_urls = Blueprint('signed_urls', __name__)
 
 # Global Cache to store signed URLs
 SIGNED_RESIZED_IMAGE_MASK_URLS = None
@@ -14,7 +14,7 @@ SIGNED_VALIDATION_SET_URLS = None
 SIGNED_TESTING_SET_URLS = None
 
 
-@signed_download_urls.route('/generate-signed-download-url', methods=['GET'])
+@google_cloud_signed_urls.route('/generate-signed-download-url', methods=['GET'])
 def generate_signed_download_urls():
     """
     Generates a v4 signed URL for downloading the zipped augmented result, from Google Cloud Storage, using HTTP GET request.
@@ -43,7 +43,38 @@ def generate_signed_download_urls():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@signed_download_urls.route('/generate-signed-urls-for-resized-images-and-masks', methods=['GET'])
+@google_cloud_signed_urls.route('/generate-signed-upload-url', methods=['POST'])
+def generate_signed_upload_urls():
+    """
+    Generates a v4 signed URL for uploading data files to Google Cloud Storage, using HTTP PUT request.
+    """
+    try:
+        data = request.json
+        filenames = data.get('filenames', [])
+        content_types = data.get('content_types', [])
+        folder_path = data.get('folder_path', '')
+        signed_urls = []
+
+        for i, filename in enumerate(filenames):
+            # Use corresponding type if provided; default to application/octet-stream
+            content_type = content_types[i] if i < len(content_types) else 'application/octet-stream'
+
+            url = generate_signed_url(blob_name=f"{folder_path}/{filename}",
+                                      method="PUT",
+                                      content_type=content_type,
+                                      google_cloud_config=google_cloud_config)
+
+            signed_urls.append({"filename": filename, "url": url, "content_type": content_type})
+
+        return jsonify({'success': True,
+                        'count': len(signed_urls),
+                        'results': signed_urls}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@google_cloud_signed_urls.route('/generate-signed-urls-for-resized-images-and-masks', methods=['GET'])
 def generate_signed_urls_for_resized_images_and_masks():
     """Generate signed url for downloading the resized uploaded images and masks from GCS bucket."""
 
@@ -85,7 +116,7 @@ def generate_signed_urls_for_resized_images_and_masks():
         return []
 
 
-@signed_download_urls.route('/generate-signed-urls-for-resized-augmented-train-set', methods=['GET'])
+@google_cloud_signed_urls.route('/generate-signed-urls-for-resized-augmented-train-set', methods=['GET'])
 def generate_signed_urls_for_resized_train_set():
     """Generate signed url for downloading the resized training images and masks from GCS bucket."""
 
@@ -127,7 +158,7 @@ def generate_signed_urls_for_resized_train_set():
         return []
 
 
-@signed_download_urls.route('/generate-signed-urls-for-resized-augmented-validation-set', methods=['GET'])
+@google_cloud_signed_urls.route('/generate-signed-urls-for-resized-augmented-validation-set', methods=['GET'])
 def generate_signed_urls_for_resized_validation_set():
     """Generate signed url for downloading the resized augmented validation images and masks from GCS bucket."""
     global SIGNED_VALIDATION_SET_URLS
@@ -168,7 +199,7 @@ def generate_signed_urls_for_resized_validation_set():
         return []
 
 
-@signed_download_urls.route('/generate-signed-urls-for-resized-augmented-test-set', methods=['GET'])
+@google_cloud_signed_urls.route('/generate-signed-urls-for-resized-augmented-test-set', methods=['GET'])
 def generate_signed_urls_for_resized_test_set():
     """Generate signed url for downloading the resized augmented test images and masks from GCS bucket."""
     global SIGNED_TESTING_SET_URLS
@@ -209,7 +240,7 @@ def generate_signed_urls_for_resized_test_set():
         return []
 
 
-@signed_download_urls.route('/reset-signed-urls-for-resized-images-and-masks', methods=['POST'])
+@google_cloud_signed_urls.route('/reset-signed-urls-for-resized-images-and-masks', methods=['POST'])
 def reset_signed_urls_for_resized_images_and_masks():
     global SIGNED_RESIZED_IMAGE_MASK_URLS
 
@@ -221,7 +252,7 @@ def reset_signed_urls_for_resized_images_and_masks():
         return jsonify({'success': False, 'message': f"Error resetting signed urls for resized images and masks: {e}"})
 
 
-@signed_download_urls.route('/reset-signed-urls-for-resized-train-set', methods=['POST'])
+@google_cloud_signed_urls.route('/reset-signed-urls-for-resized-train-set', methods=['POST'])
 def reset_signed_urls_for_resized_train_set():
     global SIGNED_TRAINING_SET_URLS
 
@@ -233,7 +264,7 @@ def reset_signed_urls_for_resized_train_set():
         return jsonify({'success': False, 'message': f"Error resetting signed urls for resized training set: {e}"})
 
 
-@signed_download_urls.route('/reset-signed-urls-for-resized-validation-set', methods=['POST'])
+@google_cloud_signed_urls.route('/reset-signed-urls-for-resized-validation-set', methods=['POST'])
 def reset_signed_urls_for_resized_validation_set():
     global SIGNED_VALIDATION_SET_URLS
 
@@ -245,7 +276,7 @@ def reset_signed_urls_for_resized_validation_set():
         return jsonify({'success': False, 'message': f"Error resetting signed urls for resized validation set.: {e}"})
 
 
-@signed_download_urls.route('/reset-signed-urls-for-resized-test-set', methods=['POST'])
+@google_cloud_signed_urls.route('/reset-signed-urls-for-resized-test-set', methods=['POST'])
 def reset_signed_urls_for_resized_test_set():
     global SIGNED_TESTING_SET_URLS
 

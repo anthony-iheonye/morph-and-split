@@ -5,7 +5,7 @@ from flask import send_from_directory, url_for
 from werkzeug.utils import secure_filename
 
 from app.config import google_cloud_config
-from app.routes.signed_download_urls import generate_signed_urls_for_resized_images_and_masks, \
+from app.routes.signed_urls import generate_signed_urls_for_resized_images_and_masks, \
     generate_signed_urls_for_resized_train_set, generate_signed_urls_for_resized_validation_set, \
     generate_signed_urls_for_resized_test_set
 from app.services import generate_signed_url
