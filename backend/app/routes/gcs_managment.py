@@ -1,8 +1,11 @@
 from flask import Blueprint, jsonify
+import logging
 
 from app.config import google_cloud_config, DIRECTORIES
-from app.services import create_google_cloud_storage_bucket
+from app.services import create_google_cloud_storage_bucket, reset_global_bucket_variables
 from app.services.gcs_client import delete_and_recreate_directories_in_gcs_bucket, delete_google_cloud_storage_bucket
+logger = logging.getLogger(__name__)
+
 
 # Blueprint definition
 gcs_management = Blueprint('gcs_management', __name__)
@@ -72,4 +75,26 @@ def delete_uploaded_masks():
                         'message': 'Successfully deleted uploaded masks in Google Cloud Storage Bucket'}), 200
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@gcs_management.route('/gcs/reset_global_buckets_variables', methods=['POST'])
+def reset_global_buckets():
+    """
+    An endpoint to reset the global bucket variables
+    :return: JSON response
+    """
+
+    try:
+        success = reset_global_bucket_variables()
+
+        if success:
+            return jsonify({'success': True,
+                            'message': 'Successfully reset global bucket parameter to None'}), 200
+        else:
+            return jsonify({'success': False, 'error': "Failed to reset global bucket variables."}), 500
+
+    except Exception as e:
+        logger.exception("Unexpected error in reset_global_buckets endpoint.")
+        return jsonify({'success': False,
+                        'error': f"An unexpected error occurred while resetting buckets: {e}"}), 500
 
