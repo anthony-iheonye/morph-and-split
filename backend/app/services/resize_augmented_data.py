@@ -37,7 +37,7 @@ def get_resized_dimension(image_path: str):
             new_height = 256
             new_width = (256 * width) // height
 
-        return new_width, new_height, num_channels
+        return  new_height, new_width, num_channels
 
 
 def resize_augmented_data():

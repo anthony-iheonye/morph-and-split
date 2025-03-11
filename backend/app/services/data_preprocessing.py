@@ -722,6 +722,15 @@ class ImageCropperResizerAndSaver:
         # saves image and mask
         image_basename = image_name.numpy().decode('utf-8')
 
+        # Check number of channels
+        if len(image.shape) == 2:  # Grayscale (H, W)
+            save_mode = 'grayscale'  # Save as grayscale
+        elif image.shape[-1] == 1:  # Single-channel (H, W, 1)
+            image = np.squeeze(image, axis=-1)  # Remove last dimension -> (H, W)
+            save_mode = 'grayscale'  # Save as grayscale
+        else:  # RGB or multi-channel (H, W, C)
+            save_mode = 'rgb'  # Save as RGB
+
         io.imsave(fname=f'{self.new_images_directory}/{image_basename}',
                   arr=image, check_contrast=False)
 
