@@ -16,13 +16,13 @@ def resize_original_images():
         sample_img_name = list_filenames(directory_store.image_dir)[0]
         sample_img_path = str(os.path.join(directory_store.image_dir, sample_img_name))
 
-        resize_width, resize_height, channels = get_resized_dimension(sample_img_path)
+        resize_height, resize_width, channels = get_resized_dimension(sample_img_path)
 
         # Resize images
         image_resizer = ImageCropperResizerAndSaver(images_directory=directory_store.image_dir,
                                                     new_images_directory=directory_store.resized_image_dir,
                                                     image_channels=channels,
-                                                    final_image_shape=(resize_width, resize_height))
+                                                    final_image_shape=(resize_height, resize_width))
         image_resizer.process_data()
 
         return jsonify({'success': True, 'message': 'Uploaded images resized successfully!'}), 201
@@ -39,14 +39,14 @@ def resize_original_masks():
         sample_img_name = list_filenames(directory_store.mask_dir)[0]
         sample_img_path = str(os.path.join(directory_store.mask_dir, sample_img_name))
 
-        resize_width, resize_height, channels = get_resized_dimension(sample_img_path)
+        resize_height, resize_width, channels = get_resized_dimension(sample_img_path)
 
 
         # Resize images
         mask_resizer = ImageCropperResizerAndSaver(images_directory=directory_store.mask_dir,
                                                     new_images_directory=directory_store.resized_mask_dir,
                                                     image_channels=channels,
-                                                    final_image_shape=(resize_width, resize_height))
+                                                    final_image_shape=(resize_height, resize_width))
         mask_resizer.process_data()
 
         return jsonify({'success': True, 'message': 'Uploaded masks resized successfully!'}), 201

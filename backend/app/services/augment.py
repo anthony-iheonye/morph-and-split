@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 
 from app.utils import create_directory
 from .visual_attributes_service import VisualAttributesDatasetCreator
+import numpy as np
 
 
 class DataSplitterAugmenterAndSaver:
@@ -784,10 +785,19 @@ class DataSplitterAugmenterAndSaver:
 
     def _save_data(self, index, image, mask):
         """saves the image and mask."""
+
+        if image.shape[-1] == 1:  # Single-channel (H, W, 1)
+            image = np.squeeze(image, axis=-1)  # Remove last dimension -> (H, W) so it can be saved as grayscale
+
+        if mask.shape[-1] == 1:  # Single-channel (H, W, 1)
+            mask = np.squeeze(mask, axis=-1)  # Remove last dimension -> (H, W) so it can be saved as grayscale
+
         io.imsave(fname=f'{self.image_save_directory}/{self.image_save_prefix}_{index}.{self.image_save_format}',
                   arr=image, check_contrast=False)
+
         io.imsave(fname=f'{self.mask_save_directory}/{self.mask_save_prefix}_{index}.{self.image_save_format}',
                   arr=mask, check_contrast=False)
+
         return index
 
     def _tf_save_data(self, index, image, mask):

@@ -1106,6 +1106,13 @@ class ImageAndMaskCropperResizerAndSaver:
         image_basename = image_name.numpy().decode('utf-8')
         mask_basename = mask_name.numpy().decode('utf-8')
 
+        if image.shape[-1] == 1:  # Single-channel (H, W, 1)
+            image = np.squeeze(image, axis=-1)  # Remove last dimension -> (H, W) so it can be saved as grayscale
+
+        if mask.shape[-1] == 1:  # Single-channel (H, W, 1)
+            mask = np.squeeze(mask, axis=-1)  # Remove last dimension -> (H, W) so it can be saved as grayscale
+
+
         io.imsave(fname=f'{self.new_images_directory}/{image_basename}',
                   arr=image, check_contrast=False)
         io.imsave(fname=f'{self.new_masks_directory}/{mask_basename}',
