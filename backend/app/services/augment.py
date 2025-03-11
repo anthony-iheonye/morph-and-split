@@ -443,13 +443,10 @@ class DataSplitterAugmenterAndSaver:
         self.no_of_val_examples = len(val_image_paths)
         self.no_of_test_examples = len(test_image_paths)
 
-        # The number of the times the data augmentation step has be run per iteration, inorder to produce enough
+        # The number of the times the data augmentation step has to be run per iteration, inorder to produce enough
         # training and validation examples, to produce the total number of training images and mask required.
         if self.apply_data_augmentation:
-            if self.number_of_training_images_after_augmentation // self.no_of_train_examples != 0:
-                self.iterations = self.number_of_training_images_after_augmentation // self.no_of_train_examples + 1
-            else:
-                self.iterations = self.number_of_training_images_after_augmentation // self.no_of_train_examples
+            self.iterations = max(1, -(-self.number_of_training_images_after_augmentation // self.no_of_train_examples))
         else:
             self.iterations = 1
 
@@ -490,10 +487,7 @@ class DataSplitterAugmenterAndSaver:
         # The number of the times the data augmentation step has be run per iteration, inorder to produce enough
         # training and validation examples, to produce the total number of training images and mask required.
         if self.apply_data_augmentation:
-            if self.number_of_training_images_after_augmentation // self.no_of_train_examples != 0:
-                self.iterations = self.number_of_training_images_after_augmentation // self.no_of_train_examples + 1
-            else:
-                self.iterations = self.number_of_training_images_after_augmentation // self.no_of_train_examples
+            self.iterations = max(1, -(-self.number_of_training_images_after_augmentation // self.no_of_train_examples))
         else:
             self.iterations = 1
 
@@ -919,4 +913,6 @@ class DataSplitterAugmenterAndSaver:
         self._process_images_and_masks()
         print(f'\nProcess completed!!\n')
         gc.collect()
+
+
 
