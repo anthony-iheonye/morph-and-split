@@ -12,7 +12,7 @@ import { MdInfoOutline } from "react-icons/md";
 
 const StratifiedFileHint = () => {
   return (
-    <Popover placement="auto" preventOverflow>
+    <Popover placement="auto">
       <PopoverTrigger>
         <IconButton
           aria-label="CSV format hint"
@@ -22,7 +22,7 @@ const StratifiedFileHint = () => {
           _hover={{ bg: "transparent" }}
         />
       </PopoverTrigger>
-      <PopoverContent boxShadow="lg" p={4}>
+      <PopoverContent boxShadow="lg" p={4} maxHeight="47vh">
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader> CSV Requirements</PopoverHeader>

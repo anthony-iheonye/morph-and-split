@@ -1,4 +1,4 @@
-import { IoIosColorPalette } from "react-icons/io";
+import { FaScaleBalanced } from "react-icons/fa6";
 import {
   subParentNames,
   useActiveNavColor,
@@ -13,7 +13,7 @@ const StratifiedSplitting = () => {
 
   return (
     <SubNavBarItem
-      icon={<IoIosColorPalette />}
+      icon={<FaScaleBalanced />}
       iconLabel="Select visual attributes JSON file"
       text={{ md: "Stratified Splitting" }}
       to={"/settings/stratified_splitting"}
