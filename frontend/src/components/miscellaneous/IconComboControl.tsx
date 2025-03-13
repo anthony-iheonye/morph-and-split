@@ -18,6 +18,7 @@ interface IconComboControlProps extends Omit<GridProps, "title"> {
   icon?: IconType | undefined;
   controlElement?: ReactNode;
   controlElementWidth?: number | string | {};
+  titleHint?: JSX.Element;
 }
 const IconComboControl = ({
   icon,
@@ -27,6 +28,7 @@ const IconComboControl = ({
   titleFontSize = 16,
   controlElement,
   controlElementWidth = "auto",
+  titleHint,
   ...rest
 }: IconComboControlProps) => {
   const responsiveTitle = useBreakpointValue(
@@ -61,6 +63,7 @@ const IconComboControl = ({
           <Text mb={0} fontSize={titleFontSize} fontWeight="medium">
             {responsiveTitle}
           </Text>
+          {titleHint}
         </HStack>
       </GridItem>
 

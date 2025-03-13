@@ -4,3 +4,4 @@ export { default as IconHeadingDescriptionCombo } from "./IconHeadingDescription
 export { default as PageTitle } from "./PageTitle";
 export { default as SplitSelector } from "./SplitSelector";
 export { default as IconComboControl } from "./IconComboControl";
+export { default as StratifiedFileHint } from "./StratifiedFileHint";

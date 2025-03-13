@@ -15,7 +15,11 @@ import {
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
-import { IconComboControl, PageTitle } from "../components/miscellaneous";
+import {
+  IconComboControl,
+  PageTitle,
+  StratifiedFileHint,
+} from "../components/miscellaneous";
 import { useStratificationDataFileName } from "../hooks";
 
 const StratifiedSplitting = () => {
@@ -82,6 +86,7 @@ const StratifiedSplitting = () => {
               }}
               controlElement={<StratifiedDataFileUploader />}
               leftAlignDescription={false}
+              titleHint={<StratifiedFileHint />}
             />
             <HStack justifySelf={"start"} mt={2}>
               {fileName && (
