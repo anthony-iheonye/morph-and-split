@@ -35,12 +35,11 @@ const MaskUpload = () => {
       templateAreas={{
         base: `"title"
                "uploader"
-               "channels"
                "selectedMasks"
                "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
-      templateRows={{ base: "auto auto auto 1fr auto" }} // ✅ Ensures selectedMasks expands
+      templateRows={{ base: "auto auto 1fr auto" }} // ✅ Ensures selectedMasks expands
       overflow="hidden"
     >
       <GridItem area="title" mt={8}>
@@ -54,8 +53,8 @@ const MaskUpload = () => {
               icon={BiSolidImageAdd}
               title={{ base: "Upload Masks", md: "Upload Segmentation Masks" }}
               description={{
-                base: "Select masks",
-                md: "Click button to upload segmentation masks",
+                base: "Select masks (.jpg, .png, .bmp)",
+                md: "Click button to upload segmentation masks (.jpg, .png, .bmp)",
               }}
             />
             <MaskUploader />
@@ -63,7 +62,7 @@ const MaskUpload = () => {
         </BoundingBox>
       </GridItem>
 
-      <GridItem area="channels">
+      {/* <GridItem area="channels">
         <BoundingBox mt={0}>
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
@@ -78,7 +77,7 @@ const MaskUpload = () => {
           </HStack>
         </BoundingBox>
       </GridItem>
-
+ */}
       <GridItem
         area="selectedMasks"
         display="flex"

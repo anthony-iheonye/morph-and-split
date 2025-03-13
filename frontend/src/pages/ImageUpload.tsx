@@ -38,12 +38,11 @@ const ImageUpload = () => {
       templateAreas={{
         base: `"title"
                "uploader"
-               "channels"
                "selectedImages"
                "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
-      templateRows={{ base: "auto auto auto 1fr auto" }}
+      templateRows={{ base: "auto auto 1fr auto" }}
       overflow="hidden"
     >
       <GridItem area="title" mt={8}>
@@ -57,8 +56,8 @@ const ImageUpload = () => {
               icon={BiSolidImageAdd}
               title="Upload Images"
               description={{
-                base: "Select images",
-                md: "Click button to upload images for augmentation.",
+                base: "Select images (.jpg, .png, .bmp)",
+                md: "Click button to upload images for augmentation. (.jpg, .png, .bmp)",
               }}
             />
             <ImageUploader />
@@ -66,7 +65,7 @@ const ImageUpload = () => {
         </BoundingBox>
       </GridItem>
 
-      <GridItem area="channels">
+      {/* <GridItem area="channels">
         <BoundingBox mt={0}>
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
@@ -80,7 +79,7 @@ const ImageUpload = () => {
             <ImageChannel />
           </HStack>
         </BoundingBox>
-      </GridItem>
+      </GridItem> */}
 
       <GridItem
         area="selectedImages"
