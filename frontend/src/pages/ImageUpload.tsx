@@ -8,6 +8,7 @@ import {
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import {
+  CopyrightBar,
   IconHeadingDescriptionCombo,
   PageTitle,
 } from "../components/miscellaneous";
@@ -37,7 +38,8 @@ const ImageUpload = () => {
         base: `"title"
                "uploader"
                "selectedImages"
-               "navBtn"`,
+               "navBtn"
+               "copyright"`,
       }}
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto auto 1fr auto" }}
@@ -134,6 +136,10 @@ const ImageUpload = () => {
             disable={!imageUploadStatus?.success || imageIsUploading}
           />
         </BoundingBox>
+      </GridItem>
+
+      <GridItem area="copyright">
+        <CopyrightBar />
       </GridItem>
     </Grid>
   );

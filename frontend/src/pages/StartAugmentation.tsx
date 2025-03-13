@@ -8,7 +8,7 @@ import {
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { SaveSuffixInput } from "../components/inputFields";
-import { PageTitle } from "../components/miscellaneous";
+import { CopyrightBar, PageTitle } from "../components/miscellaneous";
 import { useBackendResponse } from "../hooks";
 import useAugmentationIsComplete from "../hooks/useAugmentationIsComplete";
 import { handleDownloadGCSFiles } from "../services";
@@ -23,7 +23,8 @@ const StartAugmentation = () => {
       templateAreas={{
         base: `"title"
                "suffix"
-               "navBtn"`,
+               "navBtn"
+               "copyright"`,
       }}
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto 1fr auto" }}
@@ -118,6 +119,10 @@ const StartAugmentation = () => {
             )}
           </HStack>
         </BoundingBox>
+      </GridItem>
+
+      <GridItem area="copyright">
+        <CopyrightBar />
       </GridItem>
     </Grid>
   );

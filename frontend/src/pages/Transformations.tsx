@@ -9,7 +9,7 @@ import {
 } from "react-icons/tb";
 import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import { PageTitle } from "../components/miscellaneous";
+import { CopyrightBar, PageTitle } from "../components/miscellaneous";
 import { RandomTransformation } from "../components/switches";
 
 const AugTransformationsInput = () => {
@@ -19,10 +19,11 @@ const AugTransformationsInput = () => {
         base: `"title"
              "transformations"
              "augmentOtherSets"
-             "navBtn"`,
+             "navBtn"
+             "copyright"`,
       }}
       templateColumns={{ base: "1fr" }}
-      templateRows={{ base: "auto 1fr auto auto" }}
+      templateRows={{ base: "auto 1fr auto auto auto" }}
       overflow="hidden"
       maxHeight="100%"
     >
@@ -134,6 +135,10 @@ const AugTransformationsInput = () => {
             <ContinueBtn to="/settings/pre_processing" />
           </HStack>
         </BoundingBox>
+      </GridItem>
+
+      <GridItem area="copyright">
+        <CopyrightBar />
       </GridItem>
     </Grid>
   );

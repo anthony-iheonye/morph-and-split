@@ -109,6 +109,16 @@ const ResetIcon = () => {
         );
       }
 
+      // Create new project directories
+      const projectDirectoryCreation =
+        await projectDirectoryClient.executeAction();
+
+      if (!projectDirectoryCreation.success) {
+        throw new CustomError(
+          "Project Directory Creation Failed.",
+          "Failed to create project directories."
+        );
+      }
       const resetUploadedDataSignedUrls =
         await resetUploadedDataURLClient.executeAction();
       if (!resetUploadedDataSignedUrls.success) {
@@ -144,19 +154,8 @@ const ResetIcon = () => {
         );
       }
 
-      // Create new project directories
-      const projectDirectoryCreation =
-        await projectDirectoryClient.executeAction();
-
-      if (!projectDirectoryCreation.success) {
-        throw new CustomError(
-          "Project Directory Creation Failed.",
-          "Failed to create project directories."
-        );
-      }
-
       // Add delay to wait for the bucket to be fully available
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 10000));
 
       // Create folders within the bucket
       const directoryCreation = await bucketDirectoryClient.executeAction();

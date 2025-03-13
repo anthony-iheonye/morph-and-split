@@ -1,4 +1,11 @@
-import { Grid, GridItem, HStack, SimpleGrid, Switch } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  HStack,
+  Image,
+  SimpleGrid,
+  Switch,
+} from "@chakra-ui/react";
 import { GiResize } from "react-icons/gi";
 import { PiResizeFill } from "react-icons/pi";
 import { RiCropFill } from "react-icons/ri";
@@ -13,8 +20,13 @@ import {
   TargetWidthInput,
   WidthOffsetInput,
 } from "../components/inputFields";
-import { IconComboControl, PageTitle } from "../components/miscellaneous";
+import {
+  CopyrightBar,
+  IconComboControl,
+  PageTitle,
+} from "../components/miscellaneous";
 import { useAugConfigAndSetter } from "../hooks";
+import cropGuide from "../assets/crop_guide.svg";
 
 const PreProcessing = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -29,10 +41,11 @@ const PreProcessing = () => {
         base: `"title"
                "cropData"
                "resizeData"
-               "navBtn"`,
+               "navBtn"
+               "copyright"`,
       }}
       templateColumns={{ base: "1fr" }}
-      templateRows={{ base: "auto 1fr auto auto" }}
+      templateRows={{ base: "auto 1fr auto auto auto" }}
       overflow="hidden"
       maxHeight="100%"
     >
@@ -62,6 +75,7 @@ const PreProcessing = () => {
                 />
               }
             />
+            {augConfig.crop ? <Image src={cropGuide} boxSize="300px" /> : null}
             {augConfig.crop ? (
               <BoundingBox
                 maxWidth={"600px"}
@@ -69,10 +83,10 @@ const PreProcessing = () => {
                 paddingTop={{ base: "3", md: "3" }}
                 paddingBottom={{ base: "0", md: "0" }}
               >
-                <SimpleGrid columns={{ base: 1 }} spacing={{ base: 8, md: 8 }}>
+                <SimpleGrid columns={{ base: 1 }} spacing={{ base: 4, md: 8 }}>
                   <IconComboControl
                     icon={PiResizeFill}
-                    title="Height Offset"
+                    title="Height Offset (a)"
                     description="Adjusts the vertical position of the cropping area within the image."
                     controlElement={<HeightOffsetInput />}
                     controlElementWidth={"100px"}
@@ -80,25 +94,24 @@ const PreProcessing = () => {
 
                   <IconComboControl
                     icon={PiResizeFill}
-                    title="Width Offset"
+                    title="Width Offset (b)"
                     description="Adjusts the horizontal position of the cropping area within the image."
                     controlElement={<WidthOffsetInput />}
                     controlElementWidth={"100px"}
                   />
 
                   <IconComboControl
-                    icon={TbArrowAutofitHeight}
-                    title="Target Height"
-                    description="The height of the image/mask after cropping."
-                    controlElement={<TargetHeightInput />}
-                    controlElementWidth={"100px"}
-                  />
-
-                  <IconComboControl
                     icon={TbArrowAutofitWidth}
-                    title="Target Width"
+                    title="Target Width (c)"
                     description="The width of the image/mask after cropping."
                     controlElement={<TargetWidthInput />}
+                    controlElementWidth={"100px"}
+                  />
+                  <IconComboControl
+                    icon={TbArrowAutofitHeight}
+                    title="Target Height (d)"
+                    description="The height of the image/mask after cropping."
+                    controlElement={<TargetHeightInput />}
                     controlElementWidth={"100px"}
                   />
                 </SimpleGrid>
@@ -153,6 +166,10 @@ const PreProcessing = () => {
             <ContinueBtn to="/augment/start_augmentation" />
           </HStack>
         </BoundingBox>
+      </GridItem>
+
+      <GridItem area="copyright">
+        <CopyrightBar />
       </GridItem>
     </Grid>
   );

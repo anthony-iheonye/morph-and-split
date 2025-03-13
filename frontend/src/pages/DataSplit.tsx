@@ -16,7 +16,11 @@ import { FaLayerGroup } from "react-icons/fa6";
 import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { TotalTrainData } from "../components/inputFields";
-import { IconComboControl, PageTitle } from "../components/miscellaneous";
+import {
+  CopyrightBar,
+  IconComboControl,
+  PageTitle,
+} from "../components/miscellaneous";
 import {
   TestRatioLock,
   TrainRatioLock,
@@ -161,10 +165,11 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
         base: `"title"
                    "splitSlider"
                    "augmentedSize"
-                   "navBtn"`,
+                   "navBtn"
+                   "copyright"`,
       }}
       templateColumns={{ base: "1fr" }}
-      templateRows={{ base: "auto 1fr auto auto" }}
+      templateRows={{ base: "auto 1fr auto auto auto" }}
       overflow="hidden"
       maxHeight="100%"
     >
@@ -276,6 +281,10 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
             <ContinueBtn to="/settings/stratified_splitting" />
           </HStack>
         </BoundingBox>
+      </GridItem>
+
+      <GridItem area="copyright">
+        <CopyrightBar />
       </GridItem>
     </Grid>
   );
