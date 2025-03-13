@@ -22,7 +22,6 @@ const handleImageUpload = async ({
   files,
   queryClient,
   toast,
-  augConfig,
   setIsUploading,
   setBackendResponseLog,
 }: Props) => {

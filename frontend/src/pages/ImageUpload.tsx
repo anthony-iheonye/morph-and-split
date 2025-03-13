@@ -1,6 +1,5 @@
 import { Box, Grid, GridItem, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
-import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
 import {
   ContinueBtn,
@@ -8,7 +7,6 @@ import {
   ImageUploader,
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import { ImageChannel } from "../components/dropdowns";
 import {
   IconHeadingDescriptionCombo,
   PageTitle,

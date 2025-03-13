@@ -1,10 +1,9 @@
 import { Box, Grid, GridItem, HStack, Text } from "@chakra-ui/react";
 import { BiSolidImageAdd } from "react-icons/bi";
-import { IoLayers } from "react-icons/io5";
 import { TbLayersSelected } from "react-icons/tb";
 import { ContinueBtn, MaskUploader, PreviousBtn } from "../components/buttons";
+import DeleteMasks from "../components/buttons/DeleteMasks";
 import { BoundingBox } from "../components/display";
-import { MaskChannel } from "../components/dropdowns";
 import {
   IconHeadingDescriptionCombo,
   PageTitle,
@@ -16,7 +15,6 @@ import {
   useMaskUploadStatus,
   useUploadedMaskNames,
 } from "../hooks";
-import DeleteMasks from "../components/buttons/DeleteMasks";
 
 const MaskUpload = () => {
   const { data: maskData } = useUploadedMaskNames();
