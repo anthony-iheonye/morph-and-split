@@ -75,9 +75,9 @@ const ResetIcon = () => {
     "/gcs/reset_global_buckets_variables"
   );
 
-  const bucketDirectoryClient = new APIClient<BackendResponse>(
-    "/gcs/create_folders_in_bucket"
-  );
+  // const bucketDirectoryClient = new APIClient<BackendResponse>(
+  //   "/gcs/create_folders_in_bucket"
+  // );
 
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
@@ -154,17 +154,18 @@ const ResetIcon = () => {
         );
       }
 
-      // Add delay to wait for the bucket to be fully available
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      // // Add delay to wait for the bucket to be fully available
+      // await new Promise((resolve) => setTimeout(resolve, 10000));
 
-      // Create folders within the bucket
-      const directoryCreation = await bucketDirectoryClient.executeAction();
-      if (!directoryCreation.success) {
-        throw new CustomError(
-          "Bucket Directory Creation",
-          "Failed to create directories within the GCS bucket."
-        );
-      } else {
+      // // Create folders within the bucket
+      // const directoryCreation = await bucketDirectoryClient.executeAction();
+      // if (!directoryCreation.success) {
+      //   throw new CustomError(
+      //     "Bucket Directory Creation",
+      //     "Failed to create directories within the GCS bucket."
+      //   );
+      // }
+      else {
         toast({
           title: "Session reset successfully!",
           status: "success",
