@@ -27,6 +27,9 @@ const StartSession = ({
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "project_directories/create"
   );
+  const bucketDirectoryClient = new APIClient<BackendResponse>(
+    "/gcs/create_folders_in_bucket"
+  );
 
   const navigate = useNavigate();
   const toast = useToast();
@@ -47,6 +50,15 @@ const StartSession = ({
         throw new CustomError(
           "GCS Bucket Creation",
           "Failed to create a Google Cloud Storage bucket."
+        );
+      }
+
+      // Create folders within the bucket
+      const directoryCreation = await bucketDirectoryClient.executeAction();
+      if (!directoryCreation.success) {
+        throw new CustomError(
+          "Bucket Directory Creation",
+          "Failed to create directories within the GCS bucket."
         );
       }
 

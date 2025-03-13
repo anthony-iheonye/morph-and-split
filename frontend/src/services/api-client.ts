@@ -174,7 +174,7 @@ class APIClient<T> {
           folder_path
         );
 
-      // upload files using signed URLs in parallel
+      // upload files in parallel using signed URLs
       const failedFiles: string[] = [];
 
       const uploadPromises = files.map(async (file) => {

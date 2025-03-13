@@ -75,26 +75,37 @@ const ResetIcon = () => {
     "/gcs/reset_global_buckets_variables"
   );
 
+  const bucketDirectoryClient = new APIClient<BackendResponse>(
+    "/gcs/create_folders_in_bucket"
+  );
+
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
       setBackendResponseLog("isResetting", true);
 
-      // Create new project directories
-      const projectDirectoryCreation =
-        await projectDirectoryClient.executeAction();
-
-      if (!projectDirectoryCreation.success) {
-        throw new CustomError(
-          "Project Directory Creation Failed.",
-          "Failed to create project directories."
-        );
-      }
-
+      // Delete GCS bucket
       const gcsBucketDeletion = await GCSDeleteClient.deleteFileOrDirectory();
       if (!gcsBucketDeletion) {
         throw new CustomError(
           "GCS Storage Deletion  Failed.",
           "Failed to delete Google Cloud Storage bucket."
+        );
+      }
+
+      const resetBucketVariables =
+        await resetGlobalBucketVariableClient.executeAction();
+      if (!resetBucketVariables.success) {
+        throw new CustomError(
+          "Resetting Global Bucket Variables",
+          "Failed to reset global bucket variables."
+        );
+      }
+
+      const gcsBucketCreation = await GCSCreateClient.executeAction();
+      if (!gcsBucketCreation.success) {
+        throw new CustomError(
+          "GCS Bucket Creation",
+          "Failed to create Google Cloud Storage bucket."
         );
       }
 
@@ -133,20 +144,26 @@ const ResetIcon = () => {
         );
       }
 
-      const resetBucketVariables =
-        await resetGlobalBucketVariableClient.executeAction();
-      if (!resetBucketVariables.success) {
+      // Create new project directories
+      const projectDirectoryCreation =
+        await projectDirectoryClient.executeAction();
+
+      if (!projectDirectoryCreation.success) {
         throw new CustomError(
-          "Resetting Global Bucket Variables",
-          "Failed to reset global bucket variables."
+          "Project Directory Creation Failed.",
+          "Failed to create project directories."
         );
       }
 
-      const gcsBucketCreation = await GCSCreateClient.executeAction();
-      if (!gcsBucketCreation.success) {
+      // Add delay to wait for the bucket to be fully available
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      // Create folders within the bucket
+      const directoryCreation = await bucketDirectoryClient.executeAction();
+      if (!directoryCreation.success) {
         throw new CustomError(
-          "GCS Bucket Creation",
-          "Failed to create Google Cloud Storage bucket."
+          "Bucket Directory Creation",
+          "Failed to create directories within the GCS bucket."
         );
       } else {
         toast({

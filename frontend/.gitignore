@@ -28,3 +28,4 @@ src/components/Augment2.tsx
 src/pages/Practice.tsx
 src/pages/ImageUpload copy.tsx
 src/components/buttons/SignedUrl.tsx
+src/components/buttons/ImageUploader2.tsx
