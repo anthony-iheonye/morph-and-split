@@ -1,9 +1,8 @@
-import { Box, Grid, GridItem, Show } from "@chakra-ui/react";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { NavBar } from "../components/navigation";
 import { parentNames, useActiveParent } from "../hooks";
 import WelcomePage from "./WelcomePage";
-import { CopyrightBar } from "../components/miscellaneous";
 // import FeatureSwitcher from "../components/display/FeatureSwitcher";
 
 const Layout = () => {
