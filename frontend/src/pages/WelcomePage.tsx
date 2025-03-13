@@ -11,6 +11,7 @@ import {
 import { FaCheckCircle } from "react-icons/fa";
 import StartSession from "../components/buttons/StartSession";
 import { BoundingBox } from "../components/display";
+import { CopyrightBar } from "../components/miscellaneous";
 
 const WelcomePage = () => {
   return (
@@ -18,7 +19,8 @@ const WelcomePage = () => {
       templateAreas={{
         base: `"heading"
                 "features"
-                "startSession"`,
+                "startSession"
+                "copyright"`,
       }}
       textAlign="center"
       p={6}
@@ -139,8 +141,12 @@ const WelcomePage = () => {
         </BoundingBox>
       </GridItem>
 
-      <GridItem area="startSession" mt={4}>
+      <GridItem area="startSession" mt={4} mb={2}>
         <StartSession to="/upload_data/images" label="Start New Session" />
+      </GridItem>
+
+      <GridItem area="copyright">
+        <CopyrightBar />
       </GridItem>
     </Grid>
   );
