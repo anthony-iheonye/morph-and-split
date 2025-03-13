@@ -1,9 +1,15 @@
+import time
+
 from flask import Blueprint, jsonify
 import logging
 
+from google.cloud import storage
+
 from app.config import google_cloud_config, DIRECTORIES
-from app.services import create_google_cloud_storage_bucket, reset_global_bucket_variables
-from app.services.gcs_client import delete_and_recreate_directories_in_gcs_bucket, delete_google_cloud_storage_bucket
+from app.services import create_google_cloud_storage_bucket, reset_global_bucket_variables, get_bucket
+from app.services.gcs_client import delete_and_recreate_directories_in_gcs_bucket, delete_google_cloud_storage_bucket, \
+    create_folders_in_bucket
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,17 +24,47 @@ def create_bucket():
         bucket = create_google_cloud_storage_bucket(directories=DIRECTORIES,
                                                     google_cloud_config=google_cloud_config)
 
-        if bucket is not None:
-            return jsonify({'success': True,
-                            'message': f"Google cloud Storage bucket "
-                                       f"{google_cloud_config.bucket_name} created successfully."}), 201
-        else:
+        if bucket is None:
             return jsonify({'success': False,
-                            'message': f"Failed to created Storge bucket "
-                                       f"{google_cloud_config.bucket_name} "}), 400
+                            'message': f"Failed to create storage bucket '{google_cloud_config.bucket_name}'."})
+
+        # # Wait until the bucket is fully available
+        # storage_client = storage.Client()
+        # retries = 5 # Max retries to check bucket availability
+        # for _ in range(retries):
+        #     if storage_client.lookup_bucket(google_cloud_config.bucket_name):
+        #         break
+        #     time.sleep(3)
+
+        return jsonify({'success': True,
+                        'message': f"Google cloud Storage bucket "
+                                   f"{google_cloud_config.bucket_name} created successfully."}), 201
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+
+@gcs_management.route('/gcs/create_folders_in_bucket', methods=['POST'])
+def create_directories_in_bucket():
+    try:
+        # storage_client = storage.Client()
+        # bucket = storage_client.lookup_bucket(google_cloud_config.bucket_name)
+        #
+        # if not bucket:
+        #     return jsonify({'success': False,
+        #                     'message': f"Bucket '{google_cloud_config.bucket_name}' not found."}), 400
+
+        success = create_folders_in_bucket(directories=DIRECTORIES,
+                                           google_cloud_config=google_cloud_config)
+
+        if success:
+            return jsonify({'success': True,
+                            'message': f"Directories created in bucket '{google_cloud_config.bucket_name}'"}), 201
+        else:
+            return jsonify({'success': False,
+                            'message': f"Failed to create directories in bucket '{google_cloud_config.bucket_name}'"}), 400
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @gcs_management.route('/gcs/delete_bucket', methods=['DELETE'])

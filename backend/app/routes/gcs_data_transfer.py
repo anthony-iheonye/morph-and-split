@@ -1,5 +1,6 @@
 import gc
 import os.path
+import logging
 
 from flask import Blueprint, jsonify
 from tensorflow.keras.backend import clear_session
@@ -8,6 +9,8 @@ from app.config import google_cloud_config
 from app.utils import directory_store
 from app.services.gcs_client import upload_file_to_gcs_bucket, download_files_from_gcs_folder, \
     upload_files_to_gcs_bucket
+
+logger = logging.getLogger(__name__)
 
 transfer_data_to_gcs = Blueprint(name='transfer_data_to_gcs', import_name=__name__)
 
@@ -108,15 +111,19 @@ def transfer_resized_original_masks():
 def get_images_from_gcs():
     try:
         # Download the uploaded images from Google Cloud Storage
-        download_files_from_gcs_folder(bucket_name=google_cloud_config.bucket_name,
-                                       source_folder_path=google_cloud_config.image_dir,
-                                       destination_folder_path=directory_store.image_dir,
-                                       copy=False)
+        success, message = download_files_from_gcs_folder(bucket_name=google_cloud_config.bucket_name,
+                                                          source_folder_path=google_cloud_config.image_dir,
+                                                          destination_folder_path=directory_store.image_dir,
+                                                          copy=False)
 
-        return jsonify({'success': True, 'message': 'Successfully downloaded images to backend.'}), 200
+        if success:
+            return jsonify({'success': True, 'message': message}), 200
+        else:
+            return jsonify({'success': False, 'error': message}), 500
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.exception('Unexpected error while downloading images from GCS.')
+        return jsonify({'success': False, 'error': str(e)}), 500
 
     finally:
         clear_session()
@@ -127,15 +134,19 @@ def get_images_from_gcs():
 def get_masks_from_gcs():
     try:
         # Download the uploaded masks from Google Cloud Storage
-        download_files_from_gcs_folder(bucket_name=google_cloud_config.bucket_name,
-                                       source_folder_path=google_cloud_config.mask_dir,
-                                       destination_folder_path=directory_store.mask_dir,
-                                       copy=False)
+        success, message = download_files_from_gcs_folder(bucket_name=google_cloud_config.bucket_name,
+                                                          source_folder_path=google_cloud_config.mask_dir,
+                                                          destination_folder_path=directory_store.mask_dir,
+                                                          copy=False)
 
-        return jsonify({'success': True, 'message': 'Successfully downloaded masks to backend.'}), 200
+        if success:
+            return jsonify({'success': True, 'message': message}), 200
+        else:
+            return jsonify({'success': False, 'error': message}), 500
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.exception('Unexpected error while downloading masks from GCS.')
+        return jsonify({'success': False, 'error': str(e)}), 500
 
     finally:
         clear_session()

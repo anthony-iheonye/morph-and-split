@@ -22,7 +22,7 @@ class GoogleCloudStorageConfig:
 
     # Bucket and service account details
     bucket_name: str = attr.ib(default='morph-and-split-assets')
-    location: str = attr.ib(default='us-south1')
+    location: str = attr.ib(default='US-SOUTH1')
     storage_class: str = attr.ib(default='STANDARD')
     enable_uniform_bucket_level_access: bool = attr.ib(default=True)
     service_account_file_name: str = attr.ib(default='morph-and-split-key.json')

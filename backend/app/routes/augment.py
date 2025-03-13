@@ -3,12 +3,13 @@ import json
 import os
 import zipfile
 import threading
+import importlib.util
+import sys
 
 from flask import Blueprint, request, jsonify
 from tensorflow.keras.backend import clear_session
 from werkzeug.utils import secure_filename
 
-from app.aug_config import aug_config
 from app.services import DataSplitterAugmenterAndSaver, resize_augmented_data
 from app.utils import directory_store, list_filenames
 
@@ -17,9 +18,6 @@ augment = Blueprint('augment', __name__)
 STRATIFICATION_DATA_DIR = directory_store.stratification_data_file_dir
 AUGMENTED_DIR = directory_store.augmented
 
-channels = aug_config['imageMaskChannels']
-image_channels = channels['imgChannels']
-mask_channels = channels['maskChannels']
 
 # A global variable to track augmentation status
 is_augmenting = threading.Event()
@@ -41,8 +39,30 @@ def save_aug_config(aug_config: dict, target_file: str):
         file.write(config_str + "\n")
 
 
+def load_updated_aug_config():
+    """
+    Load the updated augmentation configuration file dynamically after modification.
+    """
+    # config_filepath = os.path.join(os.path.dirname(__file__), '..', 'app', 'aug_config.py')
+    current_dir = os.path.dirname(__file__)
+    app_dir = os.path.abspath(os.path.join(current_dir, '..'))
+    config_filepath = os.path.join(app_dir, 'aug_config.py')
+
+    # Remove cached module if it exists
+    if 'app.aug_config' in sys.modules:
+        del sys.modules['app.aug_config']
+
+    # Load the module dynamically
+    spec = importlib.util.spec_from_file_location('app.aug_config', config_filepath)
+    aug_config_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(aug_config_module)
+
+    return aug_config_module.aug_config
+
+
 @augment.route('/augment', methods=['POST'])
 def augment_data():
+    """Augment image-mask pairs"""
     try:
         config = request.form.get("config")
 
@@ -58,6 +78,9 @@ def augment_data():
         save_aug_config(aug_config_data, config_filepath)
 
         file_paths = list_filenames(STRATIFICATION_DATA_DIR)
+
+        # Reload the updated aug_config dynamically
+        aug_config = load_updated_aug_config()
 
         if file_paths:
             stratification_data_filepath = str(os.path.join(STRATIFICATION_DATA_DIR, file_paths[0]))
