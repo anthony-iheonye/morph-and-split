@@ -1,9 +1,9 @@
-import { create, SetState, StateCreator } from "zustand";
-import CropDimension from "../entities/CropDimension";
+import { create, StateCreator } from "zustand";
 import AugImage from "../entities/AugImage";
+import AugMask from "../entities/AugMask";
+import CropDimension from "../entities/CropDimension";
 import ImgDimension from "../entities/ImgDimension";
 import ImgMaskChannels from "../entities/ImgMaskChannels";
-import AugMask from "../entities/AugMask";
 import StratificationDataFile from "../entities/VisualAttributeFile";
 
 export interface AugConfig {
