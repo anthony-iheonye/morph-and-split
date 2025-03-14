@@ -1,8 +1,8 @@
-import { useAugConfigStore } from "../store";
+import { AugConfigStore, useAugConfigStore } from "../store";
 
 const useLockedRatio = () => {
   const { trainRatioLocked, valRatioLocked, testRatioLocked, setAugConfig } =
-    useAugConfigStore((store) => ({
+    useAugConfigStore((store: AugConfigStore) => ({
       trainRatioLocked: store.augConfig.trainRatioLocked,
       valRatioLocked: store.augConfig.valRatioLocked,
       testRatioLocked: store.augConfig.testRatioLocked,

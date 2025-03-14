@@ -1,8 +1,8 @@
-import { useAugConfigStore } from "../store";
+import { AugConfigStore, useAugConfigStore } from "../store";
 
 const useSplitRatio = () => {
   const { trainRatio, valRatio, testRatio, setRatios } = useAugConfigStore(
-    (store) => ({
+    (store: AugConfigStore) => ({
       trainRatio: store.augConfig.trainRatio,
       valRatio: store.augConfig.valRatio,
       testRatio: store.augConfig.testRatio,

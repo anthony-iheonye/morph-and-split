@@ -1,11 +1,13 @@
 import { Radio, RadioGroup, Stack, useBreakpointValue } from "@chakra-ui/react";
-import { useAugConfigStore } from "../../store";
+import { AugConfigStore, useAugConfigStore } from "../../store";
 
 const SplitSelector = () => {
-  const { previewedSet, setAugConfig } = useAugConfigStore((state) => ({
-    previewedSet: state.augConfig.previewedSet,
-    setAugConfig: state.setAugConfig,
-  }));
+  const { previewedSet, setAugConfig } = useAugConfigStore(
+    (state: AugConfigStore) => ({
+      previewedSet: state.augConfig.previewedSet,
+      setAugConfig: state.setAugConfig,
+    })
+  );
 
   const trainText = useBreakpointValue({ base: "Train", md: "Training" });
   const valText = useBreakpointValue({ base: "Val", md: "Validation" });

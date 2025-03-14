@@ -2,14 +2,14 @@ import { Box, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useTrainingSet } from "../../hooks";
-import { useAugConfigStore } from "../../store";
+import { AugConfigStore, useAugConfigStore } from "../../store";
 import PreviewCard from "./PreviewCard";
 import PreviewContainer from "./PreviewContainer";
 import PreviewCardSkeleton from "./PreviewCardSkeleton";
 
 const PreviewGridTrain = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(
-    (state) => ({
+    (state: AugConfigStore) => ({
       previewAugmentedResult: state.previewAugmentedResult,
       previewedSet: state.augConfig.previewedSet,
     })

@@ -1,9 +1,9 @@
 import { Switch } from "@chakra-ui/react";
-import { useAugConfigStore } from "../../store";
+import { AugConfigStore, useAugConfigStore } from "../../store";
 
 const PreviewAugResultSwitch = () => {
   const { previewAugmentedResult, setPreviewAugmentedResult } =
-    useAugConfigStore((state) => ({
+    useAugConfigStore((state: AugConfigStore) => ({
       previewAugmentedResult: state.previewAugmentedResult,
       setPreviewAugmentedResult: state.setPreviewAugmentedResult,
     }));

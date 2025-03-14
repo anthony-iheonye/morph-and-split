@@ -15,11 +15,11 @@ import {
 } from "../components/miscellaneous";
 import { PreviewAugResultSwitch } from "../components/switches";
 import { useBackendResponse } from "../hooks";
-import { useAugConfigStore } from "../store";
+import { AugConfigStore, useAugConfigStore } from "../store";
 
 const PreviewAugmentedResults = () => {
   const { previewAugmentedResult, previewedSet } = useAugConfigStore(
-    (state) => ({
+    (state: AugConfigStore) => ({
       previewAugmentedResult: state.previewAugmentedResult,
       previewedSet: state.augConfig.previewedSet,
     })

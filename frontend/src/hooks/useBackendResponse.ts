@@ -1,4 +1,4 @@
-import { useBackendResponseStore } from "../store";
+import { useBackendResponseStore, BackendResponseStore } from "../store";
 
 const useBackendResponse = () => {
   const {
@@ -14,7 +14,7 @@ const useBackendResponse = () => {
     isDownloading,
     setBackendResponseLog,
     resetBackendResponseLog,
-  } = useBackendResponseStore((store) => ({
+  } = useBackendResponseStore((store: BackendResponseStore) => ({
     imageIsUploading: store.backendResponseLog.imageIsUploading,
     maskIsUploading: store.backendResponseLog.maskIsUploading,
     augmentationIsRunning: store.backendResponseLog.augmentationIsRunning,
