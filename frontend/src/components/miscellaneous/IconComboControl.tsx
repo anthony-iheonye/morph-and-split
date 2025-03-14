@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
+import ThemedText from "./ThemedText";
 
 interface IconComboControlProps extends Omit<GridProps, "title"> {
   title: string | { base?: string; md?: string; lg?: string };
@@ -77,18 +78,17 @@ const IconComboControl = ({
         {controlElement && controlElement}
       </GridItem>
       <GridItem area="description">
-        <Text
+        <ThemedText
           fontSize="sm"
-          fontWeight="thin"
+          // fontWeight="thin"
           mb={0}
           mt={0.6}
           lineHeight="17px"
-          color="gray.400"
           marginRight={{ base: 2, md: 6 }}
           marginTop={1}
         >
           {responsiveDescription}
-        </Text>
+        </ThemedText>
       </GridItem>
     </Grid>
   );

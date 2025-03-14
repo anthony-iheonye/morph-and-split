@@ -11,6 +11,7 @@ import {
   CopyrightBar,
   IconHeadingDescriptionCombo,
   PageTitle,
+  ThemedText,
 } from "../components/miscellaneous";
 import {
   useBackendResponse,
@@ -109,9 +110,9 @@ const ImageUpload = () => {
           <Box overflowY="auto" mt={4} flex="1">
             {uploadedImages?.results && uploadedImages?.results.length > 0 ? (
               uploadedImages?.results.map((name, index) => (
-                <Text fontWeight="thin" fontSize="md" key={index}>
+                <ThemedText fontWeight="thin" fontSize="md" key={index}>
                   {name}
-                </Text>
+                </ThemedText>
               ))
             ) : (
               <Text color="red" fontWeight="thin" fontSize="md">

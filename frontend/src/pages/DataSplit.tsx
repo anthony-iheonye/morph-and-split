@@ -20,6 +20,7 @@ import {
   CopyrightBar,
   IconComboControl,
   PageTitle,
+  ThemedText,
 } from "../components/miscellaneous";
 import {
   TestRatioLock,
@@ -184,9 +185,9 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
         overflowY="hidden"
       >
         <BoundingBox overflowY="hidden" display="flex" flexDirection="column">
-          <Text color={"gray.400"} mb={4} fontSize="md">
+          <ThemedText mb={4} fontSize="md">
             {splitDetail}
-          </Text>
+          </ThemedText>
 
           <VStack spacing={{ base: 5, lg: 4 }} flex="1" overflow="auto">
             {/*Training Slider*/}

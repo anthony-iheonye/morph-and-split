@@ -8,6 +8,7 @@ import {
   CopyrightBar,
   IconHeadingDescriptionCombo,
   PageTitle,
+  ThemedText,
 } from "../components/miscellaneous";
 import {
   useBackendResponse,
@@ -106,9 +107,9 @@ const MaskUpload = () => {
           <Box mt={4} flex="1" overflowY="auto">
             {maskData?.results && maskData?.results.length > 0 ? (
               maskData.results.map((name, index) => (
-                <Text fontWeight="thin" fontSize="md" key={index}>
+                <ThemedText fontWeight="thin" fontSize="md" key={index}>
                   {name}
-                </Text>
+                </ThemedText>
               ))
             ) : (
               <Text color="red" fontWeight="thin" fontSize="md">

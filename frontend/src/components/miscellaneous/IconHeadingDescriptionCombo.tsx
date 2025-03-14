@@ -6,6 +6,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { IconType } from "react-icons";
+import ThemedText from "./ThemedText";
 
 interface Props {
   icon?: IconType;
@@ -35,17 +36,17 @@ const IconHeadingDescriptionCombo = ({
           {responsiveTitle}
         </Text>
       </HStack>
-      <Text
+
+      <ThemedText
         fontSize="sm"
         fontWeight="thin"
         mb={0}
         mt={0.6}
         lineHeight="17px"
-        color="gray.400"
         marginRight={{ base: 2, md: 6 }}
       >
         {responsiveDescription}
-      </Text>
+      </ThemedText>
     </VStack>
   );
 };
