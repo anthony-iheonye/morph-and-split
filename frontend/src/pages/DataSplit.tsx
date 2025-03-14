@@ -8,7 +8,6 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Text,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
