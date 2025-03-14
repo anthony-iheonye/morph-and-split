@@ -80,7 +80,7 @@ const StratifiedSplitting = () => {
         </GridItem>
 
         <GridItem area="csvFile">
-          <BoundingBox mt={0}>
+          <BoundingBox>
             <IconComboControl
               icon={BsFiletypeCsv}
               title="Stratifed Split Data"
@@ -103,7 +103,7 @@ const StratifiedSplitting = () => {
         </GridItem>
 
         <GridItem area="splitParameter">
-          <BoundingBox mt={0}>
+          <BoundingBox>
             <IconComboControl
               icon={HiOutlineArrowsExpand}
               title={{
@@ -122,7 +122,7 @@ const StratifiedSplitting = () => {
       </BoundingBox>
 
       <GridItem area="navBtn">
-        <BoundingBox transparent padding={0}>
+        <BoundingBox transparent padding={0} mb={{ base: 3.5, md: 4 }}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
             <PreviousBtn to="/settings/data_split" />
             <ContinueBtn to="/settings/select_transformation" />

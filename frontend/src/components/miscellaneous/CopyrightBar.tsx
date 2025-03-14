@@ -3,11 +3,10 @@ import { Box, Link, Text, useBreakpointValue } from "@chakra-ui/react";
 const CopyrightBar = () => {
   const rightsWord =
     useBreakpointValue({
-      sm: "",
-      md: "All rights reserved.",
+      base: "",
     }) ?? "All right reserved.";
   return (
-    <Box as="footer" pb={3} pt={2} textAlign="center">
+    <Box as="footer" pb={1} pt={0} textAlign="center">
       <Text fontSize="sm" color="gray.600">
         {" "}
         © {new Date().getFullYear()} Developed by{" "}

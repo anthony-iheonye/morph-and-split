@@ -28,7 +28,7 @@ const AugmentationSettings = () => {
         // flex="1"
         overflow="auto" // Allows content scrolling when needed
       >
-        <Box marginTop={8} overflowY="hidden">
+        <Box marginTop={{ base: 5, md: 8 }} overflowY="hidden">
           <Outlet />
         </Box>
       </GridItem>

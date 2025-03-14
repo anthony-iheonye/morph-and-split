@@ -28,7 +28,7 @@ const InitiateAugmentation = () => {
         // flex="1"
         overflow="hidden"
       >
-        <Box marginTop={8} overflowY="hidden">
+        <Box marginTop={{ base: 5, md: 8 }} overflowY="hidden">
           <Outlet />
         </Box>
       </GridItem>

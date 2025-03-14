@@ -46,7 +46,7 @@ const PreviewAugmentedResults = () => {
 
       <GridItem area="previewSlider">
         <BoundingBox>
-          <VStack align="start" spacing={2.5}>
+          <VStack align="start" spacing={{ base: 1.5, md: 2.5 }}>
             <IconComboControl
               icon={HiViewGrid}
               title={{
@@ -77,7 +77,6 @@ const PreviewAugmentedResults = () => {
           flexDirection="column"
           flex="1"
           overflowY="hidden"
-          mt={0}
         >
           <Text color={"gray.400"} mb={4} fontSize="sm">
             Preview of augmented result.
@@ -93,7 +92,7 @@ const PreviewAugmentedResults = () => {
       </GridItem>
 
       <GridItem area="navBtn">
-        <BoundingBox transparent padding={0} mt={0}>
+        <BoundingBox transparent padding={0} mb={{ base: 3.5, md: 4 }}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
             <PreviousBtn
               to="/augment/start_augmentation"

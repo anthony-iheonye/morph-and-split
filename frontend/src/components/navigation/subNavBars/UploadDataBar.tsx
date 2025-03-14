@@ -10,7 +10,7 @@ const UploadDataBar = () => {
       direction={{ base: "row", md: "column" }}
       height={{ md: "100dvh" }}
       minHeight={{ md: "100%" }}
-      padding="10px"
+      padding={{ base: "8px", md: "10px" }}
       gap={{ md: 8 }}
       bg={backgroundColor}
       justifyContent={{ base: "space-between", md: "flex-start" }}

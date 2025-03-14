@@ -42,7 +42,7 @@ const MaskUpload = () => {
       templateRows={{ base: "auto auto 1fr auto" }} // ✅ Ensures selectedMasks expands
       overflow="hidden"
     >
-      <GridItem area="title" mt={8}>
+      <GridItem area="title">
         <PageTitle title="Segmentation Masks" />
       </GridItem>
 
@@ -63,7 +63,7 @@ const MaskUpload = () => {
       </GridItem>
 
       {/* <GridItem area="channels">
-        <BoundingBox mt={0}>
+        <BoundingBox >
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
               icon={IoLayers}
@@ -89,7 +89,6 @@ const MaskUpload = () => {
           display="flex"
           flex="1"
           flexDirection="column"
-          mt={0}
           overflowY="hidden"
         >
           <HStack justify="space-between">
@@ -121,7 +120,7 @@ const MaskUpload = () => {
       </GridItem>
 
       <GridItem area="navBtn">
-        <BoundingBox transparent padding={0} mt={0}>
+        <BoundingBox transparent padding={0} mb={{ base: 3.5, md: 4 }}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
             <PreviousBtn to="/upload_data/images" />
             <ContinueBtn

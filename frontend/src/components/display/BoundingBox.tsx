@@ -15,9 +15,11 @@ const BoundingBox = ({
   flex,
   justifySelf,
   display,
-  marginLeft,
-  marginRight,
-  padding = { base: 3.5, md: 5 },
+  marginLeft = { base: 3.5, md: 4 },
+  marginRight = { base: 3.5, md: 4 },
+  marginTop = { base: 3.5, md: 4 },
+  marginBottom = "0",
+  padding = { base: 3.5, md: 4 },
   maxHeight = "none",
   overflowY = undefined,
   borderRadius = 4,
@@ -29,7 +31,6 @@ const BoundingBox = ({
   return (
     <Box
       padding={padding}
-      margin={4}
       borderRadius={borderRadius}
       backgroundColor={transparent ? "transparent" : backgroundColor}
       maxHeight={maxHeight}
@@ -42,6 +43,8 @@ const BoundingBox = ({
       display={display}
       marginLeft={marginLeft}
       marginRight={marginRight}
+      marginTop={marginTop}
+      marginBottom={marginBottom}
       {...rest}
     >
       {children}

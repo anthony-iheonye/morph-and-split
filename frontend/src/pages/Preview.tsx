@@ -22,7 +22,7 @@ const Preview = () => {
       templateRows={{ base: "auto auto 1fr auto" }}
       overflow="hidden"
     >
-      <GridItem area="title" mt={8}>
+      <GridItem area="title">
         <PageTitle title="Preview" />
       </GridItem>
 
@@ -49,7 +49,6 @@ const Preview = () => {
         overflow="hidden"
       >
         <BoundingBox
-          mt={0}
           display="flex"
           flex="1"
           flexDirection="column"
@@ -63,7 +62,7 @@ const Preview = () => {
       </GridItem>
 
       <GridItem area="navBtn">
-        <BoundingBox transparent padding={0} mt={0}>
+        <BoundingBox transparent padding={0} mb={{ base: 3.5, md: 4 }}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
             <PreviousBtn to="/upload_data/masks" />
             <ContinueBtn to="/settings/data_split" />

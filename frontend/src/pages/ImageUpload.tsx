@@ -45,7 +45,7 @@ const ImageUpload = () => {
       templateRows={{ base: "auto auto 1fr auto" }}
       overflow="hidden"
     >
-      <GridItem area="title" mt={8}>
+      <GridItem area="title">
         <PageTitle title="Images" />
       </GridItem>
 
@@ -66,7 +66,7 @@ const ImageUpload = () => {
       </GridItem>
 
       {/* <GridItem area="channels">
-        <BoundingBox mt={0}>
+        <BoundingBox >
           <HStack justify="space-between" align="start" width="100%">
             <IconHeadingDescriptionCombo
               icon={IoLayers}
@@ -92,7 +92,6 @@ const ImageUpload = () => {
           display="flex"
           flex="1"
           flexDirection="column"
-          mt={0}
           overflowY="hidden"
         >
           <HStack justify="space-between">
@@ -127,9 +126,9 @@ const ImageUpload = () => {
         <BoundingBox
           transparent
           padding={0}
-          mt={0}
           justifyContent={{ base: "center", md: "start" }}
           display="flex"
+          mb={{ base: 3.5, md: 4 }}
         >
           <ContinueBtn
             to="/upload_data/masks"

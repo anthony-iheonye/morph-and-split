@@ -262,7 +262,7 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
       </GridItem>
 
       <GridItem area="augmentedSize">
-        <BoundingBox mt={0}>
+        <BoundingBox>
           <IconComboControl
             icon={FaLayerGroup}
             title="Augmented Training Set Size"
@@ -275,7 +275,7 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
       </GridItem>
 
       <GridItem area="navBtn">
-        <BoundingBox transparent padding={0} mt={0}>
+        <BoundingBox transparent padding={0} mb={{ base: 3.5, md: 4 }}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
             <PreviousBtn to="/upload_data/preview" />
             <ContinueBtn to="/settings/stratified_splitting" />

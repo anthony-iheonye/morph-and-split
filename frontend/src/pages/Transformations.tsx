@@ -116,7 +116,7 @@ const AugTransformationsInput = () => {
       </GridItem>
 
       <GridItem area="augmentOtherSets">
-        <BoundingBox mt={0} paddingRight={{ base: 7, md: 9 }}>
+        <BoundingBox paddingRight={{ base: 7, md: 9 }}>
           <RandomTransformation
             title={{
               base: "Augment Validation & Test Sets",
@@ -129,7 +129,7 @@ const AugTransformationsInput = () => {
       </GridItem>
 
       <GridItem area="navBtn">
-        <BoundingBox transparent padding={0} mt={0}>
+        <BoundingBox transparent padding={0} mb={{ base: 3.5, md: 4 }}>
           <HStack justifyContent={{ base: "center", md: "start" }}>
             <PreviousBtn to="/settings/stratified_splitting" />
             <ContinueBtn to="/settings/pre_processing" />
