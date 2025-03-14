@@ -117,48 +117,50 @@ const initialAugConfig: AugConfig = {
   reset: false,
 };
 
-const useAugConfigStore = create<AugConfigStore>()((set) => ({
-  augConfig: initialAugConfig,
-  previewSelection: false,
-  previewAugmentedResult: false,
+const useAugConfigStore = create<AugConfigStore>()(
+  (set: (fn: (state: AugConfigStore) => Partial<AugConfigStore>) => void) => ({
+    augConfig: initialAugConfig,
+    previewSelection: false,
+    previewAugmentedResult: false,
 
-  setPreviewSelection: (previewSelection: boolean) =>
-    set(() => ({ previewSelection })),
+    setPreviewSelection: (previewSelection: boolean) =>
+      set(() => ({ previewSelection })),
 
-  setPreviewAugmentedResult: (previewAugmentedResult: boolean) =>
-    set(() => ({ previewAugmentedResult })),
+    setPreviewAugmentedResult: (previewAugmentedResult: boolean) =>
+      set(() => ({ previewAugmentedResult })),
 
-  setAugmentedImages: (augmentedImages: AugImage[]) =>
-    set((store: AugConfigStore) => ({
-      augConfig: { ...store.augConfig, augmentedImages },
-    })),
+    setAugmentedImages: (augmentedImages: AugImage[]) =>
+      set((store: AugConfigStore) => ({
+        augConfig: { ...store.augConfig, augmentedImages },
+      })),
 
-  setAugmentedMasks: (augmentedMasks: AugMask[]) =>
-    set((store: AugConfigStore) => ({
-      augConfig: { ...store.augConfig, augmentedMasks },
-    })),
+    setAugmentedMasks: (augmentedMasks: AugMask[]) =>
+      set((store: AugConfigStore) => ({
+        augConfig: { ...store.augConfig, augmentedMasks },
+      })),
 
-  setAugConfig: <K extends keyof AugConfig>(key: K, value: AugConfig[K]) =>
-    set((store: AugConfigStore) => ({
-      augConfig: { ...store.augConfig, [key]: value },
-    })),
+    setAugConfig: <K extends keyof AugConfig>(key: K, value: AugConfig[K]) =>
+      set((store: AugConfigStore) => ({
+        augConfig: { ...store.augConfig, [key]: value },
+      })),
 
-  setRatios: (train: number, val: number, test: number) =>
-    set((store: AugConfigStore) => ({
-      augConfig: {
-        ...store.augConfig,
-        trainRatio: train,
-        valRatio: val,
-        testRatio: test,
-      },
-    })),
+    setRatios: (train: number, val: number, test: number) =>
+      set((store: AugConfigStore) => ({
+        augConfig: {
+          ...store.augConfig,
+          trainRatio: train,
+          valRatio: val,
+          testRatio: test,
+        },
+      })),
 
-  resetAugConfig: () =>
-    set(() => ({
-      augConfig: initialAugConfig,
-      previewAugmentedResult: false,
-      previewSelection: false,
-    })),
-}));
+    resetAugConfig: () =>
+      set(() => ({
+        augConfig: initialAugConfig,
+        previewAugmentedResult: false,
+        previewSelection: false,
+      })),
+  })
+);
 
 export default useAugConfigStore;

@@ -32,21 +32,27 @@ export interface BackendResponseStore {
   resetBackendResponseLog: () => void;
 }
 
-const useBackendResponseStore = create<BackendResponseStore>()((set) => ({
-  backendResponseLog: initialBackendResponseLog,
+const useBackendResponseStore = create<BackendResponseStore>()(
+  (
+    set: (
+      fn: (state: BackendResponseStore) => Partial<BackendResponseStore>
+    ) => void
+  ) => ({
+    backendResponseLog: initialBackendResponseLog,
 
-  setBackendResponseLog: <K extends keyof BackendResponseLog>(
-    key: K,
-    value: BackendResponseLog[K]
-  ) =>
-    set((store: BackendResponseStore) => ({
-      backendResponseLog: { ...store.backendResponseLog, [key]: value },
-    })),
+    setBackendResponseLog: <K extends keyof BackendResponseLog>(
+      key: K,
+      value: BackendResponseLog[K]
+    ) =>
+      set((store: BackendResponseStore) => ({
+        backendResponseLog: { ...store.backendResponseLog, [key]: value },
+      })),
 
-  resetBackendResponseLog: () =>
-    set(() => ({
-      backendResponseLog: initialBackendResponseLog,
-    })),
-}));
+    resetBackendResponseLog: () =>
+      set(() => ({
+        backendResponseLog: initialBackendResponseLog,
+      })),
+  })
+);
 
 export default useBackendResponseStore;
