@@ -1,4 +1,4 @@
-import { create, StateCreator } from "zustand";
+import { create } from "zustand";
 
 export interface BackendResponseLog {
   imageIsUploading: boolean;
@@ -32,14 +32,14 @@ export interface BackendResponseStore {
   resetBackendResponseLog: () => void;
 }
 
-const useBackendResponseStore = create<BackendResponseStore>(((set) => ({
+const useBackendResponseStore = create<BackendResponseStore>((set) => ({
   backendResponseLog: initialBackendResponseLog,
 
   setBackendResponseLog: <K extends keyof BackendResponseLog>(
     key: K,
     value: BackendResponseLog[K]
   ) =>
-    set((store) => ({
+    set((store: BackendResponseStore) => ({
       backendResponseLog: { ...store.backendResponseLog, [key]: value },
     })),
 
@@ -47,6 +47,6 @@ const useBackendResponseStore = create<BackendResponseStore>(((set) => ({
     set(() => ({
       backendResponseLog: initialBackendResponseLog,
     })),
-})) as StateCreator<BackendResponseStore>);
+}));
 
 export default useBackendResponseStore;

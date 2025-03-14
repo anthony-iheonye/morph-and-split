@@ -1,4 +1,4 @@
-import { create, StateCreator } from "zustand";
+import { create } from "zustand";
 import AugImage from "../entities/AugImage";
 import AugMask from "../entities/AugMask";
 import CropDimension from "../entities/CropDimension";
@@ -117,7 +117,7 @@ const initialAugConfig: AugConfig = {
   reset: false,
 };
 
-const useAugConfigStore = create<AugConfigStore>(((set) => ({
+const useAugConfigStore = create<AugConfigStore>((set) => ({
   augConfig: initialAugConfig,
   previewSelection: false,
   previewAugmentedResult: false,
@@ -159,6 +159,6 @@ const useAugConfigStore = create<AugConfigStore>(((set) => ({
       previewAugmentedResult: false,
       previewSelection: false,
     })),
-})) as StateCreator<AugConfigStore>);
+}));
 
 export default useAugConfigStore;
