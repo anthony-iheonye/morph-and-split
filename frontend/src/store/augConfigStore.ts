@@ -117,7 +117,7 @@ const initialAugConfig: AugConfig = {
   reset: false,
 };
 
-const useAugConfigStore = create<AugConfigStore>((set) => ({
+const useAugConfigStore = create<AugConfigStore>()((set) => ({
   augConfig: initialAugConfig,
   previewSelection: false,
   previewAugmentedResult: false,

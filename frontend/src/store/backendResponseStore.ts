@@ -32,7 +32,7 @@ export interface BackendResponseStore {
   resetBackendResponseLog: () => void;
 }
 
-const useBackendResponseStore = create<BackendResponseStore>((set) => ({
+const useBackendResponseStore = create<BackendResponseStore>()((set) => ({
   backendResponseLog: initialBackendResponseLog,
 
   setBackendResponseLog: <K extends keyof BackendResponseLog>(
