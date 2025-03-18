@@ -2,7 +2,7 @@ import { Button, Input, useToast, VStack } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { ChangeEvent, useState } from "react";
 import { BackendResponse, CustomError } from "../../entities";
-import { useAugConfigAndSetter } from "../../hooks";
+import { useAugConfigAndSetter, useButtonThemedColor } from "../../hooks";
 import { APIClient, getFileExt } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 
@@ -11,6 +11,14 @@ const StratifiedDataFileUploader = () => {
   const toast = useToast();
   const { setAugConfig } = useAugConfigAndSetter();
   const queryClient = useQueryClient();
+
+  const {
+    backgroundColor,
+    borderColor,
+    hoverBorder,
+    textColor,
+    hoverBackgroundColor,
+  } = useButtonThemedColor();
 
   const uploadClient = new APIClient<BackendResponse>(
     "/upload/backend/stratification_file"
@@ -102,7 +110,16 @@ const StratifiedDataFileUploader = () => {
       <Button
         as="label"
         cursor="pointer"
-        // leftIcon={<Icon as={BsFiletypeCsv} />}
+        bg={backgroundColor}
+        border={`1px solid ${borderColor}`}
+        color={textColor}
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        _hover={{
+          border: `2px solid ${hoverBorder}`,
+          boxShadow: `0 0 0 2px ${hoverBorder}`,
+          bg: hoverBackgroundColor,
+        }}
+        size="md"
       >
         {!uploading ? "Select file" : "Uploading..."}
         <Input

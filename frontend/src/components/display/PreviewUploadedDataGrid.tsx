@@ -1,11 +1,11 @@
-import { Box, Spinner, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useUploadedImageMask } from "../../hooks";
 import { AugConfigStore, useAugConfigStore } from "../../store";
 import PreviewCard from "./PreviewCard";
-import PreviewContainer from "./PreviewContainer";
 import PreviewCardSkeleton from "./PreviewCardSkeleton";
+import PreviewContainer from "./PreviewContainer";
 
 const PreviewUploadedDataGrid = () => {
   const previewSelection = useAugConfigStore(

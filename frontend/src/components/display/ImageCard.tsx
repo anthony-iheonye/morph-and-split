@@ -1,5 +1,6 @@
-import { Card, CardBody, Image, Text } from "@chakra-ui/react";
+import { Card, CardBody, Image } from "@chakra-ui/react";
 import { Metadata } from "../../entities";
+import { ThemedText } from "../miscellaneous";
 
 interface Props {
   file: Metadata;
@@ -10,9 +11,14 @@ const ImageCard = ({ file }: Props) => {
     <Card borderRadius={0}>
       <Image src={file.url} objectFit="contain" />
       <CardBody paddingTop={1} paddingBottom={1}>
-        <Text color="gray" fontSize="small" overflowWrap="normal">
+        <ThemedText
+          lightModeTextColor="gray.600"
+          darkModeTextColor="gray.500"
+          fontSize="small"
+          overflowWrap="normal"
+        >
           {file.name}
-        </Text>
+        </ThemedText>
       </CardBody>
     </Card>
   );

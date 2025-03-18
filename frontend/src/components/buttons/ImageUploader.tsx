@@ -6,7 +6,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { BackendResponse, CustomError, SignedUrls } from "../../entities";
-import { useBackendResponse, useFileUploader } from "../../hooks";
+import {
+  useBackendResponse,
+  useButtonThemedColor,
+  useFileUploader,
+} from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
@@ -36,6 +40,14 @@ const ImageUploader = () => {
     base: "Select",
     md: "Select Images",
   });
+
+  const {
+    backgroundColor,
+    borderColor,
+    hoverBorder,
+    textColor,
+    hoverBackgroundColor,
+  } = useButtonThemedColor();
 
   const { setBackendResponseLog } = useBackendResponse();
   const queryClient = useQueryClient();
@@ -132,7 +144,18 @@ const ImageUploader = () => {
       cursor="pointer"
       isDisabled={isUploading}
       width="auto"
+      borderRadius={10}
       leftIcon={isUploading ? <Spinner size="md" color="white" /> : undefined}
+      bg={backgroundColor}
+      border={`1px solid ${borderColor}`}
+      color={textColor}
+      transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+      _hover={{
+        border: `2px solid ${hoverBorder}`,
+        boxShadow: `0 0 0 2px ${hoverBorder}`,
+        bg: hoverBackgroundColor,
+      }}
+      size="md"
     >
       {isUploading ? "Uploading" : buttonText}
       <Input

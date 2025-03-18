@@ -5,13 +5,24 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
-import { useAugConfigAndSetter, useBackendResponse } from "../../hooks";
+import {
+  useAugConfigAndSetter,
+  useBackendResponse,
+  useInputThemedColor,
+} from "../../hooks";
 import { sizes } from "../../services";
 
 const TrainStartIndex = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
   const { augmentationIsRunning } = useBackendResponse();
+  const {
+    backgroundColor,
+    borderColor,
+    focusBorder,
+    textColor,
+    focusedBackgroundColor,
+  } = useInputThemedColor();
 
   return (
     <NumberInput
@@ -29,7 +40,17 @@ const TrainStartIndex = () => {
       }}
       isDisabled={augmentationIsRunning}
     >
-      <NumberInputField />
+      <NumberInputField
+        bg={backgroundColor}
+        border={`1px solid ${borderColor}`}
+        color={textColor}
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        _focus={{
+          border: `2px solid ${focusBorder}`,
+          boxShadow: `0 0 0 2px ${focusBorder}`,
+          bg: focusedBackgroundColor,
+        }}
+      />
       <NumberInputStepper>
         <NumberIncrementStepper />
         <NumberDecrementStepper />

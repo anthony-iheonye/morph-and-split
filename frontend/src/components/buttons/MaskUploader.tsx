@@ -8,7 +8,11 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { BackendResponse, CustomError, SignedUrls } from "../../entities";
-import { useBackendResponse, useFileUploader } from "../../hooks";
+import {
+  useBackendResponse,
+  useButtonThemedColor,
+  useFileUploader,
+} from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
@@ -38,6 +42,14 @@ const MaskUploader = () => {
   const { setBackendResponseLog } = useBackendResponse();
   const queryClient = useQueryClient();
   const toast = useToast();
+
+  const {
+    backgroundColor,
+    borderColor,
+    hoverBorder,
+    textColor,
+    hoverBackgroundColor,
+  } = useButtonThemedColor();
 
   const { isUploading, handleFileChange } = useFileUploader<File>(
     async (files) => {
@@ -131,6 +143,17 @@ const MaskUploader = () => {
       cursor="pointer"
       isDisabled={isUploading}
       leftIcon={isUploading ? <Spinner size="md" color="white" /> : undefined}
+      bg={backgroundColor}
+      border={`1px solid ${borderColor}`}
+      borderRadius={10}
+      color={textColor}
+      transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+      _hover={{
+        border: `2px solid ${hoverBorder}`,
+        boxShadow: `0 0 0 2px ${hoverBorder}`,
+        bg: hoverBackgroundColor,
+      }}
+      size="md"
     >
       {isUploading ? "Uploading" : buttonText}
       <Input
