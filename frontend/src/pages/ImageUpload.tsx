@@ -110,7 +110,7 @@ const ImageUpload = () => {
           <Box overflowY="auto" mt={4} flex="1">
             {uploadedImages?.results && uploadedImages?.results.length > 0 ? (
               uploadedImages?.results.map((name, index) => (
-                <ThemedText fontWeight="thin" fontSize="md" key={index}>
+                <ThemedText fontSize="md" fontWeight="thin" key={index}>
                   {name}
                 </ThemedText>
               ))

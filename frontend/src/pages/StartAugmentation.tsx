@@ -8,7 +8,11 @@ import {
 } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { SaveSuffixInput } from "../components/inputFields";
-import { CopyrightBar, PageTitle } from "../components/miscellaneous";
+import {
+  CopyrightBar,
+  PageTitle,
+  ThemedText,
+} from "../components/miscellaneous";
 import { useBackendResponse } from "../hooks";
 import useAugmentationIsComplete from "../hooks/useAugmentationIsComplete";
 import { handleDownloadGCSFiles } from "../services";
@@ -48,12 +52,12 @@ const StartAugmentation = () => {
           // flex="1"
           overflow="hidden"
         >
-          <Text color={"gray.400"} mb={4} fontSize="sm">
+          <ThemedText mb={4} fontSize="sm">
             Augmented images and masks are named with an 'img' or 'mask' prefix
             followed by a numerical suffix (e.g., 'img_1.png', 'mask_1.png').
             Enter the starting suffix for the first augmented training,
             validation, and test sets.
-          </Text>
+          </ThemedText>
 
           <VStack
             spacing={{ base: 5, md: 4, lg: 8 }}

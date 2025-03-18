@@ -77,6 +77,7 @@ const IconComboControl = ({
       >
         {controlElement && controlElement}
       </GridItem>
+
       <GridItem area="description">
         <ThemedText
           fontSize="sm"

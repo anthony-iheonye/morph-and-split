@@ -9,7 +9,11 @@ import {
 } from "react-icons/tb";
 import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
-import { CopyrightBar, PageTitle } from "../components/miscellaneous";
+import {
+  CopyrightBar,
+  PageTitle,
+  ThemedText,
+} from "../components/miscellaneous";
 import { RandomTransformation } from "../components/switches";
 
 const AugTransformationsInput = () => {
@@ -44,10 +48,10 @@ const AugTransformationsInput = () => {
           overflowY="hidden"
           // flex="1"
         >
-          <Text
-            color={"gray.400"}
+          <ThemedText
             mb={4}
             fontSize="sm"
+            fontWeight="medium"
             pb={3}
             boxShadow={{
               base: "0px 4px 4px -4px rgb(73, 69, 69)",
@@ -55,7 +59,7 @@ const AugTransformationsInput = () => {
             }}
           >
             Choose random transformations for augmenting the training set.
-          </Text>
+          </ThemedText>
           <BoundingBox
             padding={"0"}
             paddingRight={3}

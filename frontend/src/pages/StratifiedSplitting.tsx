@@ -1,10 +1,4 @@
-import {
-  Grid,
-  GridItem,
-  HStack,
-  Text,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Grid, GridItem, HStack, useBreakpointValue } from "@chakra-ui/react";
 import { BsFiletypeCsv } from "react-icons/bs";
 import { HiOutlineArrowsExpand } from "react-icons/hi";
 import {
@@ -20,6 +14,7 @@ import {
   IconComboControl,
   PageTitle,
   StratifiedFileHint,
+  ThemedText,
 } from "../components/miscellaneous";
 import { useStratificationDataFileName } from "../hooks";
 
@@ -70,12 +65,12 @@ const StratifiedSplitting = () => {
             paddingTop={0}
             padding={2}
           >
-            <Text color={"gray.400"} mb={4} fontSize="md" marginBottom={0}>
+            <ThemedText mb={4} fontSize="md" marginBottom={0}>
               {splitDetail1}
-            </Text>
-            <Text color={"gray.400"} mb={0} fontSize="md" mt={2}>
+            </ThemedText>
+            <ThemedText mb={0} fontSize="md" mt={2}>
               {splitDetail2}
-            </Text>
+            </ThemedText>
           </BoundingBox>
         </GridItem>
 
@@ -93,9 +88,14 @@ const StratifiedSplitting = () => {
             />
             <HStack justifySelf={"start"} mt={2}>
               {fileName && (
-                <Text fontWeight="thin" fontSize="sm" color="pink.100">
+                <ThemedText
+                  fontWeight="thin"
+                  fontSize="sm"
+                  lightModeTextColor="teal.500"
+                  darkModeTextColor="teal.100"
+                >
                   {fileName}
-                </Text>
+                </ThemedText>
               )}
               {fileName && <DeleteStratDataFile tooltipPlacment="top-end" />}
             </HStack>

@@ -39,7 +39,6 @@ const IconHeadingDescriptionCombo = ({
 
       <ThemedText
         fontSize="sm"
-        fontWeight="thin"
         mb={0}
         mt={0.6}
         lineHeight="17px"

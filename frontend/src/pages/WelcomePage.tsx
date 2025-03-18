@@ -11,7 +11,7 @@ import {
 import { FaCheckCircle } from "react-icons/fa";
 import StartSession from "../components/buttons/StartSession";
 import { BoundingBox } from "../components/display";
-import { CopyrightBar } from "../components/miscellaneous";
+import { CopyrightBar, ThemedText } from "../components/miscellaneous";
 
 const WelcomePage = () => {
   return (
@@ -37,9 +37,9 @@ const WelcomePage = () => {
             Morph & Split
           </Text>
         </Heading>
-        <Text fontSize="lg" color="gray.400" mb={6}>
+        <ThemedText fontSize="lg" mb={6}>
           Seamless Image-Mask Processing for Machine Learning & Computer Vision
-        </Text>
+        </ThemedText>
       </GridItem>
 
       <GridItem
@@ -68,31 +68,31 @@ const WelcomePage = () => {
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="teal.500" />
                   <b>Advanced Augmentation</b>
-                  <Text as="span" color="gray.300" display="block">
+                  <ThemedText as="span" display="block">
                     Apply flips, rotations, color shifts, and more.
-                  </Text>
+                  </ThemedText>
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="teal.500" />
                   <b>Smart Dataset Splitting</b>
-                  <Text as="span" color="gray.300" display="block">
+                  <ThemedText as="span" display="block">
                     Maintain class balance across train, validation, and test
                     sets.
-                  </Text>
+                  </ThemedText>
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="teal.500" />
                   <b>Resize & Crop with Precision</b>
-                  <Text as="span" color="gray.300" display="block">
+                  <ThemedText as="span" display="block">
                     Refine image and mask dimensions effortlessly
-                  </Text>
+                  </ThemedText>
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="teal.500" />
                   <b>Intuitive No-Code Interface</b>
-                  <Text as="span" color="gray.300" display="block">
+                  <ThemedText as="span" display="block">
                     A sleek UI designed for speed, efficiency, and automation.
-                  </Text>
+                  </ThemedText>
                 </ListItem>
               </List>
             </VStack>
@@ -114,26 +114,26 @@ const WelcomePage = () => {
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="teal.500" />
                   <b>Save Time</b>
-                  <Text as="span" color="gray.300" display="block">
+                  <ThemedText as="span" display="block">
                     Automate tedious preprocessing tasks in just a few clicks
                     and focus on model development.
-                  </Text>
+                  </ThemedText>
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="teal.500" />
                   <b>Improve Data Quality</b>
-                  <Text as="span" color="gray.300" display="block">
+                  <ThemedText as="span" display="block">
                     Enhance dataset consistency and variety through structured
                     augmentation techniques.
-                  </Text>
+                  </ThemedText>
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="teal.500" />
                   <b>Boost AI Model Accuracy</b>
-                  <Text as="span" color="gray.300" display="block">
+                  <ThemedText as="span" display="block">
                     Well-prepared datasets contribute to better model
                     generalization and performance.
-                  </Text>
+                  </ThemedText>
                 </ListItem>
               </List>
             </VStack>

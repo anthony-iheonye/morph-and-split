@@ -192,7 +192,9 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
             {/*Training Slider*/}
             <FormControl>
               <FormLabel fontWeight={labelweight} marginBottom={mb}>
-                Training split ({(trainRatio * 100).toFixed(1)}%)
+                <ThemedText fontWeight="medium">
+                  Training split ({(trainRatio * 100).toFixed(1)}%)
+                </ThemedText>
               </FormLabel>
               <HStack>
                 <Slider
@@ -215,7 +217,9 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
             {/* Validation Split slider */}
             <FormControl>
               <FormLabel fontWeight={labelweight} marginBottom={mb}>
-                Validation split ({(valRatio * 100).toFixed(1)}%)
+                <ThemedText fontWeight="medium">
+                  Validation split ({(valRatio * 100).toFixed(1)}%)
+                </ThemedText>
               </FormLabel>
               <HStack>
                 <Slider
@@ -238,7 +242,9 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
             {/* Testing Split slider */}
             <FormControl>
               <FormLabel fontWeight={labelweight} marginBottom={mb}>
-                Testing split ({(testRatio * 100).toFixed(1)}%)
+                <ThemedText fontWeight="medium">
+                  Testing split ({(testRatio * 100).toFixed(1)}%)
+                </ThemedText>
               </FormLabel>
               <HStack>
                 <Slider

@@ -12,6 +12,7 @@ import {
   IconComboControl,
   PageTitle,
   SplitSelector,
+  ThemedText,
 } from "../components/miscellaneous";
 import { PreviewAugResultSwitch } from "../components/switches";
 import { useBackendResponse } from "../hooks";
@@ -78,9 +79,9 @@ const PreviewAugmentedResults = () => {
           flex="1"
           overflowY="hidden"
         >
-          <Text color={"gray.400"} mb={4} fontSize="sm">
-            Preview of augmented result.
-          </Text>
+          <ThemedText mb={4} fontSize="sm">
+            Preview of augmented result
+          </ThemedText>
           {previewedSet === "train" ? (
             <PreviewGridTrain />
           ) : previewedSet === "val" ? (

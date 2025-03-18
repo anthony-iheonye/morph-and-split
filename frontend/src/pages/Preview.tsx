@@ -1,12 +1,12 @@
-import { Grid, GridItem, HStack, Text } from "@chakra-ui/react";
+import { Grid, GridItem, HStack } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
 import ContinueBtn from "../components/buttons/ContinueBtn";
 import PreviousBtn from "../components/buttons/PreviousBtn";
 import { BoundingBox, PreviewUploadedDataGrid } from "../components/display";
+import { CopyrightBar, ThemedText } from "../components/miscellaneous";
 import IconHeadingDescriptionCombo from "../components/miscellaneous/IconHeadingDescriptionCombo";
 import PageTitle from "../components/miscellaneous/PageTitle";
 import PreviewSwitch from "../components/switches/PreviewSwitch";
-import { CopyrightBar } from "../components/miscellaneous";
 
 const Preview = () => {
   return (
@@ -54,9 +54,9 @@ const Preview = () => {
           flexDirection="column"
           overflowY="hidden"
         >
-          <Text color={"gray.400"} fontSize="sm">
+          <ThemedText fontSize="sm">
             Preview of uploaded Images and Masks.
-          </Text>
+          </ThemedText>
           <PreviewUploadedDataGrid />
         </BoundingBox>
       </GridItem>
