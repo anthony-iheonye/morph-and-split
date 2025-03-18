@@ -1,4 +1,4 @@
-import { Grid, GridItem, HStack, SimpleGrid, Text } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, SimpleGrid } from "@chakra-ui/react";
 import { PiFlipHorizontalFill, PiFlipVerticalFill } from "react-icons/pi";
 import { RiContrastDropLine, RiCropFill } from "react-icons/ri";
 import { RxRotateCounterClockwise } from "react-icons/rx";

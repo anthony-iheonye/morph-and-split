@@ -1,4 +1,4 @@
-import { Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, VStack } from "@chakra-ui/react";
 import { HiViewGrid } from "react-icons/hi";
 import { EndSession, PreviousBtn } from "../components/buttons";
 import {

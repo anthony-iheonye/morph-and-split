@@ -1,4 +1,4 @@
-import { Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, VStack } from "@chakra-ui/react";
 import { TbNumbers } from "react-icons/tb";
 import {
   Augment,
