@@ -5,7 +5,7 @@ import logging
 from flask import Blueprint, jsonify
 from tensorflow.keras.backend import clear_session
 
-from app.config import google_cloud_config
+from app.config import get_google_cloud_config
 from app.utils import directory_store
 from app.services.gcs_client import upload_file_to_gcs_bucket, download_files_from_gcs_folder, \
     upload_files_to_gcs_bucket
@@ -29,6 +29,7 @@ def transfer_augmented_zip_to_gcs():
 
     try:
         if os.path.exists(os.path.join(AUGMENTED_DIR, filename)):
+            google_cloud_config = get_google_cloud_config()
             destination_blob_name = google_cloud_config.augmented_dir + '/' + filename
             source_file_name = os.path.join(AUGMENTED_DIR, filename)
 
@@ -53,6 +54,7 @@ def transfer_resized_augmented_data():
     Transfer the resized augmented images and masks to Google Cloud bucket
     """
     try:
+        google_cloud_config = get_google_cloud_config()
         upload_files_to_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
                                    source_folder_path=directory_store.resized_augmented,
                                    destination_folder_path=google_cloud_config.resized_augmented,
@@ -73,6 +75,7 @@ def transfer_resized_original_images():
     Transfer the resized original images and mask to Google Cloud bucket
     """
     try:
+        google_cloud_config = get_google_cloud_config()
         upload_files_to_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
                                    source_folder_path=directory_store.resized_image_dir,
                                    destination_folder_path=google_cloud_config.resized_image_dir,
@@ -93,6 +96,7 @@ def transfer_resized_original_masks():
     Transfer the resized original images and mask to Google Cloud bucket
     """
     try:
+        google_cloud_config = get_google_cloud_config()
         upload_files_to_gcs_bucket(bucket_name=google_cloud_config.bucket_name,
                                    source_folder_path=directory_store.resized_mask_dir,
                                    destination_folder_path=google_cloud_config.resized_mask_dir,
@@ -111,6 +115,7 @@ def transfer_resized_original_masks():
 def get_images_from_gcs():
     try:
         # Download the uploaded images from Google Cloud Storage
+        google_cloud_config = get_google_cloud_config()
         success, message = download_files_from_gcs_folder(bucket_name=google_cloud_config.bucket_name,
                                                           source_folder_path=google_cloud_config.image_dir,
                                                           destination_folder_path=directory_store.image_dir,
@@ -134,6 +139,7 @@ def get_images_from_gcs():
 def get_masks_from_gcs():
     try:
         # Download the uploaded masks from Google Cloud Storage
+        google_cloud_config = get_google_cloud_config()
         success, message = download_files_from_gcs_folder(bucket_name=google_cloud_config.bucket_name,
                                                           source_folder_path=google_cloud_config.mask_dir,
                                                           destination_folder_path=directory_store.mask_dir,

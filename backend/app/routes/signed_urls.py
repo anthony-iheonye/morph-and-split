@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from werkzeug.utils import secure_filename
 
-from app.config import google_cloud_config
+from app.config import get_google_cloud_config
 from app.services import generate_signed_url
 from app.utils import get_sorted_filenames, directory_store
 
@@ -27,6 +27,7 @@ def generate_signed_download_urls():
 
 
         signed_urls = []
+        google_cloud_config = get_google_cloud_config()
         for filename in filenames:
             secure_file = secure_filename(filename)
             url = generate_signed_url(
@@ -55,6 +56,7 @@ def generate_signed_upload_urls():
         folder_path = data.get('folder_path', '')
         signed_urls = []
 
+        google_cloud_config = get_google_cloud_config()
         for i, filename in enumerate(filenames):
             # Use corresponding type if provided; default to application/octet-stream
             content_type = content_types[i] if i < len(content_types) else 'application/octet-stream'
@@ -92,6 +94,7 @@ def generate_signed_urls_for_resized_images_and_masks():
             return []
 
         signed_urls = []
+        google_cloud_config = get_google_cloud_config()
         for image_name, mask_name in zip(image_names, mask_names):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
@@ -134,6 +137,7 @@ def generate_signed_urls_for_resized_train_set():
             return []
 
         signed_urls = []
+        google_cloud_config = get_google_cloud_config()
         for image_name, mask_name in zip(image_names, mask_names):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
@@ -175,6 +179,7 @@ def generate_signed_urls_for_resized_validation_set():
             return []
 
         signed_urls = []
+        google_cloud_config = get_google_cloud_config()
         for image_name, mask_name in zip(image_names, mask_names):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)
@@ -216,6 +221,7 @@ def generate_signed_urls_for_resized_test_set():
             return []
 
         signed_urls = []
+        google_cloud_config = get_google_cloud_config()
         for image_name, mask_name in zip(image_names, mask_names):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)

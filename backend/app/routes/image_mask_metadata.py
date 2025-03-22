@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 from flask import send_from_directory, url_for
 from werkzeug.utils import secure_filename
 
-from app.config import google_cloud_config
+from app.config import get_google_cloud_config
 from app.routes.signed_urls import generate_signed_urls_for_resized_images_and_masks, \
     generate_signed_urls_for_resized_train_set, generate_signed_urls_for_resized_validation_set, \
     generate_signed_urls_for_resized_test_set
@@ -266,6 +266,7 @@ def get_image_mask_metadata_from_gcs_old():
 
         # Generate signed URLs for each image/mask pair
         metadata = []
+        google_cloud_config = get_google_cloud_config()
         for image_name, mask_name in zip(paginated_images, paginated_masks):
             secure_image_name = secure_filename(image_name)
             secure_mask_name = secure_filename(mask_name)

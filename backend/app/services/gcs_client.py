@@ -11,7 +11,7 @@ from google.oauth2 import service_account
 from google.auth import default
 from google.auth.credentials import Credentials
 
-from app.config import google_cloud_config as gc_config
+from app.config import get_google_cloud_config
 from app.config.google_cloud_storage import GoogleCloudStorageConfig
 from app.utils.directory_file_management import sort_filenames
 
@@ -31,6 +31,7 @@ if GCS_KEY_CONTENT:
     credentials_info = json.loads(GCS_KEY_CONTENT)
     bucket_credentials_for_signed_urls = service_account.Credentials.from_service_account_info(credentials_info)
 else:
+    gc_config = get_google_cloud_config()
     bucket_credentials_for_signed_urls = service_account.Credentials.from_service_account_file(
         gc_config.service_account_file_path)
 
@@ -521,7 +522,6 @@ def delete_google_cloud_storage_bucket(google_cloud_config: Optional[GoogleCloud
         # credentials = service_account.Credentials.from_service_account_file(google_cloud_config.service_account_file_path)
 
         credentials, project = default()
-
         storage_client = storage.Client(project=project,
                                         credentials=credentials)
 
@@ -531,9 +531,6 @@ def delete_google_cloud_storage_bucket(google_cloud_config: Optional[GoogleCloud
         if bucket is None:
             logger.info(f"Bucket {bucket_name} does not exist.")
             return False
-
-        # Delete the bucket
-        # bucket.delete(force=True)
 
         gcloud_command = [
             "gcloud",

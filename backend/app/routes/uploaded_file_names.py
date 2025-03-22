@@ -2,7 +2,7 @@ from fileinput import filename
 
 from flask import Blueprint, jsonify
 
-from app.config import google_cloud_config
+from app.config import get_google_cloud_config
 from app.utils import get_sorted_filenames, directory_store, list_filenames
 from app.services.gcs_client import list_files_in_bucket_directory
 
@@ -12,6 +12,7 @@ uploaded_file_names = Blueprint('uploaded_file_names', __name__)
 @uploaded_file_names.route('/upload/gcs/image_names', methods=['GET'])
 def get_uploaded_image_names_from_gcs():
     try:
+        google_cloud_config = get_google_cloud_config()
         image_files = list_files_in_bucket_directory(directory_path=f"{google_cloud_config.image_dir}/",
                                                      google_cloud_config=google_cloud_config)
 
@@ -23,6 +24,7 @@ def get_uploaded_image_names_from_gcs():
 @uploaded_file_names.route('/upload/gcs/mask_names', methods=['GET'])
 def get_uploaded_mask_names_from_gcs():
     try:
+        google_cloud_config = get_google_cloud_config()
         mask_files = list_files_in_bucket_directory(directory_path=f"{google_cloud_config.mask_dir}/",
                                                     google_cloud_config=google_cloud_config)
 

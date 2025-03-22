@@ -1,9 +1,37 @@
 import os.path
 
 import attr
+import string
+import random
 from typing import List, Dict
 
 from app.utils import current_directory
+
+# --- Global State ---
+BUCKET_NAME = None
+_google_cloud_config = None
+
+def generate_unique_code(length=20):
+    """Generate unique characters"""
+    characters = string.ascii_letters.lower() + string.digits  # A-Z, a-z, 0-9
+    return ''.join(random.choices(characters, k=length))
+
+
+def generate_bucket_name() -> string:
+    """Generate a unique name for a GCS bucket. All names are prefixed by `morph-and-split-assets-`."""
+    global BUCKET_NAME
+
+    if BUCKET_NAME is None:
+        BUCKET_NAME = f'morph-and-split-assets-{generate_unique_code()}'
+
+    return BUCKET_NAME
+
+
+def reset_bucket_name():
+    """Reset cached bucket name and config."""
+    global BUCKET_NAME, _google_cloud_config
+    BUCKET_NAME = None
+    _google_cloud_config = None
 
 
 @attr.s
@@ -21,7 +49,7 @@ class GoogleCloudStorageConfig:
     }])
 
     # Bucket and service account details
-    bucket_name: str = attr.ib(default='morph-and-split-assets')
+    bucket_name: str = attr.ib(factory=generate_bucket_name)
     location: str = attr.ib(default='US-SOUTH1')
     storage_class: str = attr.ib(default='STANDARD')
     enable_uniform_bucket_level_access: bool = attr.ib(default=True)
@@ -44,24 +72,33 @@ class GoogleCloudStorageConfig:
     augmented_dir: str = attr.ib(default='augmented/combined')
 
 
-google_cloud_config = GoogleCloudStorageConfig()
+# --- Public Getter ---
+def get_google_cloud_config() -> GoogleCloudStorageConfig:
+    """Get the current Google Cloud config instance, recreating it if necessary."""
+    global _google_cloud_config
+    if _google_cloud_config is None:
+        _google_cloud_config = GoogleCloudStorageConfig()
+    return _google_cloud_config
 
-DIRECTORIES = [google_cloud_config.image_dir,
-               google_cloud_config.mask_dir,
-               google_cloud_config.resized_image_dir,
-               google_cloud_config.resized_mask_dir,
-               google_cloud_config.resized_augmented,
-               google_cloud_config.resized_train_images_dir,
-               google_cloud_config.resized_train_masks_dir,
-               google_cloud_config.resized_val_images_dir,
-               google_cloud_config.resized_val_masks_dir,
-               google_cloud_config.resized_test_images_dir,
-               google_cloud_config.resized_test_masks_dir,
-               google_cloud_config.augmented_dir,
-               ]
-cors = [{
-    "origin": google_cloud_config.origin,
-    "responseHeader": google_cloud_config.responseHeader,
-    "method": google_cloud_config.method,
-    "maxAgeSeconds": google_cloud_config.maxAgeSeconds,
-}]
+
+def get_google_cloud_directories() -> List[str]:
+    """Returns a list containing paths to all GCS directories/folders in the bucket."""
+    config = get_google_cloud_config()
+    return [config.image_dir,
+            config.mask_dir,
+            config.resized_image_dir,
+            config.resized_mask_dir,
+            config.resized_augmented,
+            config.resized_train_images_dir,
+            config.resized_train_masks_dir,
+            config.resized_val_images_dir,
+            config.resized_val_masks_dir,
+            config.resized_test_images_dir,
+            config.resized_test_masks_dir,
+            config.augmented_dir,
+            ]
+
+
+def get_cors():
+    config = get_google_cloud_config()
+    return config.cors

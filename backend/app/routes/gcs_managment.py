@@ -1,12 +1,9 @@
-import time
-
-from flask import Blueprint, jsonify
 import logging
 
-from google.cloud import storage
+from flask import Blueprint, jsonify
 
-from app.config import google_cloud_config, DIRECTORIES
-from app.services import create_google_cloud_storage_bucket, reset_global_bucket_variables, get_bucket
+from app.config import get_google_cloud_config, get_google_cloud_directories, reset_bucket_name
+from app.services import create_google_cloud_storage_bucket, reset_global_bucket_variables
 from app.services.gcs_client import delete_and_recreate_directories_in_gcs_bucket, delete_google_cloud_storage_bucket, \
     create_folders_in_bucket
 
@@ -18,23 +15,20 @@ gcs_management = Blueprint('gcs_management', __name__)
 
 @gcs_management.route('/gcs/create_bucket', methods=['POST'])
 def create_bucket():
+    """Create a new Google Cloud Storage Bucket."""
     try:
 
         # Create Google Cloud Storage
-        bucket = create_google_cloud_storage_bucket(directories=DIRECTORIES,
+        reset_bucket_name()
+        google_cloud_config = get_google_cloud_config()
+        print(f"\n\nGoogle bucket name: {google_cloud_config.bucket_name}\n\n")
+        directories = get_google_cloud_directories()
+        bucket = create_google_cloud_storage_bucket(directories=directories,
                                                     google_cloud_config=google_cloud_config)
 
         if bucket is None:
             return jsonify({'success': False,
                             'message': f"Failed to create storage bucket '{google_cloud_config.bucket_name}'."})
-
-        # # Wait until the bucket is fully available
-        # storage_client = storage.Client()
-        # retries = 5 # Max retries to check bucket availability
-        # for _ in range(retries):
-        #     if storage_client.lookup_bucket(google_cloud_config.bucket_name):
-        #         break
-        #     time.sleep(3)
 
         return jsonify({'success': True,
                         'message': f"Google cloud Storage bucket "
@@ -45,15 +39,11 @@ def create_bucket():
 
 @gcs_management.route('/gcs/create_folders_in_bucket', methods=['POST'])
 def create_directories_in_bucket():
+    """Create folders within a GCS bucket."""
     try:
-        # storage_client = storage.Client()
-        # bucket = storage_client.lookup_bucket(google_cloud_config.bucket_name)
-        #
-        # if not bucket:
-        #     return jsonify({'success': False,
-        #                     'message': f"Bucket '{google_cloud_config.bucket_name}' not found."}), 400
-
-        success = create_folders_in_bucket(directories=DIRECTORIES,
+        google_cloud_config = get_google_cloud_config()
+        directories = get_google_cloud_directories()
+        success = create_folders_in_bucket(directories=directories,
                                            google_cloud_config=google_cloud_config)
 
         if success:
@@ -71,7 +61,9 @@ def create_directories_in_bucket():
 def delete_bucket():
     try:
         # Delete Google cloud storage bucket.
+        google_cloud_config = get_google_cloud_config()
         delete_google_cloud_storage_bucket(google_cloud_config=google_cloud_config)
+        reset_bucket_name()
         return jsonify({'success': True,
                         'message': f"Google Cloud Storage bucket "
                                    f"{google_cloud_config.bucket_name} deleted successfully. "}), 200
@@ -87,6 +79,7 @@ def delete_uploaded_images():
     """
 
     try:
+        google_cloud_config = get_google_cloud_config()
         delete_and_recreate_directories_in_gcs_bucket(directories=[google_cloud_config.resized_image_dir,],
                                                       google_cloud_config=google_cloud_config,)
 
@@ -104,6 +97,7 @@ def delete_uploaded_masks():
     """
 
     try:
+        google_cloud_config = get_google_cloud_config()
         delete_and_recreate_directories_in_gcs_bucket(directories=[google_cloud_config.resized_mask_dir, ],
                                                       google_cloud_config=google_cloud_config,)
 
@@ -116,7 +110,7 @@ def delete_uploaded_masks():
 @gcs_management.route('/gcs/reset_global_buckets_variables', methods=['POST'])
 def reset_global_buckets():
     """
-    An endpoint to reset the global bucket variables
+    An endpoint to reset the global bucket variables.
     :return: JSON response
     """
 
