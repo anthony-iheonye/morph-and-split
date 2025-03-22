@@ -47,6 +47,17 @@ const StratifiedFileHint = () => {
               The number of rows must match the number of images in the dataset.
             </li>
           </ul>
+          <a
+            href="/assets/sample_split_data.csv"
+            download="sample_split_data.csv"
+            style={{
+              display: "inline-block",
+              marginTop: "1rem",
+              color: "#3182ce",
+            }}
+          >
+            Download sample CSV
+          </a>
         </PopoverBody>
       </PopoverContent>
     </Popover>
