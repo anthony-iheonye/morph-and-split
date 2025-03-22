@@ -145,7 +145,7 @@ const ImageUploader = () => {
       isDisabled={isUploading}
       width="auto"
       borderRadius={10}
-      leftIcon={isUploading ? <Spinner size="md" color="white" /> : undefined}
+      leftIcon={isUploading ? <Spinner size="md" color="black" /> : undefined}
       bg={backgroundColor}
       border={`1px solid ${borderColor}`}
       color={textColor}

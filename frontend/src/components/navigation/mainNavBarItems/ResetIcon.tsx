@@ -48,16 +48,22 @@ const ResetIcon = () => {
   // Query client for reseting queries
   const queryClient = useQueryClient();
   const { data } = useIsBackendRunning();
-
   const navigate = useNavigate();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   // Create API clients
+  const GCSDeleteClient = new APIClient<BackendResponse>("/gcs/delete_bucket");
+
+  const resetGlobalBucketVariableClient = new APIClient(
+    "/gcs/reset_global_buckets_variables"
+  );
+
+  const GCSCreateClient = new APIClient<BackendResponse>("/gcs/create_bucket");
+
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "project_directories/create"
   );
-  const GCSDeleteClient = new APIClient<BackendResponse>("/gcs/delete_bucket");
-  const GCSCreateClient = new APIClient<BackendResponse>("/gcs/create_bucket");
+
   const resetUploadedDataURLClient = new APIClient<BackendResponse>(
     "reset-signed-urls-for-resized-images-and-masks"
   );
@@ -70,14 +76,6 @@ const ResetIcon = () => {
   const resetTestSetURLClient = new APIClient<BackendResponse>(
     "/reset-signed-urls-for-resized-test-set"
   );
-
-  const resetGlobalBucketVariableClient = new APIClient(
-    "/gcs/reset_global_buckets_variables"
-  );
-
-  // const bucketDirectoryClient = new APIClient<BackendResponse>(
-  //   "/gcs/create_folders_in_bucket"
-  // );
 
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
@@ -233,7 +231,7 @@ const ResetIcon = () => {
             aria-label="Upload Image and segmentation mask"
             icon={
               isResetting || isShuttingDown ? (
-                <Spinner size="md" color="white" />
+                <Spinner size="md" color="teal" />
               ) : (
                 <VscDebugRestart />
               )

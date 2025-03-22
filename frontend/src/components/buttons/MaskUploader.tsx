@@ -142,7 +142,7 @@ const MaskUploader = () => {
       variant="outline"
       cursor="pointer"
       isDisabled={isUploading}
-      leftIcon={isUploading ? <Spinner size="md" color="white" /> : undefined}
+      leftIcon={isUploading ? <Spinner size="md" color="black" /> : undefined}
       bg={backgroundColor}
       border={`1px solid ${borderColor}`}
       borderRadius={10}
