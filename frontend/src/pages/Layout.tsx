@@ -27,7 +27,7 @@ const Layout = () => {
         }}
         templateColumns={{
           base: "1fr",
-          md: "65px 1fr",
+          md: "80px 1fr",
         }}
         overflow="hidden"
       >
