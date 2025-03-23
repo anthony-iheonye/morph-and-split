@@ -1,6 +1,7 @@
 import os
 
 from flask import Blueprint, jsonify
+from .session_control import session_is_running
 
 from app.routes.augment import is_augmenting
 from app.utils import directory_exit, directory_store, get_sorted_filenames, list_filenames
@@ -103,3 +104,19 @@ def augmentation_is_running():
             return jsonify({'isRunning': False, 'message': 'Augmentation is not running'}), 200
     except Exception as e:
         return jsonify({'isRunning': False, 'error': str(e)}), 500
+
+
+@status_checks.route('/status_checks/session_is_running', methods=['GET'])
+def session_in_progress():
+    """
+    Checks if a session is currently running.
+    :return:
+    """
+    try:
+        if session_is_running.is_set():
+            return jsonify({'isRunning': True, 'message': 'Session is running'}), 200
+        else:
+            return jsonify({'isRunning': False, 'message': 'Session is not running'}), 200
+    except Exception as e:
+        return jsonify({'isRunning': False, 'error': str(e)}), 500
+

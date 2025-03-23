@@ -14,7 +14,7 @@ from app.routes import (
     image_upload,
     mask_upload,
     resize_data,
-    reset_session,
+    set_session,
     google_cloud_signed_urls,
     uploaded_file_names,
     stratification_data_file_processing
@@ -39,7 +39,7 @@ def create_app():
     app.register_blueprint(resize_data)
     app.register_blueprint(image_mask_metadata)
     app.register_blueprint(uploaded_file_names)
-    app.register_blueprint(reset_session)
+    app.register_blueprint(set_session)
     app.register_blueprint(download_file)
     app.register_blueprint(augment)
     app.register_blueprint(status_checks)

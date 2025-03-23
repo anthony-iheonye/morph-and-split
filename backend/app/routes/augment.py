@@ -8,7 +8,6 @@ import sys
 
 from flask import Blueprint, request, jsonify
 from tensorflow.keras.backend import clear_session
-from werkzeug.utils import secure_filename
 
 from app.services import DataSplitterAugmenterAndSaver, resize_augmented_data
 from app.utils import directory_store, list_filenames
