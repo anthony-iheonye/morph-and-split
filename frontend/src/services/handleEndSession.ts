@@ -1,10 +1,10 @@
 import { ToastId, UseToastOptions } from "@chakra-ui/react";
+import { QueryClient } from "@tanstack/react-query";
 import { NavigateFunction } from "react-router-dom";
 import { BackendResponse, CustomError } from "../entities";
+import { BackendResponseLog } from "../store";
 import APIClient from "./api-client";
 import invalidateQueries from "./invalidateQueries";
-import { QueryClient } from "@tanstack/react-query";
-import { BackendResponseLog } from "../store";
 
 interface Props {
   resetAugConfig: () => void;
@@ -27,6 +27,7 @@ const handleEndSession = async ({
   navigate,
 }: Props): Promise<void> => {
   const GCSClient = new APIClient<BackendResponse>("/gcs/delete_bucket");
+
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "/project_directories/delete"
   );
@@ -50,6 +51,8 @@ const handleEndSession = async ({
   const resetGlobalBucketVariableClient = new APIClient(
     "/gcs/reset_global_buckets_variables"
   );
+
+  const sessionClient = new APIClient<BackendResponse>("/session/stop_session");
 
   try {
     setBackendResponseLog("isShuttingDown", true);
@@ -126,6 +129,12 @@ const handleEndSession = async ({
         "Project Directory Deletion Failed",
         "Failed to delete project directories."
       );
+    }
+
+    // Mark session as 'started'
+    const session = await sessionClient.executeAction();
+    if (session.isRunning) {
+      throw new CustomError("Session State", "Failed to stop current session.");
     } else {
       // Reset local configurations
       resetAugConfig();
@@ -146,6 +155,7 @@ const handleEndSession = async ({
         "backendIsRunning",
         "stratificationFileName",
         "strafied_split_parameters",
+        "sessionIsRunning",
       ]);
     }
   } catch (error: any) {

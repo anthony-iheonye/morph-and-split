@@ -9,7 +9,7 @@ const useAugmentationIsRunning = () => {
   return useQuery<BackendResponse, Error>({
     queryKey: ["augmentationIsRunning"],
     queryFn: apiClient.getStatus,
-    staleTime: ms("1hr"),
+    staleTime: ms("24hr"),
   });
 };
 

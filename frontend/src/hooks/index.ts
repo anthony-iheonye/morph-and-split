@@ -25,6 +25,7 @@ export { default as useStratifiedSplitParameters } from "./useStratifiedSplitPar
 export { default as useStratificationDataFileName } from "./useStratificationDataFileName";
 export { default as useInputThemedColor } from "./useInputThemedColor";
 export { default as useButtonThemedColor } from "./useButtonThemedColor";
+export { default as useSessionIsRunning } from "./useSessionIsRunning";
 
 export { parentNames } from "./useActiveParent";
 export { subParentNames } from "./useActiveSubParent";

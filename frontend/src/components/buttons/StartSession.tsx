@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { BackendResponse, CustomError } from "../../entities";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
+import { useSessionIsRunning } from "../../hooks";
+import { FaCircleCheck } from "react-icons/fa6";
 
 interface Props {
   label?: string | { base?: string; md?: string; lg?: string };
@@ -24,12 +26,19 @@ const StartSession = ({
   disable = false,
 }: Props) => {
   const GCSClient = new APIClient<BackendResponse>("/gcs/create_bucket");
+
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "project_directories/create"
   );
   const bucketDirectoryClient = new APIClient<BackendResponse>(
     "/gcs/create_folders_in_bucket"
   );
+
+  const sessionClient = new APIClient<BackendResponse>(
+    "/session/start_session"
+  );
+
+  const { data: session } = useSessionIsRunning();
 
   const navigate = useNavigate();
   const toast = useToast();
@@ -71,9 +80,18 @@ const StartSession = ({
           "Project Directory Creation",
           "Failed to create backend project directories."
         );
+      }
+
+      // Mark session as 'started'
+      const session = await sessionClient.executeAction();
+      if (!session.isRunning) {
+        throw new CustomError("Session State", "Failed to start new session.");
       } else {
         navigate(to);
-        invalidateQueries(queryClient, ["backendIsRunning"]);
+        invalidateQueries(queryClient, [
+          "backendIsRunning",
+          "sessionIsRunning",
+        ]);
       }
     } catch (error: any) {
       toast({
@@ -94,10 +112,22 @@ const StartSession = ({
       size="sm"
       onClick={() => handleClick()}
       borderRadius={20}
-      leftIcon={isLoading ? <Spinner /> : <FaPowerOff size="1rem" />}
-      isDisabled={disable}
+      leftIcon={
+        isLoading ? (
+          <Spinner color="blacks" />
+        ) : session?.isRunning ? (
+          <FaCircleCheck size="1rem" />
+        ) : (
+          <FaPowerOff size="1rem" />
+        )
+      }
+      isDisabled={disable || session?.isRunning}
     >
-      {isLoading ? "Preparing work space..." : responsiveLabel}
+      {isLoading
+        ? "Setting up workspace..."
+        : session?.isRunning
+        ? "Workspace ready"
+        : responsiveLabel}
     </Button>
   );
 };
