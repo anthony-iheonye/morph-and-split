@@ -1,7 +1,7 @@
 import { PlacementWithLogical, Spinner, useToast } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdDeleteForever } from "react-icons/md";
-import { useBackendResponse } from "../../hooks";
+import { useAugConfigAndSetter, useBackendResponse } from "../../hooks";
 import { handleDeleteStratDataFile } from "../../services";
 import IconButtonWithToolTip from "./IconButtonWithToolTip";
 
@@ -17,6 +17,7 @@ const DeleteStratDataFile = ({ tooltipPlacment = "left-start" }: Props) => {
   const toast = useToast();
   const { setBackendResponseLog, imageIsUploading, deletingStratDataFile } =
     useBackendResponse();
+  const { setAugConfig } = useAugConfigAndSetter();
 
   return (
     <IconButtonWithToolTip
@@ -29,6 +30,7 @@ const DeleteStratDataFile = ({ tooltipPlacment = "left-start" }: Props) => {
         handleDeleteStratDataFile({
           queryClient,
           setBackendResponseLog,
+          setAugConfig,
           toast,
         })
       }

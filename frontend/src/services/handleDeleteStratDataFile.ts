@@ -1,6 +1,6 @@
 import { ToastId, UseToastOptions } from "@chakra-ui/react";
 import { QueryClient } from "@tanstack/react-query";
-import { BackendResponseLog } from "../store";
+import { AugConfig, BackendResponseLog } from "../store";
 import APIClient from "./api-client";
 import invalidateQueries from "./invalidateQueries";
 
@@ -11,12 +11,17 @@ interface Props {
     key: K,
     value: BackendResponseLog[K]
   ) => void;
+  setAugConfig: <K extends keyof AugConfig>(
+    key: K,
+    value: AugConfig[K]
+  ) => void;
 }
 
 const handleDeleteStratDataFile = async ({
   queryClient,
   toast,
   setBackendResponseLog,
+  setAugConfig,
 }: Props) => {
   const deleteStratificationFileClient = new APIClient(
     "/stratification_data_file/delete"
@@ -57,6 +62,7 @@ const handleDeleteStratDataFile = async ({
     });
   } finally {
     setBackendResponseLog("deletingStratDataFile", false);
+    setAugConfig("splitParameter", "");
   }
 };
 
