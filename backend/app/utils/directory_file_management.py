@@ -9,7 +9,9 @@ base_dir = os.path.abspath(os.path.join(current_dir, '../..'))
 
 @attr.s
 class DirectoryStore:
-    asset_dir = attr.ib(type=str, default=os.path.join(base_dir, 'assets'))
+    session_id = attr.ib(type=str)
+    asset_dir = attr.ib(type=str, init=False)
+
     image_dir = attr.ib(type=str, init=False)
     mask_dir = attr.ib(type=str, init=False)
 
@@ -39,6 +41,7 @@ class DirectoryStore:
 
     def __attrs_post_init__(self):
         # Set the paths that depend on other attributes
+        self.asset_dir = os.path.join(base_dir, f"assets-{self.session_id}")
         self.image_dir = os.path.join(self.asset_dir, 'images')
         self.mask_dir = os.path.join(self.asset_dir, 'masks')
 
@@ -65,10 +68,6 @@ class DirectoryStore:
         self.resized_test_mask_dir = os.path.join(self.resized_augmented, 'test', 'masks')
 
         self.stratification_data_file_dir = os.path.join(self.asset_dir, 'stratification')
-
-
-# Initialize DirectoryStore instance
-directory_store = DirectoryStore()
 
 
 def create_directory(dir_name, return_dir=False, overwrite_if_existing=False):
@@ -114,7 +113,7 @@ def delete_directory(dir_name, return_dir=False):
         print("Directory does not exist!")
 
 
-def create_project_directories(return_dir=True, overwrite_if_existing=False):
+def create_project_directories(directory_store: DirectoryStore, return_dir=True, overwrite_if_existing=False):
     """
     Create directory for the uploaded images and masks, for the augmented training, validation and testing datasets.
     :returns: dictionary with keys 'image_dir', 'mask_dir', 'train_dir', 'val_dir' and 'test_dir'.
@@ -183,13 +182,13 @@ def create_project_directories(return_dir=True, overwrite_if_existing=False):
                 'visual_attribute_dir': visual_attribute_dir}
 
 
-def create_resized_augmentation_directories(return_dir=True, overwrite_if_existing=False):
+def create_resized_augmentation_directories(directory_store: DirectoryStore, return_dir=True, overwrite_if_existing=False):
     """
     Create directory for resized augmented training, validation and testing datasets.
     :returns: dictionary with keys 'image_dir', 'mask_dir', 'train_dir', 'val_dir' and 'test_dir'.
     """
-    # Directory setup
 
+    # Directory setup
     resized_augmented_dir = create_directory(dir_name=directory_store.resized_augmented, return_dir=True,
                                              overwrite_if_existing=overwrite_if_existing)
 
