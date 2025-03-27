@@ -6,7 +6,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React from "react";
 import { BackendResponse, CustomError, SignedUrls } from "../../entities";
 import {
   useBackendResponse,
@@ -30,6 +30,10 @@ const MaskUploader = () => {
     "/gcs/transfer_resized_original_masks_to_gcs"
   );
 
+  const signedUrlResetClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-images-and-masks"
+  );
+
   const deleteStratificationFileClient = new APIClient(
     "/stratification_data_file/delete"
   );
@@ -39,7 +43,7 @@ const MaskUploader = () => {
     md: "Select Masks",
   });
 
-  const { setBackendResponseLog } = useBackendResponse();
+  const { maskIsUploading, setBackendResponseLog } = useBackendResponse();
   const queryClient = useQueryClient();
   const toast = useToast();
 
@@ -51,7 +55,7 @@ const MaskUploader = () => {
     hoverBackgroundColor,
   } = useButtonThemedColor();
 
-  const { isUploading, handleFileChange } = useFileUploader<File>(
+  const { handleFileChange } = useFileUploader<File>(
     async (files) => {
       try {
         // Trigger the upload process
@@ -92,6 +96,15 @@ const MaskUploader = () => {
           );
         }
 
+        // Reset the Signed urls
+        const signedUrlsReset = await signedUrlResetClient.executeAction();
+        if (!signedUrlsReset.success) {
+          throw new CustomError(
+            "Reset Signed URLs",
+            "Failed to reset signed urls for uploaded masks."
+          );
+        }
+
         // Delete stratification data file from backend storage
         const response =
           await deleteStratificationFileClient.deleteFileOrDirectory();
@@ -125,24 +138,24 @@ const MaskUploader = () => {
         });
       }
     },
-    toast
+    toast,
+    setBackendResponseLog,
+    "maskIsUploading"
   );
 
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.target.value = ""; // Reset the file input's value so the previous file can be reuploaded, if we choose to.
   };
 
-  useEffect(() => {
-    setBackendResponseLog("maskIsUploading", isUploading);
-  }, [isUploading]);
-
   return (
     <Button
       as="label"
       variant="outline"
       cursor="pointer"
-      isDisabled={isUploading}
-      leftIcon={isUploading ? <Spinner size="md" color="black" /> : undefined}
+      isDisabled={maskIsUploading}
+      leftIcon={
+        maskIsUploading ? <Spinner size="md" color="black" /> : undefined
+      }
       bg={backgroundColor}
       border={`1px solid ${borderColor}`}
       borderRadius={10}
@@ -155,7 +168,7 @@ const MaskUploader = () => {
       }}
       size="md"
     >
-      {isUploading ? "Uploading" : buttonText}
+      {maskIsUploading ? "Uploading" : buttonText}
       <Input
         type="file"
         multiple

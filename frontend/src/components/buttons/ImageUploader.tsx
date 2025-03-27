@@ -5,6 +5,7 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { BackendResponse, CustomError, SignedUrls } from "../../entities";
 import {
   useBackendResponse,
@@ -14,8 +15,6 @@ import {
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 
 const ImageUploader = () => {
   const uploadClient = new APIClient<SignedUrls>("/generate-signed-upload-url");
@@ -30,6 +29,10 @@ const ImageUploader = () => {
 
   const resizedImageTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_resized_original_images_to_gcs"
+  );
+
+  const signedUrlResetClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-images-and-masks"
   );
 
   const deleteStratificationFileClient = new APIClient(
@@ -49,11 +52,11 @@ const ImageUploader = () => {
     hoverBackgroundColor,
   } = useButtonThemedColor();
 
-  const { setBackendResponseLog } = useBackendResponse();
+  const { imageIsUploading, setBackendResponseLog } = useBackendResponse();
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  const { isUploading, handleFileChange } = useFileUploader<File>(
+  const { handleFileChange } = useFileUploader<File>(
     async (files) => {
       try {
         // Trigger the upload process
@@ -94,6 +97,15 @@ const ImageUploader = () => {
           );
         }
 
+        // Reset the Signed urls
+        const signedUrlsReset = await signedUrlResetClient.executeAction();
+        if (!signedUrlsReset.success) {
+          throw new CustomError(
+            "Reset Signed URLs",
+            "Failed to reset signed urls for uploaded images."
+          );
+        }
+
         // Delete stratification data file from backend storage
         const response =
           await deleteStratificationFileClient.deleteFileOrDirectory();
@@ -126,26 +138,26 @@ const ImageUploader = () => {
         });
       }
     },
-    toast
+    toast,
+    setBackendResponseLog,
+    "imageIsUploading"
   );
 
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.target.value = ""; // Reset the file input's value so the previous file can be reuploaded, if we choose to.
   };
 
-  useEffect(() => {
-    setBackendResponseLog("imageIsUploading", isUploading);
-  }, [isUploading]);
-
   return (
     <Button
       as="label"
       variant="outline"
       cursor="pointer"
-      isDisabled={isUploading}
+      isDisabled={imageIsUploading}
       width="auto"
       borderRadius={10}
-      leftIcon={isUploading ? <Spinner size="md" color="black" /> : undefined}
+      leftIcon={
+        imageIsUploading ? <Spinner size="md" color="black" /> : undefined
+      }
       bg={backgroundColor}
       border={`1px solid ${borderColor}`}
       color={textColor}
@@ -157,7 +169,7 @@ const ImageUploader = () => {
       }}
       size="md"
     >
-      {isUploading ? "Uploading" : buttonText}
+      {imageIsUploading ? "Uploading" : buttonText}
       <Input
         type="file"
         multiple

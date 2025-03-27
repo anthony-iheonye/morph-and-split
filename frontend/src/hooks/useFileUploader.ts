@@ -1,6 +1,6 @@
 import { UseToastOptions } from "@chakra-ui/react";
-import { useState } from "react";
 import { sortByName } from "../services";
+import { BackendResponseLog } from "../store";
 import useAugConfigAndSetter from "./useAugConfigAndSetter";
 
 /**
@@ -23,9 +23,13 @@ import useAugConfigAndSetter from "./useAugConfigAndSetter";
  */
 const useFileUploader = <T extends File>(
   setFilePaths: (files: T[]) => Promise<void>,
-  toast: (options: UseToastOptions) => void
+  toast: (options: UseToastOptions) => void,
+  setBackendResponseLog: <K extends keyof BackendResponseLog>(
+    key: K,
+    value: BackendResponseLog[K]
+  ) => void,
+  dataIsUploading: "imageIsUploading" | "maskIsUploading"
 ) => {
-  const [isUploading, setUploading] = useState<boolean>(false);
   const { setAugConfig } = useAugConfigAndSetter();
 
   const getFileExt = (file: File): "png" | "jpeg" | "jpg" | null => {
@@ -77,13 +81,13 @@ const useFileUploader = <T extends File>(
 
     // Upload files
     try {
-      setUploading(true);
+      setBackendResponseLog(dataIsUploading, true);
       await setFilePaths(validFiles);
       toast({
         title: "Upload Successful",
         description: `${validFiles.length} file(s) uploaded successfully.`,
         status: "success",
-        duration: 4000,
+        duration: 2000,
         isClosable: true,
       });
     } catch (uploadError) {
@@ -95,10 +99,10 @@ const useFileUploader = <T extends File>(
         isClosable: true,
       });
     } finally {
-      setUploading(false);
+      setBackendResponseLog(dataIsUploading, false);
     }
   };
-  return { isUploading, handleFileChange };
+  return { handleFileChange };
 };
 
 export default useFileUploader;

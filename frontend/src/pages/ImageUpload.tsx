@@ -66,22 +66,6 @@ const ImageUpload = () => {
         </BoundingBox>
       </GridItem>
 
-      {/* <GridItem area="channels">
-        <BoundingBox >
-          <HStack justify="space-between" align="start" width="100%">
-            <IconHeadingDescriptionCombo
-              icon={IoLayers}
-              title={{ base: "Image Channels", md: "Number of Image Channels" }}
-              description={{
-                base: "Select image channels",
-                md: "Select the number of image channels.",
-              }}
-            />
-            <ImageChannel />
-          </HStack>
-        </BoundingBox>
-      </GridItem> */}
-
       <GridItem
         area="selectedImages"
         display="flex"
