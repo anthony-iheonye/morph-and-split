@@ -162,7 +162,7 @@ const WelcomePage = () => {
         </BoundingBox>
       </GridItem>
 
-      <GridItem area="startSession" mt={4} mb={2}>
+      <GridItem area="startSession" mt={4} mb={"2rem"}>
         <StartSession to="/upload_data/images" label="Start New Session" />
       </GridItem>
     </Grid>

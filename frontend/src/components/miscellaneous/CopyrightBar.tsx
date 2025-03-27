@@ -14,7 +14,7 @@ const CopyrightBar = () => {
       position="absolute"
       right="0"
       left="0"
-      bottom="0"
+      bottom="0.5rem"
     >
       <Text fontSize="0.8rem" color="gray.600">
         {" "}
