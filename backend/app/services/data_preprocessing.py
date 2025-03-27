@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Union, Tuple
+from typing import Union, Tuple, Optional
 
 import numpy as np
 import tensorflow as tf
@@ -149,7 +149,7 @@ class ImageOrMaskDatasetCreator:
         self.add_label_channels = add_label_channels_to_mask
         self.unique_intensities = None
 
-        self.image_shape = None
+        self.image_shape: Optional[Tuple] = None
 
         # " if image_directory is not None:" is introduced for class inheritance purpose, when we want to use
         # other method but on supply image_directory.
@@ -388,7 +388,6 @@ class ImageOrMaskDatasetCreator:
         Prepares batches of the validation set.
 
         :param image_paths: (list) paths to each image file in the validation set
-        :param mask_paths: (list) paths to each mask in the validation set
         :return: tf Dataset containing the preprocessed validation set
         """
         dataset = tf.data.Dataset.from_tensor_slices(image_paths)
@@ -418,8 +417,6 @@ class ImageOrMaskDatasetCreator:
         """
         Prepares shuffled batches of the training set.
 
-        :param image_paths: (list) paths to each image file in the training set
-        :param mask_paths: (list) paths to each mask in the training set
         :return: tf Dataset containing the preprocessed training set
         """
         # create counter for the image and mask name

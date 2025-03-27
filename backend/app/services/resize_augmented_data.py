@@ -1,12 +1,8 @@
 from app.services.data_preprocessing import ImageAndMaskCropperResizerAndSaver
-from app.utils import directory_store as ds, list_filenames
-from app.aug_config import aug_config
+from app.utils import list_filenames
+from .session_store import session_store
 from PIL import Image
 import os
-
-# channels = aug_config['imageMaskChannels']
-# image_channels = channels['imgChannels']
-# mask_channels = channels['maskChannels']
 
 
 def get_resized_dimension(image_path: str):
@@ -40,39 +36,51 @@ def get_resized_dimension(image_path: str):
         return  new_height, new_width, num_channels
 
 
-def resize_augmented_data():
-    sample_img_name = list_filenames(ds.image_dir)[0]
-    sample_img_path = str(os.path.join(ds.image_dir, sample_img_name))
+def resize_augmented_data(session_id: str):
+    """
+    Resizes the training, validation, and test datasets for images and masks associated with a session.
 
-    sample_mask_name = list_filenames(ds.mask_dir)[0]
-    sample_mask_path = str(os.path.join(ds.mask_dir, sample_mask_name))
+    This function determines the target dimensions by inspecting one sample image and mask.
+    It then initializes separate resizer objects for training, validation, and test sets,
+    which perform resizing and saving to designated directories.
+
+    :param session_id: The session identifier used to retrieve image and mask directories.
+    :return: None
+    """
+    directory_store = session_store.get_directory_store(session_id)
+
+    sample_img_name = list_filenames(directory_store.image_dir)[0]
+    sample_img_path = str(os.path.join(directory_store.image_dir, sample_img_name))
+
+    sample_mask_name = list_filenames(directory_store.mask_dir)[0]
+    sample_mask_path = str(os.path.join(directory_store.mask_dir, sample_mask_name))
 
     resize_height, resize_width, image_channels = get_resized_dimension(sample_img_path)
     _, _, mask_channels = get_resized_dimension(sample_mask_path)
 
     train_resizer = ImageAndMaskCropperResizerAndSaver(
-        images_directory=ds.train_image_dir,
-        masks_directory=ds.train_mask_dir,
-        new_images_directory=ds.resized_train_image_dir,
-        new_masks_directory=ds.resized_train_mask_dir,
+        images_directory=directory_store.train_image_dir,
+        masks_directory=directory_store.train_mask_dir,
+        new_images_directory=directory_store.resized_train_image_dir,
+        new_masks_directory=directory_store.resized_train_mask_dir,
         image_mask_channels=(image_channels, mask_channels),
         final_image_shape=(resize_height, resize_width)
     )
 
     val_resizer = ImageAndMaskCropperResizerAndSaver(
-        images_directory=ds.val_image_dir,
-        masks_directory=ds.val_mask_dir,
-        new_images_directory=ds.resized_val_image_dir,
-        new_masks_directory=ds.resized_val_mask_dir,
+        images_directory=directory_store.val_image_dir,
+        masks_directory=directory_store.val_mask_dir,
+        new_images_directory=directory_store.resized_val_image_dir,
+        new_masks_directory=directory_store.resized_val_mask_dir,
         image_mask_channels=(image_channels, mask_channels),
         final_image_shape=(resize_height, resize_width)
     )
 
     test_resizer = ImageAndMaskCropperResizerAndSaver(
-        images_directory=ds.test_image_dir,
-        masks_directory=ds.test_mask_dir,
-        new_images_directory=ds.resized_test_image_dir,
-        new_masks_directory=ds.resized_test_mask_dir,
+        images_directory=directory_store.test_image_dir,
+        masks_directory=directory_store.test_mask_dir,
+        new_images_directory=directory_store.resized_test_image_dir,
+        new_masks_directory=directory_store.resized_test_mask_dir,
         image_mask_channels=(image_channels, mask_channels),
         final_image_shape=(resize_height, resize_width)
     )
