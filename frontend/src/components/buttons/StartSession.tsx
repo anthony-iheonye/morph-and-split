@@ -7,12 +7,12 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaPowerOff } from "react-icons/fa";
+import { FaCircleCheck } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { BackendResponse, CustomError } from "../../entities";
+import { useSessionIsRunning } from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
-import { useSessionIsRunning } from "../../hooks";
-import { FaCircleCheck } from "react-icons/fa6";
 
 interface Props {
   label?: string | { base?: string; md?: string; lg?: string };
@@ -27,11 +27,12 @@ const StartSession = ({
 }: Props) => {
   const GCSClient = new APIClient<BackendResponse>("/gcs/create_bucket");
 
-  const projectDirectoryClient = new APIClient<BackendResponse>(
-    "project_directories/create"
-  );
   const bucketDirectoryClient = new APIClient<BackendResponse>(
     "/gcs/create_folders_in_bucket"
+  );
+
+  const projectDirectoryClient = new APIClient<BackendResponse>(
+    "project_directories/create"
   );
 
   const sessionClient = new APIClient<BackendResponse>(
@@ -126,7 +127,7 @@ const StartSession = ({
       {isLoading
         ? "Setting up workspace..."
         : session?.isRunning
-        ? "Workspace ready"
+        ? "Session active"
         : responsiveLabel}
     </Button>
   );

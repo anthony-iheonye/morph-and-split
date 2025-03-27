@@ -6,7 +6,7 @@ const apiClient = new APIClient<SignedUrls[]>(
   "/generate-signed-urls-for-resized-images-and-masks"
 );
 
-const useRefreshUploadImageMaskDownloadUrls = () =>
+const useRefreshUploadedImageMaskDownloadUrls = () =>
   useQuery({
     queryKey: ["imageMaskURLs"], // Unique query key for caching
     queryFn: async () => {
@@ -18,4 +18,4 @@ const useRefreshUploadImageMaskDownloadUrls = () =>
     refetchOnWindowFocus: false, // Avoids automatic refetch on window focus
   });
 
-export default useRefreshUploadImageMaskDownloadUrls;
+export default useRefreshUploadedImageMaskDownloadUrls;
