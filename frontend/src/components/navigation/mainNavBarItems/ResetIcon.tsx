@@ -54,27 +54,14 @@ const ResetIcon = () => {
   // Create API clients
   const GCSDeleteClient = new APIClient<BackendResponse>("/gcs/delete_bucket");
 
-  const resetGlobalBucketVariableClient = new APIClient(
-    "/gcs/reset_global_buckets_variables"
-  );
-
   const GCSCreateClient = new APIClient<BackendResponse>("/gcs/create_bucket");
 
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "project_directories/create"
   );
 
-  const resetUploadedDataURLClient = new APIClient<BackendResponse>(
-    "reset-signed-urls-for-resized-images-and-masks"
-  );
-  const resetTrainSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-train-set"
-  );
-  const resetValSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-validation-set"
-  );
-  const resetTestSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-test-set"
+  const signedUrlsClient = new APIClient<BackendResponse>(
+    "/reset-all-signed-download-urls"
   );
 
   const handleReset = async (key: keyof typeof augConfig) => {
@@ -90,15 +77,7 @@ const ResetIcon = () => {
         );
       }
 
-      const resetBucketVariables =
-        await resetGlobalBucketVariableClient.executeAction();
-      if (!resetBucketVariables.success) {
-        throw new CustomError(
-          "Resetting Global Bucket Variables",
-          "Failed to reset global bucket variables."
-        );
-      }
-
+      // Create new bucket
       const gcsBucketCreation = await GCSCreateClient.executeAction();
       if (!gcsBucketCreation.success) {
         throw new CustomError(
@@ -107,7 +86,7 @@ const ResetIcon = () => {
         );
       }
 
-      // Create new project directories
+      // Create new backend project directories
       const projectDirectoryCreation =
         await projectDirectoryClient.executeAction();
 
@@ -117,53 +96,14 @@ const ResetIcon = () => {
           "Failed to create project directories."
         );
       }
-      const resetUploadedDataSignedUrls =
-        await resetUploadedDataURLClient.executeAction();
-      if (!resetUploadedDataSignedUrls.success) {
+
+      const resetSignedDownloadUrls = await signedUrlsClient.executeAction();
+      if (!resetSignedDownloadUrls.success) {
         throw new CustomError(
-          "Resetting signed URLs",
-          "Failed to reset signed urls for resized images and mask."
+          "Resetting Signed Download URLs",
+          "Failed to reset signed download URLs."
         );
-      }
-
-      const resetTrainSetSignedUrls =
-        await resetTrainSetURLClient.executeAction();
-      if (!resetTrainSetSignedUrls.success) {
-        throw new CustomError(
-          "Resetting Training Set Signed URLs",
-          "Failed to reset signed urls for training set."
-        );
-      }
-
-      const resetValSetSignedUrls = await resetValSetURLClient.executeAction();
-      if (!resetValSetSignedUrls.success) {
-        throw new CustomError(
-          "Resetting Validation Set Signed URLs",
-          "Failed to reset signed urls for validation set."
-        );
-      }
-
-      const resetTestSetSignedUrls =
-        await resetTestSetURLClient.executeAction();
-      if (!resetTestSetSignedUrls.success) {
-        throw new CustomError(
-          "Resetting Testing Set Signed URLs",
-          "Failed to reset signed urls for testing set."
-        );
-      }
-
-      // // Add delay to wait for the bucket to be fully available
-      // await new Promise((resolve) => setTimeout(resolve, 10000));
-
-      // // Create folders within the bucket
-      // const directoryCreation = await bucketDirectoryClient.executeAction();
-      // if (!directoryCreation.success) {
-      //   throw new CustomError(
-      //     "Bucket Directory Creation",
-      //     "Failed to create directories within the GCS bucket."
-      //   );
-      // }
-      else {
+      } else {
         toast({
           title: "Session reset successfully!",
           status: "success",
