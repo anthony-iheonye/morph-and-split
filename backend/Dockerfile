@@ -82,7 +82,7 @@ RUN chown -R appuser:appgroup /app /app/.gcloud
 # Switch to non-root user
 USER appuser
 
-# 🔥🔥 Explicitly Authenticate gcloud inside the Container 🔥🔥
+# Explicitly Authenticate gcloud inside the Container
 #RUN gcloud auth activate-service-account --key-file=/app/morph-and-split-key.json && \
 #    gcloud config set project morph-and-split
 
