@@ -13,7 +13,7 @@ const CopyrightBar = () => {
       textAlign="center"
       position="absolute"
       right="0"
-      left={{ base: "0", md: "40%", lg: "0" }}
+      left="0"
       bottom="0"
     >
       <Text fontSize="sm" color="gray.600">
