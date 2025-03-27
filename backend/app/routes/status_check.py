@@ -1,10 +1,9 @@
 import os
 
-from flask import Blueprint, jsonify
-from .session_control import session_is_running
+from flask import Blueprint, jsonify, request
 
-from app.routes.augment import is_augmenting
-from app.utils import directory_exit, directory_store, get_sorted_filenames, list_filenames
+from app.services import session_store
+from app.utils import directory_exit, list_filenames
 
 status_checks = Blueprint('status_checks', __name__)
 
@@ -14,6 +13,9 @@ def images_upload_status():
     Checks if the images were successfully uploaded.
     """
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id)
+
         count = len(list_filenames(directory_store.image_dir))
         if count > 0:
             return jsonify({'success': True, 'count': count,
@@ -31,6 +33,9 @@ def masks_upload_status():
     Checks if masks were successfully uploaded to the mask folder.
     """
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id)
+
         masks_count = len(list_filenames(directory_store.mask_dir))
 
         if masks_count > 0:
@@ -42,12 +47,53 @@ def masks_upload_status():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+
+@status_checks.route('/status_checks/is_uploading_images', methods=['GET'])
+def image_is_uploading_status():
+    """
+    Checks if image upload is in progress.
+    """
+    try:
+        session_id = request.args.get('sessionId')
+        is_uploading_images = session_store.image_is_uploading(session_id)
+
+        if is_uploading_images:
+            return jsonify({'success': True,
+                            'message': 'Image upload in progress.'}), 200
+        else:
+            return jsonify({'success': False,
+                            'message': f'Image upload not in progress'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@status_checks.route('/status_checks/is_uploading_masks', methods=['GET'])
+def mask_is_uploading_status():
+    """
+    Checks if mask upload is in progress.
+    """
+    try:
+        session_id = request.args.get('sessionId')
+        is_uploading_masks = session_store.mask_is_uploading(session_id)
+
+        if is_uploading_masks:
+            return jsonify({'success': True,
+                            'message': 'mask upload in progress.'}), 200
+        else:
+            return jsonify({'success': False,
+                            'message': f'mask upload not in progress'}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @status_checks.route('/status_checks/image_mask_balance_status', methods=['GET'])
 def image_mask_balance_status():
     """
     Checks if the number of uploaded images equal the number of uploaded masks.
     """
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id)
         images_count = len(list_filenames(directory_store.image_dir))
         masks_count = len(list_filenames(directory_store.mask_dir))
 
@@ -67,6 +113,9 @@ def augmentation_complete():
     Checks if augmentation was completed successfully.
     """
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id)
+
         zip_file_path = os.path.join(directory_store.augmented, 'augmented_data.zip')
         file_exist = os.path.exists(zip_file_path)
 
@@ -84,6 +133,9 @@ def backend_is_running():
     Checks if a session is currently running.
     """
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id)
+
         if directory_exit(directory_store.image_dir):
             return jsonify({'success': True, 'message': 'Session is running'}), 200
         else:
@@ -98,7 +150,10 @@ def augmentation_is_running():
     Checks if augmentation is running.
     """
     try:
-        if is_augmenting.is_set():
+        session_id = request.args.get('sessionId')
+        augmentation_running = session_store.is_augmentation_running(session_id=session_id)
+
+        if augmentation_running:
             return jsonify({'isRunning': True, 'message': 'Augmentation is running'}), 200
         else:
             return jsonify({'isRunning': False, 'message': 'Augmentation is not running'}), 200
@@ -113,7 +168,10 @@ def session_in_progress():
     :return:
     """
     try:
-        if session_is_running.is_set():
+        session_id = request.args.get('sessionId')
+        session_is_running = session_store.is_session_running(session_id=session_id)
+
+        if session_is_running:
             return jsonify({'isRunning': True, 'message': 'Session is running'}), 200
         else:
             return jsonify({'isRunning': False, 'message': 'Session is not running'}), 200

@@ -3,17 +3,19 @@ import pandas as pd
 
 from flask import Blueprint, request, jsonify
 
-from app.services import validate_stratification_data_file
-from app.utils import directory_store, list_filenames, ValidationError, delete_file
+from app.services import validate_stratification_data_file, session_store
+from app.utils import list_filenames, ValidationError, delete_file
 
 stratification_data_file_processing = Blueprint('upload_stratification_data_file', __name__)
-STRATIFICATION_DATA_DIR = directory_store.stratification_data_file_dir
 
 
 @stratification_data_file_processing.route('/upload/backend/stratification_file', methods=['POST'])
 def upload_stratification_file():
     try:
+        session_id = request.args.get('sessionId')
         files = request.files.getlist("stratificationDataFile")
+
+        directory_store = session_store.get_directory_store(session_id=session_id)
         no_of_images = len(list_filenames(directory_store.image_dir))
 
         if not files:
@@ -21,7 +23,7 @@ def upload_stratification_file():
 
         stratification_data_file = files[0]
         filename = stratification_data_file.filename
-        save_path = os.path.join(STRATIFICATION_DATA_DIR, filename)
+        save_path = os.path.join(directory_store.stratification_data_file_dir, filename)
         stratification_data_file.save(save_path)
 
         try:
@@ -40,13 +42,18 @@ def upload_stratification_file():
 @stratification_data_file_processing.route('/stratification_data_file/parameters', methods=['GET'])
 def get_stratification_parameters():
     try:
-        file_names = list_filenames(STRATIFICATION_DATA_DIR)
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id=session_id)
+        stratification_dir = directory_store.stratification_data_file_dir
+
+
+        file_names = list_filenames(stratification_dir)
         if not file_names:
             return jsonify({'success': True,
                             'results': [],
                             'message': 'No stratification data file was found.'}), 200
 
-        filepath = str(os.path.join(STRATIFICATION_DATA_DIR, file_names[0]))
+        filepath = str(os.path.join(stratification_dir, file_names[0]))
         df = pd.read_csv(filepath, header=0)
         parameters = [col for col in df.columns if col != 'image_id']
 
@@ -59,14 +66,17 @@ def get_stratification_parameters():
 @stratification_data_file_processing.route('/stratification_data_file/delete', methods=['DELETE'])
 def delete_stratification_data_file():
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id=session_id)
+        stratification_dir = directory_store.stratification_data_file_dir
 
-        file_names = list_filenames(STRATIFICATION_DATA_DIR)
+        file_names = list_filenames(stratification_dir)
         if not file_names:
             return jsonify({'success': True,
                             'error': 'File not Found',
                             'message': 'No stratification data file was found.'}), 200
 
-        filepath = str(os.path.join(STRATIFICATION_DATA_DIR, file_names[0]))
+        filepath = str(os.path.join(stratification_dir, file_names[0]))
         delete_file(filepath)
         return jsonify({'success': True, 'message': f"Successfully delete stratification data file {file_names[0]}"}), 200
 

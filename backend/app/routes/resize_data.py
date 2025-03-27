@@ -1,10 +1,10 @@
 import os
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 from app.services import ImageCropperResizerAndSaver
-from app.utils import directory_store, list_filenames
-from app.services import get_resized_dimension
+from app.utils import list_filenames
+from app.services import get_resized_dimension, session_store
 
 resize_data = Blueprint(name='resize_data', import_name=__name__)
 
@@ -13,6 +13,9 @@ resize_data = Blueprint(name='resize_data', import_name=__name__)
 def resize_original_images():
     """Resizes uploaded images."""
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id)
+
         sample_img_name = list_filenames(directory_store.image_dir)[0]
         sample_img_path = str(os.path.join(directory_store.image_dir, sample_img_name))
 
@@ -36,13 +39,15 @@ def resize_original_images():
 def resize_original_masks():
     """Resizes uploaded images."""
     try:
+        session_id = request.args.get('sessionId')
+        directory_store = session_store.get_directory_store(session_id)
+
         sample_img_name = list_filenames(directory_store.mask_dir)[0]
         sample_img_path = str(os.path.join(directory_store.mask_dir, sample_img_name))
 
         resize_height, resize_width, channels = get_resized_dimension(sample_img_path)
 
-
-        # Resize images
+        # Resize masks
         mask_resizer = ImageCropperResizerAndSaver(images_directory=directory_store.mask_dir,
                                                     new_images_directory=directory_store.resized_mask_dir,
                                                     image_channels=channels,

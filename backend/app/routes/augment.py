@@ -1,25 +1,18 @@
 import gc
+import importlib.util
 import json
 import os
-import zipfile
-import threading
-import importlib.util
 import sys
+import zipfile
 
 from flask import Blueprint, request, jsonify
 from tensorflow.keras.backend import clear_session
 
 from app.services import DataSplitterAugmenterAndSaver, resize_augmented_data
-from app.utils import directory_store, list_filenames
+from app.services import session_store
+from app.utils import list_filenames
 
 augment = Blueprint('augment', __name__)
-
-STRATIFICATION_DATA_DIR = directory_store.stratification_data_file_dir
-AUGMENTED_DIR = directory_store.augmented
-
-
-# A global variable to track augmentation status
-is_augmenting = threading.Event()
 
 
 def save_aug_config(aug_config: dict, target_file: str):
@@ -59,35 +52,60 @@ def load_updated_aug_config():
     return aug_config_module.aug_config
 
 
+def convert_str_bools(obj: dict):
+    """
+    Recursively converts string boolean values in a Python data structure
+    from "true"/"false" (as strings) to their corresponding Python boolean
+    values True/False.
+
+    This function supports nested dictionaries and lists.
+
+    Args:
+        obj (Any): The input data which may contain string booleans.
+                   Can be a dict, list, string, or any other type.
+
+    Returns:
+        Any: A new data structure with "true"/"false" strings replaced
+             by Python boolean values True/False.
+    """
+    if isinstance(obj, dict):
+        return {k: convert_str_bools(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_str_bools(item) for item in obj]
+    elif obj == "true":
+        return True
+    elif obj == "false":
+        return False
+    else:
+        return obj
+
+
 @augment.route('/augment', methods=['POST'])
 def augment_data():
     """Augment image-mask pairs"""
+
+    session_id = request.args.get('sessionId')
+    directory_store = session_store.get_directory_store(session_id=session_id)
+
+    stratification_data_dir = directory_store.stratification_data_file_dir
+    augmented_dir = directory_store.augmented
+
     try:
         config = request.form.get("config")
 
         # Parse the config JSON string into a dictionary
         aug_config_data: dict = json.loads(config)
+        aug_config = convert_str_bools(aug_config_data)
 
-        # Define the path to the parent 'app' package
-        current_dir = os.path.dirname(__file__)
-        app_dir = os.path.abspath(os.path.join(current_dir, '..'))
-        config_filepath = os.path.join(app_dir, 'aug_config.py')
-
-        # Save the aug_config as a python script in the 'app' package
-        save_aug_config(aug_config_data, config_filepath)
-
-        file_paths = list_filenames(STRATIFICATION_DATA_DIR)
-
-        # Reload the updated aug_config dynamically
-        aug_config = load_updated_aug_config()
-
+        file_paths = list_filenames(stratification_data_dir)
         if file_paths:
-            stratification_data_filepath = str(os.path.join(STRATIFICATION_DATA_DIR, file_paths[0]))
+            stratification_data_filepath = str(os.path.join(stratification_data_dir, file_paths[0]))
         else:
             stratification_data_filepath = None
 
+
         # set augmentation status to running
-        is_augmenting.set()
+        session_store.set_augmentation_running(session_id=session_id)
 
         augmenter = DataSplitterAugmenterAndSaver(images_directory=directory_store.image_dir,
                                                   masks_directory=directory_store.mask_dir,
@@ -124,25 +142,26 @@ def augment_data():
         augmenter.process_data()
 
         # Create a ZIP file containing augmented images and masks.
-        zip_path = os.path.join(AUGMENTED_DIR, 'augmented_data.zip')
+        zip_path = os.path.join(augmented_dir, 'augmented_data.zip')
 
         with zipfile.ZipFile(file=zip_path, mode='w') as zipf:
-            for root, _, files in os.walk(AUGMENTED_DIR):
+            for root, _, files in os.walk(augmented_dir):
                 for file in files:
                     if file != 'augmented_data.zip':  # Avoid including the ZIP file itself
                         file_path = str(os.path.join(root, file))
                         zipf.write(filename=file_path,
-                                   arcname=os.path.relpath(file_path, AUGMENTED_DIR))
+                                   arcname=os.path.relpath(file_path, augmented_dir))
 
         # Store a resized version of the augmented results
-        resize_augmented_data()
+        resize_augmented_data(session_id=session_id)
 
         # Clear the augmentation status after completion
-        is_augmenting.clear()
+        session_store.clear_augmentation_running(session_id=session_id)
+
         return jsonify({'success': True}), 201
 
     except Exception as e:
-        is_augmenting.clear()
+        session_store.clear_augmentation_running(session_id=session_id)
         return jsonify({'success': False, 'error': str(e)}), 500
     finally:
         # clear Tensorflow session and garbage collect unused variables
