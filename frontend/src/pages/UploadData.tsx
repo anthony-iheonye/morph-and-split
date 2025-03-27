@@ -25,15 +25,14 @@ const UploadData = () => {
         area="outlet"
         display="flex"
         flexDirection="column"
-        // flex="1"
         overflow="auto" // Allows content scrolling when needed
-        maxH="95%"
       >
         <Box
           marginTop={{ base: 5, md: 8 }}
           overflowY="hidden"
           display="flex"
           flexDirection="column"
+          marginBottom={"2rem"}
         >
           <Outlet />
         </Box>

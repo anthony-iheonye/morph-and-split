@@ -16,7 +16,7 @@ const CopyrightBar = () => {
       left="0"
       bottom="0"
     >
-      <Text fontSize="sm" color="gray.600">
+      <Text fontSize="0.8rem" color="gray.600">
         {" "}
         © {new Date().getFullYear()} Developed by{" "}
         <Link

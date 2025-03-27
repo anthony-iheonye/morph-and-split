@@ -43,7 +43,7 @@ const Layout = () => {
           overflow="hidden"
           height="100%"
         >
-          <Box overflow="hidden" position="relative">
+          <Box overflow="hidden">
             {activeParent === home ? <WelcomePage /> : null}
             <Outlet />
           </Box>
