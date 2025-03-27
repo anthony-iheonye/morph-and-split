@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { BackendResponse, SignedUrls } from "../entities";
 import { BackendResponseLog } from "../store";
+import { getSessionId } from "./session";
 
 export interface FetchResponse<T> {
   count: number;
@@ -16,6 +17,17 @@ export const baseURL =
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
+});
+
+// Interceptor to inject sessionId into all requests
+axiosInstance.interceptors.request.use((config) => {
+  const sessionId = getSessionId();
+
+  if (!config.params) {
+    config.params = {};
+  }
+  config.params.sessionId = sessionId;
+  return config;
 });
 
 class APIClient<T> {

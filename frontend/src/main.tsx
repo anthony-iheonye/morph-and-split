@@ -6,7 +6,7 @@ import { RouterProvider } from "react-router-dom";
 import router from "./routes.tsx";
 import theme from "./theme.ts";
 import "./index.css";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")!).render(
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools /> */}
       </QueryClientProvider>
     </ChakraProvider>
   </StrictMode>

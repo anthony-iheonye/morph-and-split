@@ -50,8 +50,22 @@ const WelcomePage = () => {
         overflow="hidden"
         mb={0}
       >
-        <BoundingBox overflow="auto" transparent mx={0} mt={0} p={0} mb={0}>
-          <BoundingBox display="flex" overflow="hidden" mx={0} mt={0}>
+        <BoundingBox
+          overflow="auto"
+          transparent
+          m={{ base: 0, md: 0 }}
+          mx={{ base: 0, md: 6 }}
+          p={{ base: 0, md: 0 }}
+          borderRadius={8}
+        >
+          <BoundingBox
+            display="flex"
+            overflow="hidden"
+            mt={{ base: 0, md: 0 }}
+            mx={{ base: 0, md: 0 }}
+            pl={{ md: 6 }}
+            borderRadius={8}
+          >
             <VStack
               display="flex"
               overflow="hidden"
@@ -98,7 +112,15 @@ const WelcomePage = () => {
             </VStack>
           </BoundingBox>
 
-          <BoundingBox display="flex" overflowY="hidden" mx={0} mb={0}>
+          <BoundingBox
+            display="flex"
+            overflowY="hidden"
+            mb={{ base: 0, md: 0 }}
+            mx={{ base: 0, md: 0 }}
+            paddingBottom={{ base: 0, md: 0 }}
+            pl={{ md: 6 }}
+            borderRadius={8}
+          >
             <VStack
               display="flex"
               overflow="hidden"
