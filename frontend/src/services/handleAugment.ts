@@ -26,22 +26,17 @@ const handleAugment = async ({
   setIsLoading(true);
   setBackendResponseLog("augmentationIsRunning", true);
 
-  const AugmentationAPI = new APIClient<BackendResponse>("/augment");
-  const ZippedDataTransferAPI = new APIClient<BackendResponse>(
+  const augmentationClient = new APIClient<BackendResponse>("/augment");
+
+  const zippedDataTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_augmented_zip_to_gcs"
   );
-  const ResizedDataTransferAPI = new APIClient<BackendResponse>(
+  const resizedDataTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_resized_augmented_data_to_gcs"
   );
 
-  const resetTrainSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-train-set"
-  );
-  const resetValSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-validation-set"
-  );
-  const resetTestSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-test-set"
+  const resetTrainValTestClient = new APIClient<BackendResponse>(
+    "/reset-signed-urls-for-resized-train-val-test-sets"
   );
 
   // Prepare FormData
@@ -58,7 +53,7 @@ const handleAugment = async ({
 
   try {
     // Augment Images and Masks
-    const augmentation = await AugmentationAPI.postData(formData, {
+    const augmentation = await augmentationClient.postData(formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -70,7 +65,7 @@ const handleAugment = async ({
     }
 
     // Transfer compressed augmented data to Google cloud storage Bucket
-    const zippedDataTransfer = await ZippedDataTransferAPI.postData();
+    const zippedDataTransfer = await zippedDataTransferClient.postData();
 
     if (!zippedDataTransfer.success) {
       throw new CustomError(
@@ -79,37 +74,21 @@ const handleAugment = async ({
       );
     }
 
-    const resetTrainSetSignedUrls =
-      await resetTrainSetURLClient.executeAction();
-    if (!resetTrainSetSignedUrls.success) {
-      throw new CustomError(
-        "Resetting Training Set Signed URLs",
-        "Failed to reset signed urls for training set."
-      );
-    }
-
-    const resetValSetSignedUrls = await resetValSetURLClient.executeAction();
-    if (!resetValSetSignedUrls.success) {
-      throw new CustomError(
-        "Resetting Validation Set Signed URLs",
-        "Failed to reset signed urls for validation set."
-      );
-    }
-
-    const resetTestSetSignedUrls = await resetTestSetURLClient.executeAction();
-    if (!resetTestSetSignedUrls.success) {
-      throw new CustomError(
-        "Resetting Testing Set Signed URLs",
-        "Failed to reset signed urls for testing set."
-      );
-    }
-
     // Transfer resized augmented data to Google cloud storage bucket
-    const resizeDataTransfer = await ResizedDataTransferAPI.postData();
+    const resizeDataTransfer = await resizedDataTransferClient.postData();
+
     if (!resizeDataTransfer.success) {
       throw new CustomError(
         "Resized Augmented Data Transfer",
         "Failed to tranfer resized augmented result to GCS bucket."
+      );
+    }
+
+    const signedUrlReset = await resetTrainValTestClient.executeAction();
+    if (!signedUrlReset.success) {
+      throw new CustomError(
+        "Resetting Train, Val and Test signed url.",
+        "Failed to reset signed urls for Train, Val and Test sets."
       );
     } else {
       toast({
@@ -119,7 +98,12 @@ const handleAugment = async ({
         isClosable: true,
       });
 
-      invalidateQueries(queryClient, ["augmentationIsComplete"]);
+      invalidateQueries(queryClient, [
+        "augmentationIsComplete",
+        "trainingSet",
+        "validationSet",
+        "testingSet",
+      ]);
     }
   } catch (error) {
     console.error("Error during augmentation:", error);

@@ -8,10 +8,10 @@ import { useAugConfigStore } from "../../store";
 
 const Augment = () => {
   const { augConfig } = useAugConfigStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
   const toast = useToast();
   const queryClient = useQueryClient();
-  const { setBackendResponseLog } = useBackendResponse();
+  const { augmentationIsRunning, setBackendResponseLog } = useBackendResponse();
 
   return (
     <Button
@@ -30,12 +30,16 @@ const Augment = () => {
           toast,
         })
       }
-      disabled={isLoading}
+      disabled={augmentationIsRunning}
       leftIcon={
-        isLoading ? <Spinner size="md" color="white" /> : <TbTransform />
+        augmentationIsRunning ? (
+          <Spinner size="md" color="black" />
+        ) : (
+          <TbTransform />
+        )
       }
     >
-      {isLoading ? "Processing" : "Augment Data"}
+      {augmentationIsRunning ? "Processing" : "Augment Data"}
     </Button>
   );
 };
