@@ -5,6 +5,7 @@ import { BackendResponse, CustomError } from "../entities";
 import { BackendResponseLog } from "../store";
 import APIClient from "./api-client";
 import invalidateQueries from "./invalidateQueries";
+import { removeSessionId } from "./session";
 
 interface Props {
   resetAugConfig: () => void;
@@ -31,31 +32,18 @@ const handleEndSession = async ({
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "/project_directories/delete"
   );
-  const resetUploadedDataURLClient = new APIClient<BackendResponse>(
-    "reset-signed-urls-for-resized-images-and-masks"
-  );
-  const resetTrainSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-train-set"
-  );
-  const resetValSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-validation-set"
-  );
-  const resetTestSetURLClient = new APIClient<BackendResponse>(
-    "/reset-signed-urls-for-resized-test-set"
-  );
 
   const deleteStratificationFileClient = new APIClient(
     "/stratification_data_file/delete"
   );
 
-  const resetGlobalBucketVariableClient = new APIClient(
-    "/gcs/reset_global_buckets_variables"
+  const sessionClient = new APIClient<BackendResponse>(
+    "/session/clear_session"
   );
-
-  const sessionClient = new APIClient<BackendResponse>("/session/stop_session");
 
   try {
     setBackendResponseLog("isShuttingDown", true);
+
     const gcsBucketDeletion = await GCSClient.deleteFileOrDirectory();
 
     if (!gcsBucketDeletion.success) {
@@ -65,50 +53,6 @@ const handleEndSession = async ({
       );
     }
 
-    const resetBucketVariables =
-      await resetGlobalBucketVariableClient.executeAction();
-    if (!resetBucketVariables.success) {
-      throw new CustomError(
-        "Resetting Global Bucket Variables",
-        "Failed to reset global bucket variables."
-      );
-    }
-
-    const resetUploadedDataSignedUrls =
-      await resetUploadedDataURLClient.executeAction();
-    if (!resetUploadedDataSignedUrls.success) {
-      throw new CustomError(
-        "Resetting signed URLs",
-        "Failed to reset signed urls for resized images and mask."
-      );
-    }
-
-    const resetTrainSetSignedUrls =
-      await resetTrainSetURLClient.executeAction();
-    if (!resetTrainSetSignedUrls.success) {
-      throw new CustomError(
-        "Resetting Training Set Signed URLs",
-        "Failed to reset signed urls for training set."
-      );
-    }
-
-    const resetValSetSignedUrls = await resetValSetURLClient.executeAction();
-    if (!resetValSetSignedUrls.success) {
-      throw new CustomError(
-        "Resetting Validation Set Signed URLs",
-        "Failed to reset signed urls for validation set."
-      );
-    }
-
-    const resetTestSetSignedUrls = await resetTestSetURLClient.executeAction();
-    if (!resetTestSetSignedUrls.success) {
-      throw new CustomError(
-        "Resetting Testing Set Signed URLs",
-        "Failed to reset signed urls for testing set."
-      );
-    }
-
-    // Delete stratification data file from backend storage
     const deletedFile =
       await deleteStratificationFileClient.deleteFileOrDirectory();
     if (!deletedFile.success) {
@@ -121,26 +65,29 @@ const handleEndSession = async ({
       });
     }
 
-    const projectDirectoryDeletion =
+    const deleteProjectDirectory =
       await projectDirectoryClient.deleteFileOrDirectory();
 
-    if (!projectDirectoryDeletion.success) {
+    if (!deleteProjectDirectory.success) {
       throw new CustomError(
         "Project Directory Deletion Failed",
         "Failed to delete project directories."
       );
     }
 
-    // Mark session as 'started'
-    const session = await sessionClient.executeAction();
-    if (session.isRunning) {
-      throw new CustomError("Session State", "Failed to stop current session.");
+    const clearSession = await sessionClient.executeAction();
+    if (!clearSession.success) {
+      throw new CustomError(
+        "Delete Session",
+        "Failed to delete current session."
+      );
     } else {
       // Reset local configurations
       resetAugConfig();
       resetBackendResponseLog();
-
+      removeSessionId();
       navigate("/");
+
       // Reset queries.
       invalidateQueries(queryClient, [
         "imageNames",
