@@ -75,7 +75,12 @@ const handleDeleteImages = async ({
         "Failed to reset signed urls for resized images and mask ."
       );
     } else {
-      invalidateQueries(queryClient, ["imageNames", "imageUploadStatus"]);
+      invalidateQueries(queryClient, [
+        "imageNames",
+        "metadata",
+        "imageUploadStatus",
+        "imageMaskBalanceStatus",
+      ]);
     }
   } catch (error: any) {
     toast({

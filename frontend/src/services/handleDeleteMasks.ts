@@ -45,6 +45,7 @@ const handleDeleteUploadedMasks = async ({
       );
     }
 
+    // Recreate image directory in backend
     const createdImageDirectory =
       await createMaskDirectoryClient.executeAction();
     if (!createdImageDirectory.success) {
@@ -74,6 +75,7 @@ const handleDeleteUploadedMasks = async ({
     } else {
       invalidateQueries(queryClient, [
         "maskNames",
+        "metadata",
         "maskUploadStatus",
         "imageMaskBalanceStatus",
       ]);
