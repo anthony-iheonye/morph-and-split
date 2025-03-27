@@ -161,6 +161,23 @@ def augmentation_is_running():
         return jsonify({'isRunning': False, 'error': str(e)}), 500
 
 
+@status_checks.route('/status_checks/set_augmentation_as_running', methods=['POST'])
+def set_augmentation_as_running():
+    """
+    Checks if augmentation is running.
+    """
+    try:
+        session_id = request.args.get('sessionId')
+        session_store.set_augmentation_running(session_id=session_id)
+
+        if session_store.is_augmentation_running(session_id=session_id):
+            return jsonify({'isRunning': True, 'message': 'Augmentation is running'}), 200
+        else:
+            return jsonify({'isRunning': False, 'message': 'Augmentation is not running'}), 200
+    except Exception as e:
+        return jsonify({'isRunning': False, 'error': str(e)}), 500
+
+
 @status_checks.route('/status_checks/session_is_running', methods=['GET'])
 def session_in_progress():
     """
