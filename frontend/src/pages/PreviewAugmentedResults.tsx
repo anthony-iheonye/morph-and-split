@@ -8,7 +8,6 @@ import {
   PreviewGridVal,
 } from "../components/display";
 import {
-  CopyrightBar,
   IconComboControl,
   PageTitle,
   SplitSelector,
@@ -33,8 +32,7 @@ const PreviewAugmentedResults = () => {
         base: `"title"
                "previewSlider"
                "previewGrid"
-               "navBtn"
-               "copyright"`,
+               "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto 1fr auto" }}
@@ -102,10 +100,6 @@ const PreviewAugmentedResults = () => {
             <EndSession size={"sm"} />
           </HStack>
         </BoundingBox>
-      </GridItem>
-
-      <GridItem area="copyright">
-        <CopyrightBar />
       </GridItem>
     </Grid>
   );

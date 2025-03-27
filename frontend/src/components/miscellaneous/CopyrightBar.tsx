@@ -6,7 +6,16 @@ const CopyrightBar = () => {
       base: "",
     }) ?? "All right reserved.";
   return (
-    <Box as="footer" pb={1} pt={0} textAlign="center">
+    <Box
+      as="footer"
+      pb={1}
+      pt={0}
+      textAlign="center"
+      position="absolute"
+      right="0"
+      left={{ base: "0", md: "40%", lg: "0" }}
+      bottom="0"
+    >
       <Text fontSize="sm" color="gray.600">
         {" "}
         © {new Date().getFullYear()} Developed by{" "}
@@ -18,7 +27,7 @@ const CopyrightBar = () => {
         >
           Anthony Iheonye
         </Link>
-        . {rightsWord}
+        .{rightsWord}
       </Text>
     </Box>
   );

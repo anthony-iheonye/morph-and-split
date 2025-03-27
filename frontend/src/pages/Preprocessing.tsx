@@ -10,6 +10,7 @@ import { GiResize } from "react-icons/gi";
 import { PiResizeFill } from "react-icons/pi";
 import { RiCropFill } from "react-icons/ri";
 import { TbArrowAutofitHeight, TbArrowAutofitWidth } from "react-icons/tb";
+import cropGuide from "../assets/crop_guide.svg";
 import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import {
@@ -20,13 +21,8 @@ import {
   TargetWidthInput,
   WidthOffsetInput,
 } from "../components/inputFields";
-import {
-  CopyrightBar,
-  IconComboControl,
-  PageTitle,
-} from "../components/miscellaneous";
+import { IconComboControl, PageTitle } from "../components/miscellaneous";
 import { useAugConfigAndSetter } from "../hooks";
-import cropGuide from "../assets/crop_guide.svg";
 
 const PreProcessing = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
@@ -41,8 +37,7 @@ const PreProcessing = () => {
         base: `"title"
                "cropData"
                "resizeData"
-               "navBtn"
-               "copyright"`,
+               "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto 1fr auto auto auto" }}
@@ -166,10 +161,6 @@ const PreProcessing = () => {
             <ContinueBtn to="/augment/start_augmentation" />
           </HStack>
         </BoundingBox>
-      </GridItem>
-
-      <GridItem area="copyright">
-        <CopyrightBar />
       </GridItem>
     </Grid>
   );

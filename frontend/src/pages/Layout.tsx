@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { NavBar } from "../components/navigation";
 import { parentNames, useActiveParent } from "../hooks";
 import WelcomePage from "./WelcomePage";
+import { CopyrightBar } from "../components/miscellaneous";
 // import FeatureSwitcher from "../components/display/FeatureSwitcher";
 
 const Layout = () => {
@@ -42,13 +43,13 @@ const Layout = () => {
           overflow="hidden"
           height="100%"
         >
-          <Box overflow="hidden">
+          <Box overflow="hidden" position="relative">
             {activeParent === home ? <WelcomePage /> : null}
-            {/* {activeParent === home ? <FeatureSwitcher /> : null} */}
             <Outlet />
           </Box>
         </GridItem>
       </Grid>
+      <CopyrightBar />
     </Box>
   );
 };

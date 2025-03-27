@@ -5,7 +5,6 @@ import { ContinueBtn, MaskUploader, PreviousBtn } from "../components/buttons";
 import DeleteMasks from "../components/buttons/DeleteMasks";
 import { BoundingBox } from "../components/display";
 import {
-  CopyrightBar,
   IconHeadingDescriptionCombo,
   PageTitle,
   ThemedText,
@@ -36,8 +35,7 @@ const MaskUpload = () => {
         base: `"title"
                "uploader"
                "selectedMasks"
-               "navBtn"
-               "copyright"`,
+               "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto auto 1fr auto" }} // ✅ Ensures selectedMasks expands
@@ -134,10 +132,6 @@ const MaskUpload = () => {
             />
           </HStack>
         </BoundingBox>
-      </GridItem>
-
-      <GridItem area="copyright">
-        <CopyrightBar />
       </GridItem>
     </Grid>
   );

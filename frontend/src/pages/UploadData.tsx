@@ -27,6 +27,7 @@ const UploadData = () => {
         flexDirection="column"
         // flex="1"
         overflow="auto" // Allows content scrolling when needed
+        maxH="95%"
       >
         <Box
           marginTop={{ base: 5, md: 8 }}

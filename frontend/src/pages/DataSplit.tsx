@@ -16,7 +16,6 @@ import { ContinueBtn, PreviousBtn } from "../components/buttons";
 import { BoundingBox } from "../components/display";
 import { TotalTrainData } from "../components/inputFields";
 import {
-  CopyrightBar,
   IconComboControl,
   PageTitle,
   ThemedText,
@@ -165,8 +164,7 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
         base: `"title"
                    "splitSlider"
                    "augmentedSize"
-                   "navBtn"
-                   "copyright"`,
+                   "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto 1fr auto auto auto" }}
@@ -287,10 +285,6 @@ const DataSplitterSlider = ({ labelweight = "normal" }: Props) => {
             <ContinueBtn to="/settings/stratified_splitting" />
           </HStack>
         </BoundingBox>
-      </GridItem>
-
-      <GridItem area="copyright">
-        <CopyrightBar />
       </GridItem>
     </Grid>
   );

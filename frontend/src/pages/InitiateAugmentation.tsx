@@ -25,8 +25,8 @@ const InitiateAugmentation = () => {
         area="outlet"
         display="flex"
         flexDirection="column"
-        // flex="1"
         overflow="hidden"
+        maxH="95%"
       >
         <Box marginTop={{ base: 5, md: 8 }} overflowY="hidden">
           <Outlet />

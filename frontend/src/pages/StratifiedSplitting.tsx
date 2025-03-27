@@ -10,7 +10,6 @@ import {
 import { BoundingBox } from "../components/display";
 import { SplitParameterSelector } from "../components/dropdowns";
 import {
-  CopyrightBar,
   IconComboControl,
   PageTitle,
   StratifiedFileHint,
@@ -39,8 +38,7 @@ const StratifiedSplitting = () => {
                "description"
                "csvFile"
                "splitParameter"
-               "navBtn"
-               "copyright"`,
+               "navBtn"`,
       }}
       templateColumns={{ base: "1fr" }}
       templateRows={{ base: "auto auto auto auto 1fr auto" }}
@@ -128,10 +126,6 @@ const StratifiedSplitting = () => {
             <ContinueBtn to="/settings/select_transformation" />
           </HStack>
         </BoundingBox>
-      </GridItem>
-
-      <GridItem area="copyright">
-        <CopyrightBar />
       </GridItem>
     </Grid>
   );
