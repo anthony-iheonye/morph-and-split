@@ -1,5 +1,5 @@
 import os.path
-from typing import List, Dict
+from typing import List, Dict,  Optional
 
 import attr
 
@@ -8,7 +8,23 @@ from app.utils import current_directory
 
 @attr.s
 class GoogleCloudStorageConfig:
-    project_name: str = attr.ib(default='morph-and-split-tool')
+    # Google Cloud Project
+    project_name: str = attr.ib(default='morph-and-split-toolkit')
+
+    # Service Account
+    service_account_name: str = attr.ib(default='morph-and-split-toolkit-sa')
+    service_account_key_file_name: str = attr.ib(default='morph-and-split-toolkit-key.json')
+    service_account_key_file_path: Optional[str] = attr.ib(init=False, default=None)
+    service_account_email: str = attr.ib(init=False, default=None)
+
+    # Details for impersonated credentials.source
+    target_scopes: list = attr.ib(factory=lambda: ['https://www.googleapis.com/auth/cloud-platform'])
+
+    # Google Cloud Storage Bucket
+    location: str = attr.ib(default='US-SOUTH1')
+    storage_class: str = attr.ib(default='STANDARD')
+    enable_uniform_bucket_level_access: bool = attr.ib(default=True)
+
     origin: List[str] = attr.ib(factory=lambda: ["*"])
     responseHeader: List[str] = attr.ib(factory=lambda: ["Content-Type", "x-goog-content-resumable"])
     method: List[str] = attr.ib(factory=lambda: ['PUT', 'POST', 'GET'])
@@ -19,15 +35,6 @@ class GoogleCloudStorageConfig:
         "method": ['PUT', 'POST', 'GET'],
         "maxAgeSeconds": 3600,
     }])
-
-    # Bucket and service account details
-    location: str = attr.ib(default='US-SOUTH1')
-    storage_class: str = attr.ib(default='STANDARD')
-    enable_uniform_bucket_level_access: bool = attr.ib(default=True)
-    service_account_file_name: str = attr.ib(default='morph-and-split-key.json')
-    service_account_file_path: str = attr.ib(
-        factory=lambda: str(os.path.join(current_directory(), 'morph-and-split-key.json')))
-
 
     image_dir: str = attr.ib(default='images')
     mask_dir: str = attr.ib(default='masks')
@@ -42,6 +49,9 @@ class GoogleCloudStorageConfig:
     resized_test_masks_dir: str = attr.ib(default='resized_augmented/test/masks')
     augmented_dir: str = attr.ib(default='augmented/combined')
 
+    def __attrs_post_init__(self):
+        self.service_account_key_file_path =  str(os.path.join(current_directory(), self.service_account_key_file_name))
+        self.service_account_email = f"{self.service_account_name}@{self.project_name}.iam.gserviceaccount.com"
     @property
     def gcs_directories(self):
         return [self.image_dir,
