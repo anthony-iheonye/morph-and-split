@@ -83,13 +83,6 @@ const useFileUploader = <T extends File>(
     try {
       setBackendResponseLog(dataIsUploading, true);
       await setFilePaths(validFiles);
-      toast({
-        title: "Upload Successful",
-        description: `${validFiles.length} file(s) uploaded successfully.`,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-      });
     } catch (uploadError) {
       toast({
         title: "Upload Failed",

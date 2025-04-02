@@ -126,8 +126,18 @@ const ImageUploader = () => {
             "imageMaskBalanceStatus",
             "stratificationFileName",
             "strafied_split_parameters",
+            "imageMaskDimension",
           ]);
         }
+
+        // Show toast if only everything above succeeded.
+        toast({
+          title: "Upload Successful",
+          description: `${files.length} file(s) uploaded successfully.`,
+          status: "success",
+          duration: 1500,
+          isClosable: true,
+        });
       } catch (error: any) {
         toast({
           title: error.title || "Unexpected Error",
