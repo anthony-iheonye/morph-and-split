@@ -10,7 +10,7 @@ from tensorflow.keras.backend import clear_session
 
 from app.services import DataSplitterAugmenterAndSaver, resize_augmented_data
 from app.services import session_store
-from app.utils import list_filenames
+from app.utils import list_filenames, get_file_extension
 
 augment = Blueprint('augment', __name__)
 
@@ -90,6 +90,10 @@ def augment_data():
     stratification_data_dir = directory_store.stratification_data_file_dir
     augmented_dir = directory_store.augmented
 
+    directory_store = session_store.get_directory_store(session_id)
+    file_path = list_filenames(directory_store.image_dir)[0]
+    extension = get_file_extension(file_path)
+
     try:
         config = request.form.get("config")
 
@@ -102,6 +106,12 @@ def augment_data():
             stratification_data_filepath = str(os.path.join(stratification_data_dir, file_paths[0]))
         else:
             stratification_data_filepath = None
+
+        # Determine if the final the image-mask pair should be resized before augmentation.
+        if aug_config.get("resizeAugImage"):
+            final_image_shape = tuple(aug_config.get("augImageDimension").values())
+        else:
+            final_image_shape = None
 
 
         # set augmentation status to running
@@ -117,8 +127,8 @@ def augment_data():
                                                   initial_save_id_test=aug_config.get("initialTestSaveId"),
                                                   visual_attributes_json_path=stratification_data_filepath,
                                                   image_mask_channels=tuple(aug_config.get("imageMaskChannels").values()),
-                                                  final_image_shape=tuple(aug_config.get("augImageDimension").values()),
-                                                  image_save_format='png',
+                                                  final_image_shape=final_image_shape,
+                                                  image_save_format=extension,
                                                   image_save_prefix='img',
                                                   mask_save_prefix='mask',
                                                   val_size=aug_config.get('valRatio'),
@@ -138,7 +148,8 @@ def augment_data():
                                                   cache_directory=None,
                                                   display_split_histogram=False,
                                                   number_of_training_images_after_augmentation=aug_config.get(
-                                                      'totalAugmentedImages'))
+                                                      'totalAugmentedImages'),
+                                                  parameter_for_stratified_splitting=aug_config.get('splitParameter'))
         augmenter.process_data()
 
         # Create a ZIP file containing augmented images and masks.
@@ -159,6 +170,14 @@ def augment_data():
         session_store.clear_augmentation_running(session_id=session_id)
 
         return jsonify({'success': True}), 201
+
+    except ValueError as ve:
+        session_store.clear_augmentation_running(session_id=session_id)
+        return jsonify({
+            'success': False,
+            'errorType': 'StratifiedSplitError',
+            'message': str(ve)
+        }), 400
 
     except Exception as e:
         session_store.clear_augmentation_running(session_id=session_id)
