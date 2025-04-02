@@ -27,6 +27,7 @@ export { default as useInputThemedColor } from "./useInputThemedColor";
 export { default as useButtonThemedColor } from "./useButtonThemedColor";
 export { default as useSessionIsRunning } from "./useSessionIsRunning";
 export { default as useAugmentationIsRunning } from "./useAugmentationIsRunning";
+export { default as useImageMaskDimension } from "./useImageMaskDimension";
 
 export { parentNames } from "./useActiveParent";
 export { subParentNames } from "./useActiveSubParent";
