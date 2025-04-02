@@ -21,8 +21,8 @@ const ResizeHeightInput = () => {
 
   return (
     <NumberInput
-      min={1}
-      max={100000}
+      min={10}
+      max={4000}
       allowMouseWheel
       maxWidth={width}
       value={augConfig.augImageDimension?.height}
