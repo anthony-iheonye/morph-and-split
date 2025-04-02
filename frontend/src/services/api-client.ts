@@ -9,11 +9,14 @@ export interface FetchResponse<T> {
   results: T[];
   success?: boolean;
 }
-//
-// export const baseURL = "http://127.0.0.1:5000"; // Local backend base URL
 
-export const baseURL =
-  "https://morph-and-split-backend-470140954383.us-south1.run.app"; // Google cloud run backend base URL
+export const baseURL = "http://127.0.0.1:5000"; // Local backend base URL
+
+// export const baseURL =
+//   "https://morph-and-split-backend-470140954383.us-south1.run.app"; // Google cloud run backend base URL
+
+// export const baseURL =
+//   "https://morph-and-split-backend-533716684084.us-south1.run.app"; // Google cloud run backend base URL
 
 const axiosInstance = axios.create({
   baseURL: baseURL,

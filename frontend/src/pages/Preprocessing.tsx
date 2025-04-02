@@ -96,17 +96,18 @@ const PreProcessing = () => {
                   />
 
                   <IconComboControl
-                    icon={TbArrowAutofitWidth}
-                    title="Target Width (c)"
-                    description="The width of the image/mask after cropping."
-                    controlElement={<TargetWidthInput />}
-                    controlElementWidth={"100px"}
-                  />
-                  <IconComboControl
                     icon={TbArrowAutofitHeight}
                     title="Target Height (d)"
                     description="The height of the image/mask after cropping."
                     controlElement={<TargetHeightInput />}
+                    controlElementWidth={"100px"}
+                  />
+
+                  <IconComboControl
+                    icon={TbArrowAutofitWidth}
+                    title="Target Width (c)"
+                    description="The width of the image/mask after cropping."
+                    controlElement={<TargetWidthInput />}
                     controlElementWidth={"100px"}
                   />
                 </SimpleGrid>
