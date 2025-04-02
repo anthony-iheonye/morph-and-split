@@ -1,3 +1,5 @@
+import ImgDimension from "./ImgDimension";
+
 export default interface BackendResponse {
   success: boolean;
   isRunning?: boolean;
@@ -5,4 +7,6 @@ export default interface BackendResponse {
   error?: string;
   message?: string;
   results?: string[] | null;
+  errorType?: string;
+  dimension?: ImgDimension;
 }
