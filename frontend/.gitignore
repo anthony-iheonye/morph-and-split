@@ -1,0 +1,31 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+src/components/formInputs/inputs
+src/components/Augment2.tsx
+.vercel
+src/pages/Practice.tsx
+src/pages/ImageUpload copy.tsx
+src/components/buttons/SignedUrl.tsx
+src/components/buttons/ImageUploader2.tsx
