@@ -382,3 +382,17 @@ def get_resized_test_image_mask_metadata_from_gcs():
         return jsonify({'error': str(e)}), 500
 
 
+@image_mask_metadata.route('/metadata/uploaded-image-mask-dimension', methods=['GET'])
+def get_uploaded_image_mask_dimension():
+    """Fetch the height and width of the uploaded image and mask."""
+    try:
+        session_id = request.args.get('sessionId')
+        image_dimension = session_store.get_image_dimension(session_id=session_id)
+        if not image_dimension:
+            return jsonify({'success': False, 'error': "No images/masks found."}), 400
+
+        return jsonify({'success': True, 'dimension': image_dimension}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+

@@ -1,5 +1,5 @@
 from app.services.data_preprocessing import ImageAndMaskCropperResizerAndSaver
-from app.utils import list_filenames
+from app.utils import list_filenames, get_file_extension
 from .session_store import session_store
 from PIL import Image
 import os
@@ -33,7 +33,7 @@ def get_resized_dimension(image_path: str):
             new_height = 256
             new_width = (256 * width) // height
 
-        return  new_height, new_width, num_channels
+        return  new_height, new_width, num_channels, height, width
 
 
 def resize_augmented_data(session_id: str):
@@ -55,8 +55,11 @@ def resize_augmented_data(session_id: str):
     sample_mask_name = list_filenames(directory_store.mask_dir)[0]
     sample_mask_path = str(os.path.join(directory_store.mask_dir, sample_mask_name))
 
-    resize_height, resize_width, image_channels = get_resized_dimension(sample_img_path)
-    _, _, mask_channels = get_resized_dimension(sample_mask_path)
+    resize_height, resize_width, image_channels, _ , _ = get_resized_dimension(sample_img_path)
+    _, _, mask_channels, _, _ = get_resized_dimension(sample_mask_path)
+
+    image_extension = get_file_extension(sample_img_name)
+    mask_extension = get_file_extension(sample_mask_name)
 
     train_resizer = ImageAndMaskCropperResizerAndSaver(
         images_directory=directory_store.train_image_dir,
@@ -64,7 +67,9 @@ def resize_augmented_data(session_id: str):
         new_images_directory=directory_store.resized_train_image_dir,
         new_masks_directory=directory_store.resized_train_mask_dir,
         image_mask_channels=(image_channels, mask_channels),
-        final_image_shape=(resize_height, resize_width)
+        final_image_shape=(resize_height, resize_width),
+        image_save_format=image_extension,
+        mask_save_format=mask_extension,
     )
 
     val_resizer = ImageAndMaskCropperResizerAndSaver(
@@ -73,7 +78,9 @@ def resize_augmented_data(session_id: str):
         new_images_directory=directory_store.resized_val_image_dir,
         new_masks_directory=directory_store.resized_val_mask_dir,
         image_mask_channels=(image_channels, mask_channels),
-        final_image_shape=(resize_height, resize_width)
+        final_image_shape=(resize_height, resize_width),
+        image_save_format=image_extension,
+        mask_save_format=mask_extension,
     )
 
     test_resizer = ImageAndMaskCropperResizerAndSaver(
@@ -82,7 +89,9 @@ def resize_augmented_data(session_id: str):
         new_images_directory=directory_store.resized_test_image_dir,
         new_masks_directory=directory_store.resized_test_mask_dir,
         image_mask_channels=(image_channels, mask_channels),
-        final_image_shape=(resize_height, resize_width)
+        final_image_shape=(resize_height, resize_width),
+        image_save_format=image_extension,
+        mask_save_format=mask_extension,
     )
 
     train_resizer.process_data()
