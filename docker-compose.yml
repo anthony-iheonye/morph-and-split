@@ -1,0 +1,16 @@
+services:
+  # Frontend service (React app)
+  frontend:
+    build: ./frontend
+    ports:
+      # Map port 5173 of host to port 5173 of the container running the image
+      - 5173:5173
+    depends_on:
+      - backend
+
+  # Backend service (Flask app)
+  backend:
+    build: ./backend
+    ports:
+      # Map port 5000 of host to port 5000 of the container running the image
+      - 5000:5000
