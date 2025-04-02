@@ -1,0 +1,54 @@
+.
+├── backend
+│   ├── app
+│   │   ├── config
+│   │   ├── __init__.py
+│   │   ├── routes
+│   │   ├── services
+│   │   └── utils
+│   ├── cors.json
+│   ├── Dockerfile
+│   ├── morph-and-split-toolkit-key.json
+│   ├── requirements.txt
+│   └── requirements_with_gpu.txt
+├── docker-compose.yml
+├── frontend
+│   ├── Dockerfile
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── public
+│   │   ├── assets
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── entities
+│   │   ├── hooks
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   ├── pages
+│   │   ├── routes.tsx
+│   │   ├── services
+│   │   ├── store
+│   │   ├── theme.ts
+│   │   └── vite-env.d.ts
+│   ├── tsconfig.app.json
+│   ├── tsconfig.app.tsbuildinfo
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── tsconfig.node.tsbuildinfo
+│   ├── vercel.json
+│   └── vite.config.ts
+├── gc_authentication_setup.md
+├── project_structure.txt
+├── README.md
+└── screenshots
+    ├── 10.png
+    ├── 11.png
+    ├── 4.png
+    ├── 5.png
+    └── 7.png
+
+18 directories, 33 files

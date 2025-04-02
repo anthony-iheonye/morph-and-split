@@ -79,7 +79,7 @@ training, validation and test sets.
 │   │   └── utils
 │   ├── cors.json
 │   ├── Dockerfile
-│   ├── morph-and-split-key.json
+│   ├── morph-and-split-toolkit-key.json
 │   ├── requirements.txt
 │   └── requirements_with_gpu.txt
 ├── docker-compose.yml
@@ -92,7 +92,6 @@ training, validation and test sets.
 │   ├── public
 │   │   ├── assets
 │   │   └── vite.svg
-│   ├── README.md
 │   ├── src
 │   │   ├── assets
 │   │   ├── components
@@ -113,7 +112,10 @@ training, validation and test sets.
 │   ├── tsconfig.node.tsbuildinfo
 │   ├── vercel.json
 │   └── vite.config.ts
-└── structure.txt
+├── gc_authentication_setup.md
+├── project_structure.txt
+├── README.md
+└── screenshots
 ```
 
 ---
