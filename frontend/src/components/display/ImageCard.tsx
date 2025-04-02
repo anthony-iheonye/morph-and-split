@@ -9,7 +9,7 @@ interface Props {
 const ImageCard = ({ file }: Props) => {
   return (
     <Card borderRadius={0}>
-      <Image src={file.url} objectFit="contain" />
+      <Image src={file.url} objectFit="cover" />
       <CardBody paddingTop={1} paddingBottom={1}>
         <ThemedText
           lightModeTextColor="gray.600"
