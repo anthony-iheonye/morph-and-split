@@ -5,7 +5,11 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
-import { useAugConfigAndSetter, useInputThemedColor } from "../../hooks";
+import {
+  useAugConfigAndSetter,
+  useImageMaskDimension,
+  useInputThemedColor,
+} from "../../hooks";
 import { sizes } from "../../services";
 
 const TargetHeightInput = () => {
@@ -19,11 +23,13 @@ const TargetHeightInput = () => {
     focusedBackgroundColor,
   } = useInputThemedColor();
 
+  const { imageHeight } = useImageMaskDimension();
+
   return (
     <NumberInput
       maxWidth={width}
       min={1}
-      max={100000}
+      max={imageHeight! - augConfig.cropDimension?.offsetHeight!}
       allowMouseWheel
       value={augConfig.cropDimension?.targetHeight}
       onChange={(value) =>
