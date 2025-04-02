@@ -88,7 +88,6 @@ fabric.properties
 /app/routes/__pycache__
 /app/services/__pycache__
 /app/utils/__pycache__
-emeka/
 requirements_old.txt
 Dockerfile.2
 practice.py
@@ -96,5 +95,8 @@ practice.py
 /practice.ipynb
 /mean_visual_properties.csv
 morph-and-split-key.json
+morph-and-split-toolset-key.json
+morph-and-split-toolkit-key.json
+
 
 /assets-*

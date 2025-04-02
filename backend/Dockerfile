@@ -74,17 +74,17 @@ COPY . .
 
 # Copy the Google Cloud service account key file into the container
 # Ensure this setp is included to enable authentication
-#COPY morph-and-split-key.json /app/morph-and-split-key.json
+#COPY morph-and-split-toolkit-key.json /app/morph-and-split-toolkit-key.json
 
 # Change ownership of the app directory to the non-root user
-RUN chown -R appuser:appgroup /app /app/.gcloud
+#RUN chown -R appuser:appgroup /app /app/.gcloud
 
 # Switch to non-root user
 USER appuser
 
 # Explicitly Authenticate gcloud inside the Container
-#RUN gcloud auth activate-service-account --key-file=/app/morph-and-split-key.json && \
-#    gcloud config set project morph-and-split
+#RUN gcloud auth activate-service-account --key-file=/app/morph-and-split-toolkit-key.json && \
+#   gcloud config set project morph-and-split-toolkit
 
 
 # Set Flask environment variables
