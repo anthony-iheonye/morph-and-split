@@ -9,6 +9,7 @@ from .directory_file_management import (create_project_directories,
                                         get_sorted_filepaths,
                                         create_resized_augmentation_directories,
                                         delete_directory,
+                                        get_file_extension
                                         )
 
 from .errors import ValidationError

@@ -281,3 +281,10 @@ def delete_file(filepath):
     if os.path.exists(filepath):
         os.remove(filepath)
 
+
+def get_file_extension(file_path, remove_dot: bool = True):
+    _, ext = os.path.splitext(file_path)
+    if remove_dot:
+        return ext.split('.')[-1]
+    return ext
+
