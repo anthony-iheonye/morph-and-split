@@ -12,7 +12,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import train_test_split
 
 from app.utils import create_directory
-from .visual_attributes_service import VisualAttributesDatasetCreator
+from app.services.visual_attributes_service import VisualAttributesDatasetCreator
 import numpy as np
 
 
@@ -283,34 +283,38 @@ class DataSplitterAugmenterAndSaver:
         self._split_paths_into_train_val_test()
         self._create_directories()
 
-        if final_image_shape is not None:
-            self.final_image_shape = final_image_shape + (self.image_channels,)
-            self.final_mask_shape = final_image_shape + (self.mask_channels,)
-            self.new_image_height = tuple(self.final_image_shape)[0]
-            self.new_image_width = tuple(self.final_image_shape)[1]
-
-            if tuple(self.image_shape) != self.final_image_shape:
-                self.resize_images = True
-            else:
-                self.resize_images = False
-        else:
-            self.resize_images = False
-            self.final_image_shape = self.image_shape
-            self.final_mask_shape = self.mask_shape
-            self.new_image_height = self.image_shape[0]
-            self.new_image_width = self.image_shape[1]
+        self.resize_images = False
 
         if crop_dimension is not None and crop_image_and_mask:
             self.offset_height = crop_dimension[0]
             self.offset_width = crop_dimension[1]
             self.target_height = crop_dimension[2]
             self.target_width = crop_dimension[3]
-            self.resize_images = True
-            if final_image_shape is None or not isinstance(self.final_image_shape, tuple):
-                raise ValueError(
-                    "Since the image will be cropped, 'final_image_shape' must be a tuple of form (height, width)")
         else:
             self.crop_image_and_mask = False
+
+        if final_image_shape is not None:
+            self.final_image_shape = final_image_shape + (self.image_channels,)
+            self.final_mask_shape = final_image_shape + (self.mask_channels,)
+            self.new_image_height = tuple(self.final_image_shape)[0]
+            self.new_image_width = tuple(self.final_image_shape)[1]
+
+            if self.crop_image_and_mask:
+                if self.target_height != self.new_image_height or self.target_width != self.new_image_width:
+                    self.resize_images = True
+
+        elif final_image_shape is None and self.crop_image_and_mask and crop_dimension is not None:
+            self.final_image_shape = (self.target_height, self.target_width, self.image_channels)
+            self.final_mask_shape = (self.target_height, self.target_width, self.mask_channels)
+            self.new_image_height = self.target_height
+            self.new_image_width = self.target_width
+
+        else:
+            self.final_image_shape = self.image_shape
+            self.final_mask_shape = self.mask_shape
+            self.new_image_height = self.image_shape[0]
+            self.new_image_width = self.image_shape[1]
+
 
     @staticmethod
     def sort_filenames(file_paths):
@@ -484,7 +488,7 @@ class DataSplitterAugmenterAndSaver:
         self.no_of_val_examples = len(self.validation_image_paths)
         self.no_of_test_examples = len(self.test_image_paths)
 
-        # The number of the times the data augmentation step has be run per iteration, inorder to produce enough
+        # The number of the times the data augmentation step has to run per iteration, inorder to produce enough
         # training and validation examples, to produce the total number of training images and mask required.
         if self.apply_data_augmentation:
             self.iterations = max(1, -(-self.number_of_training_images_after_augmentation // self.no_of_train_examples))
@@ -501,11 +505,18 @@ class DataSplitterAugmenterAndSaver:
         else:
             try:
                 self._split_paths_using_visual_attributes()
-            except ValueError:
-                print(f"ERROR! ERROR!! ERROR!!\n"
-                      f"At least one of the non-empty bins in stratification parameter '{self.parameter_for_stratified_splitting}' contains only one element.\n"
-                      f"To use a visual attribute for stratified splitting, each non-empty bin must contain at least 2 elements.\n\n"
-                      f"SOLUTION: Choose a different value for 'parameter_for_stratified_splitting', or increase the split size assigned to val_size and test_size.")
+            except ValueError as ve:
+                print(f"The selected stratification parameter '{self.parameter_for_stratified_splitting}' "
+                      f"has at least one bin with only one image.\n"
+                      f"To fix this, try choosing a different parameter or increase the split ratio "
+                      f"of your validation/test sets.")
+
+                raise ValueError(
+                    f"The selected stratification parameter '{self.parameter_for_stratified_splitting}' has at least one"
+                    f" bin with only one image.\n"
+                    f"To fix this, try choosing a different parameter or increase the split ratio "
+                    f"of your validation/test sets.") from ve
+
 
     def _create_directories(self):
         """
