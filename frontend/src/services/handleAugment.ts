@@ -1,9 +1,9 @@
 import { ToastId, UseToastOptions } from "@chakra-ui/react";
-import { AugConfig, BackendResponseLog } from "../store";
-import invalidateQueries from "./invalidateQueries";
-import APIClient from "./api-client";
-import { BackendResponse, CustomError } from "../entities";
 import { QueryClient } from "@tanstack/react-query";
+import { BackendResponse, CustomError } from "../entities";
+import { AugConfig, BackendResponseLog } from "../store";
+import APIClient from "./api-client";
+import invalidateQueries from "./invalidateQueries";
 
 interface Props {
   queryClient: QueryClient;
@@ -58,10 +58,10 @@ const handleAugment = async ({
     });
 
     if (!augmentation.success) {
-      throw new CustomError(
-        "Augmentation State",
-        "Failed to complete augmentation."
-      );
+      if (augmentation.errorType === "StratifiedSplitError") {
+        throw new CustomError("Stratified Split Error", augmentation.message!);
+      }
+      throw new CustomError("Augmentation State", augmentation.message!);
     }
 
     // Transfer compressed augmented data to Google cloud storage Bucket
@@ -105,13 +105,17 @@ const handleAugment = async ({
         "testingSet",
       ]);
     }
-  } catch (error) {
-    console.error("Error during augmentation:", error);
+  } catch (error: any) {
+    const title = error.response?.data?.title || "Augmentation Failed";
+    const description =
+      error.response?.data?.message ||
+      error.message ||
+      "An unknown error occurred during augmentation.";
+
     toast({
-      title: "Failed to complete augmentation.",
-      description: "An unknown error occurred.",
+      title,
+      description,
       status: "error",
-      duration: 3000,
       isClosable: true,
     });
   } finally {
