@@ -27,7 +27,7 @@ if GCS_KEY_CONTENT:
 else:
     gc_config = session_store.gcs_config
     bucket_credentials_for_signed_urls = service_account.Credentials.from_service_account_file(
-        gc_config.service_account_file_path)
+        gc_config.service_account_key_file_path)
 
 
 def create_google_cloud_storage_bucket(bucket_name: Optional[str],
@@ -58,8 +58,8 @@ def create_google_cloud_storage_bucket(bucket_name: Optional[str],
         if isinstance(credentials, Credentials):
             credentials = impersonated_credentials.Credentials(
                 source_credentials=credentials,
-                target_principal="morph-and-split-tool-sa@morph-and-split-tool.iam.gserviceaccount.com",
-                target_scopes=["https://www.googleapis.com/auth/cloud-platform"],
+                target_principal=google_cloud_config.service_account_email,
+                target_scopes=google_cloud_config.target_scopes,
                 lifetime=3600
             )
 
@@ -262,13 +262,13 @@ def generate_signed_url(session_id: str,
     """
     bucket = get_bucket_for_signed_url(session_id=session_id)
     blob = bucket.blob(blob_name)
+    config = session_store.gcs_config
 
     return blob.generate_signed_url(version="v4",
                                     expiration=timedelta(minutes=expiration),
                                     method=method,
                                     content_type=content_type,
-                                    service_account_email="morph-and-split-tool-sa@morph-and-split-tool.iam.gserviceaccount.com"
-                                    )
+                                    service_account_email=config.service_account_email)
 
 
 def delete_google_cloud_storage_bucket(session_id: str):

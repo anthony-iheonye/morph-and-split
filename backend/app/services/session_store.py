@@ -97,6 +97,18 @@ class SessionStore:
         self._uploading_images: dict[str, bool] = {}
         self._uploading_masks: dict[str, bool] = {}
 
+        self._image_dimension: dict[str, Optional[dict[str, int]]] = {}
+
+    def set_image_dimension(self, session_id: str, height: int, width: int):
+        """Set the image height and width for a session."""
+        self._image_dimension[session_id] = {'height': height, 'width': width}
+
+    def get_image_dimension(self, session_id: str):
+        return self._image_dimension.get(session_id, None)
+
+    def clear_image_dimension(self, session_id: str):
+        self._image_dimension.pop(session_id, None)
+
     def set_is_uploading_images(self, session_id: str):
         """Marks that images are currently being uploaded for the session."""
         self._uploading_images[session_id] = True
