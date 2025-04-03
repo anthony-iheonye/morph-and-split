@@ -1,6 +1,6 @@
 # Morph and Split
 
-**<a href="https://www.morphandsplit.com" target="_blank">Morph and Split</a>** is
+**<a href="https://www.morphandsplit.com" target="_blank">Morph and Split</a>**
 is a user-friendly tool for computer vision and machine learning practitioners
 to preprocess, augment, and split image-mask datasets into training, validation, and test sets.
 It supports both stratified and non-stratified splitting workflows, to maintain class balance across
@@ -43,7 +43,7 @@ Experience the tool in action with real-time image augmentation and dataset spli
 
 ![Alt text](./screenshots/5.png)
 
-#### Augmenation settings sections
+#### Augmentation settings sections
 
 ![Alt text](./screenshots/4.png)
 
