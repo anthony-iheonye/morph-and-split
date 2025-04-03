@@ -1,8 +1,18 @@
 import { BackendResponseLog } from "../store";
 import { baseURL } from "./api-client";
-
 import handleDownloadBlob from "./handleDownloadBlob";
 
+/**
+ * Downloads files stored locally on the backend (not in GCS).
+ *
+ * This function:
+ * 1. Constructs download URLs for each requested filename.
+ * 2. Fetches each file directly from the backend server.
+ * 3. Converts each response to a Blob and triggers the download.
+ *
+ * @param filenames - Array of filenames to download from the local backend.
+ * @param setBackendResponseLog - Zustand setter for the "isDownloading" backend state flag.
+ */
 const handleDownloadLocalFiles = async (
   filenames: string[],
   setBackendResponseLog: <K extends keyof BackendResponseLog>(
@@ -14,23 +24,22 @@ const handleDownloadLocalFiles = async (
     setBackendResponseLog("isDownloading", true);
 
     for (const filename of filenames) {
-      // construct full download url
+      // Construct full backend URL to the file
       const url = `${baseURL}/download/augmentation_results/${encodeURIComponent(
         filename
       )}`;
 
-      // fetch file from server
+      // Fetch the file from the server
       const response = await fetch(url);
       if (!response.ok)
         throw new Error(`Failed to fetch the file: ${filename}`);
 
-      // convert response to blob
+      // Convert response to a Blob
       const blob = await response.blob();
 
-      // Trigger file download
+      // Trigger the download
       handleDownloadBlob(blob, filename);
     }
-    // await localDownloadAPI.downloadLocalFiles(filenames);
   } catch (error) {
     console.error(`Failed to download the file ${filenames[0]}: `, error);
   } finally {
