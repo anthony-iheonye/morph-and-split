@@ -8,12 +8,27 @@ import {
 import { IconType } from "react-icons";
 import ThemedText from "./ThemedText";
 
+/**
+ * Props for the IconHeadingDescriptionCombo component.
+ */
 interface Props {
+  /** Optional icon to display alongside the title */
   icon?: IconType;
+  /** Title text or responsive object */
   title?: string | { base?: string; md?: string; lg?: string };
+  /** Description text or responsive object */
   description?: string | { base?: string; md?: string; lg?: string };
+  /** Font size for the title */
   fontSize?: number | string;
 }
+
+/**
+ * IconHeadingDescriptionCombo renders an optional icon, a title,
+ * and a supporting description in a stacked layout.
+ *
+ * Responsive values are supported for both title and description.
+ * This component is commonly used for labeled controls with tooltips or switches.
+ */
 const IconHeadingDescriptionCombo = ({
   icon,
   fontSize,

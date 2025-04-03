@@ -10,6 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { MdInfoOutline } from "react-icons/md";
 
+/**
+ * StratifiedFileHint renders an icon button that opens a popover with CSV format requirements.
+ *
+ * It is used to guide users when uploading a CSV file for stratified splitting.
+ * The popover lists rules and also provides a downloadable sample CSV.
+ */
 const StratifiedFileHint = () => {
   return (
     <Popover placement="auto">

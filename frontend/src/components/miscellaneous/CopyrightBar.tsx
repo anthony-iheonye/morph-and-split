@@ -1,10 +1,17 @@
 import { Box, Link, Text, useBreakpointValue } from "@chakra-ui/react";
 
+/**
+ * CopyrightBar renders a footer bar displaying the current year and developer credits.
+ *
+ * It uses a responsive layout that optionally omits the "All right reserved." text
+ * on smaller screens for compact display. The developer name links to an external profile.
+ */
 const CopyrightBar = () => {
   const rightsWord =
     useBreakpointValue({
       base: "",
     }) ?? "All right reserved.";
+
   return (
     <Box
       as="footer"
@@ -27,7 +34,7 @@ const CopyrightBar = () => {
         >
           Anthony Iheonye
         </Link>
-        .{rightsWord}
+        {rightsWord}
       </Text>
     </Box>
   );

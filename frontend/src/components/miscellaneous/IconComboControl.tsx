@@ -11,6 +11,10 @@ import { ReactNode } from "react";
 import { IconType } from "react-icons";
 import ThemedText from "./ThemedText";
 
+/**
+ * Props for the IconComboControl component, which includes optional icon, responsive title,
+ * description, control element, and layout adjustments.
+ */
 interface IconComboControlProps extends Omit<GridProps, "title"> {
   title: string | { base?: string; md?: string; lg?: string };
   titleFontSize?: number | { base?: number; md?: number; lg?: number };
@@ -21,6 +25,14 @@ interface IconComboControlProps extends Omit<GridProps, "title"> {
   controlElementWidth?: number | string | {};
   titleHint?: JSX.Element;
 }
+
+/**
+ * IconComboControl is a responsive layout component that displays an icon, title,
+ * optional description, and a right-aligned control element (like a toggle or input).
+ *
+ * It adapts its grid layout based on screen size and allows for alignment configuration
+ * of the description. The component is typically used for labeled settings sections.
+ */
 const IconComboControl = ({
   icon,
   title,
@@ -81,7 +93,6 @@ const IconComboControl = ({
       <GridItem area="description">
         <ThemedText
           fontSize="sm"
-          // fontWeight="thin"
           mb={0}
           mt={0.6}
           lineHeight="17px"

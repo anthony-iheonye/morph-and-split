@@ -1,6 +1,13 @@
 import { Radio, RadioGroup, Stack, useBreakpointValue } from "@chakra-ui/react";
 import { AugConfigStore, useAugConfigStore } from "../../store";
 
+/**
+ * SplitSelector renders a responsive radio group that allows users to
+ * toggle between previewing training, validation, or testing image sets.
+ *
+ * The displayed labels adapt to the screen size using Chakra's breakpoint system.
+ * The selected value updates the `previewedSet` value in the augmentation config store.
+ */
 const SplitSelector = () => {
   const { previewedSet, setAugConfig } = useAugConfigStore(
     (state: AugConfigStore) => ({

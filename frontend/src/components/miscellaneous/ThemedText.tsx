@@ -7,6 +7,11 @@ interface Props extends TextProps {
   darkModeTextColor?: ColorProps["color"];
 }
 
+/**
+ * ThemedText is a reusable Chakra Text component that adapts its color
+ * based on the current color mode (light or dark).
+ *
+ */
 const ThemedText = ({
   children,
   lightModeTextColor = "gray.700",
