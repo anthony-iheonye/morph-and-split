@@ -2,6 +2,17 @@ import { Flex, Heading } from "@chakra-ui/react";
 import { useBoundingBoxColor } from "../../../hooks";
 import { AugmentationResult, AugmentData } from "../subNavItems";
 
+/**
+ * AugmentBar component renders a bar for managing the augmentation process.
+ * It includes:
+ * - A heading labeled "Augment"
+ * - Sub-navigation items for starting the augmentation and viewing the results.
+ *
+ * The component uses Chakra UI's Flex component to arrange the elements in a responsive layout.
+ * The background color is dynamically set using the `useBoundingBoxColor` hook.
+ *
+ * @returns {JSX.Element} A Flex container with a heading and navigation items for augmentation.
+ */
 const AugmentBar = () => {
   const backgroundColor = useBoundingBoxColor();
 

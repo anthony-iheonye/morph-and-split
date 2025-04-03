@@ -2,6 +2,17 @@ import { Flex, Heading } from "@chakra-ui/react";
 import { useBoundingBoxColor } from "../../../hooks";
 import { PreviewUploads, UploadImages, UploadMasks } from "../subNavItems";
 
+/**
+ * UploadDataBar component renders a bar for managing dataset upload actions.
+ * It includes:
+ * - A heading labeled "Dataset"
+ * - Sub-navigation items for uploading images, uploading segmentation masks, and previewing uploads.
+ *
+ * The component uses Chakra UI's Flex component to arrange the elements in a responsive layout.
+ * The background color is dynamically set using the `useBoundingBoxColor` hook.
+ *
+ * @returns {JSX.Element} A Flex container with a heading and navigation items for dataset upload actions.
+ */
 const UploadDataBar = () => {
   const backgroundColor = useBoundingBoxColor();
 

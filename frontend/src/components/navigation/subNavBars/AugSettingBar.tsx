@@ -7,6 +7,17 @@ import {
   Transform,
 } from "../subNavItems";
 
+/**
+ * AugSettingBar component renders a bar for managing the augmentation settings.
+ * It includes:
+ * - A heading labeled "Augmentation Settings"
+ * - Sub-navigation items for splitting data, stratified splitting, applying transformations, and preprocessing.
+ *
+ * The component uses Chakra UI's Flex component to arrange the elements in a responsive layout.
+ * The background color is dynamically set using the `useBoundingBoxColor` hook.
+ *
+ * @returns {JSX.Element} A Flex container with a heading and navigation items for augmentation settings.
+ */
 const AugSettingBar = () => {
   const backgroundColor = useBoundingBoxColor();
 
