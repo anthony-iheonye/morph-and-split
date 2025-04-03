@@ -12,6 +12,13 @@ import {
 } from "../../hooks";
 import { sizes } from "../../services";
 
+/**
+ * ValStartIndex is a numeric input for setting the initial save ID
+ * for augmented validation results.
+ *
+ * The input is disabled when augmentation is actively running.
+ * Styling dynamically adapts to the current color mode.
+ */
 const ValStartIndex = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
@@ -44,7 +51,7 @@ const ValStartIndex = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,

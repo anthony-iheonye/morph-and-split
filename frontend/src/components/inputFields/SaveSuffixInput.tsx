@@ -5,13 +5,28 @@ import TestStartIndex from "./TestStartIndex";
 import TrainStartIndex from "./TrainStartIndex";
 import ValStartIndex from "./ValStartIndex";
 
+/**
+ * Props for the SaveSuffixInput component.
+ */
 interface Props extends Omit<GridProps, "title"> {
+  /** Header/title to display above the suffix input */
   title: string | { base?: string; md?: string; lg?: string };
+  /** Font size of the title (responsive or fixed) */
   titleFontSize?: number | { base?: number; md?: number; lg?: number };
+  /** Optional description displayed below the title */
   description?: string | { base?: string; md?: string; lg?: string };
+  /** Indicates the dataset type (train/val/test) */
   setName: "training" | "validation" | "testing";
+  /** Optional icon shown alongside the title/description */
   icon?: IconType | undefined;
 }
+
+/**
+ * SaveSuffixInput is a wrapper component that displays a labeled number input
+ * for specifying the numerical suffix used in naming augmented results.
+ *
+ * It dynamically renders the appropriate suffix input (Train/Val/Test) based on the provided set name.
+ */
 const SaveSuffixInput = ({
   title,
   titleFontSize,

@@ -12,6 +12,14 @@ import {
 } from "../../hooks";
 import { sizes } from "../../services";
 
+/**
+ * TargetHeightInput is a numeric input field for setting the target height
+ * for cropping operations during augmentation.
+ *
+ * The maximum value is dynamically determined by subtracting the offset height
+ * from the image height to prevent out-of-bound cropping.
+ * It includes theme-aware styling for consistent UI behavior.
+ */
 const TargetHeightInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
@@ -48,7 +56,7 @@ const TargetHeightInput = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,

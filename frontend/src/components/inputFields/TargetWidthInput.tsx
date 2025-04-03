@@ -12,6 +12,13 @@ import {
 } from "../../hooks";
 import { sizes } from "../../services";
 
+/**
+ * TargetWidthInput is a numeric input component used for setting the target width
+ * of a cropped image section in augmentation configuration.
+ *
+ * The maximum value is constrained by the image's width minus the offset width.
+ * Input styling dynamically adjusts to light/dark mode themes.
+ */
 const TargetWidthInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
@@ -49,7 +56,7 @@ const TargetWidthInput = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,

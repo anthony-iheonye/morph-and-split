@@ -12,6 +12,13 @@ import {
 } from "../../hooks";
 import { sizes } from "../../services";
 
+/**
+ * TestStartIndex is a numeric input for configuring the initial save ID
+ * for augmented test results.
+ *
+ * It is disabled when augmentation is currently running to prevent changes
+ * during processing. Styling adapts to the active theme for consistency.
+ */
 const TestStartIndex = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
@@ -44,7 +51,7 @@ const TestStartIndex = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,

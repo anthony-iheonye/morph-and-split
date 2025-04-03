@@ -12,6 +12,13 @@ import {
 } from "../../hooks";
 import { sizes } from "../../services";
 
+/**
+ * HeightOffsetInput is a numeric input field used to set the height offset
+ * for cropping operations in the augmentation config.
+ *
+ * The maximum value is constrained by the current image height.
+ * Styling dynamically adapts to the color theme.
+ */
 const HeightOffsetInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
@@ -48,7 +55,7 @@ const HeightOffsetInput = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,

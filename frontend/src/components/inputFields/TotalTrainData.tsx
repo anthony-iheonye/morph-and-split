@@ -7,6 +7,13 @@ import {
 } from "@chakra-ui/react";
 import { useAugConfigAndSetter, useInputThemedColor } from "../../hooks";
 
+/**
+ * TotalTrainData is a numeric input used to specify the total number
+ * of augmented training images to generate.
+ *
+ * Supports mouse wheel input and includes visual styling adapted
+ * to the active theme (light or dark mode).
+ */
 const TotalTrainData = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const {
@@ -20,7 +27,7 @@ const TotalTrainData = () => {
   return (
     <NumberInput
       min={1}
-      max={100000}
+      max={1000}
       allowMouseWheel
       width="auto"
       value={augConfig.totalAugmentedImages}
@@ -35,7 +42,7 @@ const TotalTrainData = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,

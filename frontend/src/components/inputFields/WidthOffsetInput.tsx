@@ -12,6 +12,14 @@ import {
 } from "../../hooks";
 import { sizes } from "../../services";
 
+/**
+ * WidthOffsetInput is a numeric input for configuring the horizontal (X-axis)
+ * offset when cropping the uploaded image. This controls where the crop begins
+ * from the left edge of the image.
+ *
+ * The maximum value is dynamically constrained to the image width minus 10 pixels
+ * to prevent exceeding image bounds. It supports themed styling and smooth transitions.
+ */
 const WidthOffsetInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
@@ -48,7 +56,7 @@ const WidthOffsetInput = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,

@@ -8,6 +8,13 @@ import {
 import { useAugConfigAndSetter, useInputThemedColor } from "../../hooks";
 import { sizes } from "../../services";
 
+/**
+ * ResizeWidthInput is a numeric input field for setting the width
+ * of augmented images within the augmentation configuration.
+ *
+ * It allows mouse wheel interactions and restricts input between 1 and 4000 pixels.
+ * Themed colors adjust the input styling to match light or dark mode.
+ */
 const ResizeWidthInput = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const width = sizes.numberInput.width;
@@ -40,7 +47,7 @@ const ResizeWidthInput = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _focus={{
           border: `2px solid ${focusBorder}`,
           boxShadow: `0 0 0 2px ${focusBorder}`,
