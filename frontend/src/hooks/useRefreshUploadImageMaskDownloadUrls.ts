@@ -2,20 +2,31 @@ import { useQuery } from "@tanstack/react-query";
 import { SignedUrls } from "../entities";
 import { APIClient } from "../services";
 
+// API client for refreshing signed download URLs for resized images and masks
 const apiClient = new APIClient<SignedUrls[]>(
   "/generate-signed-urls-for-resized-images-and-masks"
 );
 
+/**
+ * Custom hook to fetch fresh signed download URLs for resized images and masks.
+ *
+ * This hook:
+ * - Forces a new fetch on every request and mount
+ * - Ensures the backend returns updated signed URLs
+ * - Avoids caching and automatic refetch on window focus
+ *
+ * @returns React Query result containing an array of SignedUrls
+ */
 const useRefreshUploadedImageMaskDownloadUrls = () =>
   useQuery({
-    queryKey: ["imageMaskURLs"], // Unique query key for caching
+    queryKey: ["imageMaskURLs"],
     queryFn: async () => {
-      return await apiClient.getAll({ params: { refresh: true } }); // Ensure return
+      return await apiClient.getAll({ params: { refresh: true } });
     },
-    staleTime: 0, // Ensures fresh data on every request
-    cacheTime: 0, // Prevents stale cache being used
-    refetchOnMount: true, // Triggers refetch on component mount
-    refetchOnWindowFocus: false, // Avoids automatic refetch on window focus
+    staleTime: 0,
+    cacheTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 
 export default useRefreshUploadedImageMaskDownloadUrls;

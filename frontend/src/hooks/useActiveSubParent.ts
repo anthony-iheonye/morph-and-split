@@ -1,5 +1,8 @@
 import { useLocation } from "react-router-dom";
 
+/**
+ * Object mapping sub-route names for identifying active sub-navigation items.
+ */
 export const subParentNames = {
   uploadImages: "uploadImages",
   uploadMasks: "uploadMasks",
@@ -12,6 +15,14 @@ export const subParentNames = {
   previewResult: "previewResult",
 };
 
+/**
+ * Custom hook that returns the active sub-parent section name
+ * based on the current route pathname.
+ *
+ * This is used to highlight the active sub-navigation item within a parent tab.
+ *
+ * @returns A string representing the active sub-parent section or `null` if unmatched.
+ */
 const useActiveSubParent = () => {
   const location = useLocation();
 

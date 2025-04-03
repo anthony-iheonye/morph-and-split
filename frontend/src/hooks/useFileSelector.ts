@@ -2,6 +2,21 @@ import { useState } from "react";
 import { AugImage, AugMask } from "../entities";
 import { sortByName } from "../services";
 
+/**
+ * Custom hook to handle file input selection for image or mask files.
+ *
+ * Features:
+ * - Filters valid `.jpg`, `.jpeg`, and `.png` files.
+ * - Sorts files alphabetically using `sortByName`.
+ * - Converts files to objects containing metadata (`id`, `name`, `url`, etc.).
+ * - Automatically generates blob URLs for preview.
+ * - Tracks and returns any file validation error.
+ *
+ * @template T - Must extend either `AugImage` or `AugMask`.
+ * @param setFilePaths - Setter to update state with valid parsed file objects.
+ * @param onError - Optional callback to propagate error messages externally.
+ * @returns Object containing `error` message and `handleFileChange` handler.
+ */
 const useFileSelector = <T extends AugImage | AugMask>(
   setFilePaths: (files: T[]) => void,
   onError?: (error: string | null) => void
@@ -13,14 +28,21 @@ const useFileSelector = <T extends AugImage | AugMask>(
     if (onError) onError(error);
   };
 
+  /**
+   * Validates the file extension and returns it if acceptable.
+   */
   const getFileExt = (file: File): T["extension"] | null => {
     const ext = file.name.split(".").pop()?.toLowerCase();
     if (ext === "jpg" || ext === "png" || ext === "jpeg") {
       return ext;
     }
-    return null; // Return null if it's not one of the accepted extensions
+    return null;
   };
 
+  /**
+   * Handles the file input change event.
+   * Validates file types, generates preview URLs, and sets structured file objects.
+   */
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const curFiles = event.target.files;
 
@@ -29,9 +51,7 @@ const useFileSelector = <T extends AugImage | AugMask>(
       return;
     }
 
-    // Convert FileList to Array and sort it alphabetically by file name
     const sortedFiles = sortByName(Array.from(curFiles), (file) => file.name);
-
     const newFiles: T[] = [];
 
     for (const file of sortedFiles) {
@@ -42,8 +62,8 @@ const useFileSelector = <T extends AugImage | AugMask>(
           `File name "${file.name}": Not a valid file type. Update your selection.`
         );
         setFilePaths([]);
-        return; // Stop processing further files
-      } else
+        return;
+      } else {
         newFiles.push({
           id: file.name,
           name: file.name,
@@ -51,11 +71,13 @@ const useFileSelector = <T extends AugImage | AugMask>(
           url: URL.createObjectURL(file),
           file: file,
         } as T);
+      }
     }
 
-    setError(null); //clear any previous errors.
+    setError(null);
     setFilePaths(newFiles);
   };
+
   return { error, handleFileChange };
 };
 

@@ -1,5 +1,13 @@
 import { useColorMode } from "@chakra-ui/react";
 
+/**
+ * Custom hook to determine navigation highlight colors based on the current color mode.
+ *
+ * - In dark mode: returns teal shades for better contrast
+ * - In light mode: returns subtle black alpha shades
+ *
+ * @returns An object with `parentColor` and `subParentColor` values
+ */
 const useActiveNavColor = () => {
   const { colorMode } = useColorMode();
 

@@ -1,5 +1,17 @@
 import { useColorModeValue } from "@chakra-ui/react";
 
+/**
+ * Custom hook to provide Chakra UI input field colors based on the active color mode.
+ *
+ * Returns appropriate values for:
+ * - `backgroundColor`: Base background color of the input field
+ * - `borderColor`: Border color of the input field
+ * - `textColor`: Text color inside the input
+ * - `focusBorder`: Border color when input is focused
+ * - `focusedBackgroundColor`: Background color when input is focused
+ *
+ * @returns An object containing theming values for input components
+ */
 const useInputThemedColor = () => {
   const backgroundColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.300", "gray.600");
