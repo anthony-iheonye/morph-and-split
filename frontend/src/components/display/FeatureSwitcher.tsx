@@ -15,23 +15,34 @@ import { FaArrowLeft, FaArrowRight, FaCheckCircle } from "react-icons/fa";
 // Create a motion-enhanced Chakra UI Box
 const MotionBox = chakra(motion.div);
 
+/**
+ * FeatureSwitcher is a UI component that toggles between two informative sections:
+ * "Key Features" and "Why Choose Morph & Split".
+ *
+ * It provides an animated transition between the two sections using Framer Motion,
+ * navigated by arrow buttons or a call-to-action (CTA) button.
+ */
 const FeatureSwitcher = () => {
   const [isFeatures, setIsFeatures] = useState(true);
 
-  // Handles switching between sections
+  /**
+   * Toggles between the feature list and the reasons to choose section.
+   */
   const toggleSection = () => {
     setIsFeatures((prev) => !prev);
   };
 
-  // Slide animation
+  /**
+   * Animation variants for sliding effect between content sections.
+   */
   const slideVariants = {
     hidden: (direction: number) => ({
-      x: direction > 0 ? "100%" : "-100%", // Moves in from left or right
+      x: direction > 0 ? "100%" : "-100%",
       opacity: 0,
     }),
     visible: { x: 0, opacity: 1, transition: { duration: 0.5 } },
     exit: (direction: number) => ({
-      x: direction > 0 ? "-100%" : "100%", // Moves out in opposite direction
+      x: direction > 0 ? "-100%" : "100%",
       opacity: 0,
       transition: { duration: 0.5 },
     }),

@@ -1,10 +1,19 @@
 import { Box } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
+/**
+ * Props for the PreviewContainer component.
+ */
 interface Props {
+  /** React children elements to be wrapped within the preview container. */
   children: ReactNode;
 }
 
+/**
+ * PreviewContainer provides a styled wrapper around preview content.
+ *
+ * Adds subtle animation and shadow effects on hover to enhance UI interactivity.
+ */
 const PreviewContainer = ({ children }: Props) => {
   return (
     <Box

@@ -2,11 +2,23 @@ import { Box, BoxProps } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useBoundingBoxColor } from "../../hooks";
 
+/**
+ * Props for the BoundingBox component.
+ */
 interface Props extends BoxProps {
+  /** Elements to be rendered inside the bounding box. */
   children: ReactNode;
+  /** If true, sets the background to transparent instead of themed color. */
   transparent?: boolean;
 }
 
+/**
+ * BoundingBox is a layout wrapper component that applies consistent spacing,
+ * padding, and optional background color to its children.
+ *
+ * It uses Chakra UI's Box component and integrates theme-based background coloring
+ * via the useBoundingBoxColor hook unless `transparent` is true.
+ */
 const BoundingBox = ({
   children,
   width,

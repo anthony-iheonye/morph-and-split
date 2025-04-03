@@ -7,6 +7,12 @@ import PreviewCard from "./PreviewCard";
 import PreviewCardSkeleton from "./PreviewCardSkeleton";
 import PreviewContainer from "./PreviewContainer";
 
+/**
+ * PreviewUploadedDataGrid displays a scrollable, responsive grid of uploaded image-mask pairs.
+ *
+ * Uses infinite scrolling to lazily load data fetched via React Query and displays loading
+ * skeletons during fetches. This component is shown only when a preview selection is active.
+ */
 const PreviewUploadedDataGrid = () => {
   const previewSelection = useAugConfigStore(
     (state: AugConfigStore) => state.previewSelection
