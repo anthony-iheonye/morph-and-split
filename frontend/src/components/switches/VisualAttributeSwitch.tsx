@@ -3,10 +3,17 @@ import { IconType } from "react-icons";
 import { useAugConfigAndSetter } from "../../hooks";
 import { IconComboControl } from "../miscellaneous";
 
+/**
+ * Props for the VisualAttributeSwitch component.
+ */
 interface Props extends GridProps {
+  /** Title displayed next to the switch (can be responsive). */
   title: string;
+  /** Optional font size for the title (can be responsive). */
   titleFontSize?: number | { base?: number; md?: number; lg?: number };
+  /** Optional description text shown beneath the title (can be responsive). */
   description?: string | { base?: string; md?: string; lg?: string };
+  /** Key used in augConfig to identify the visual attribute toggle. */
   attributeName:
     | "a"
     | "b"
@@ -20,11 +27,21 @@ interface Props extends GridProps {
     | "l"
     | "perimeter"
     | "roundness";
+  /** Optional icon displayed beside the title. */
   icon?: IconType | undefined;
+  /** Optional margin to the right of the switch. */
   switchRightMargin?: number;
 }
+
+/**
+ * VisualAttributeSwitch component renders a toggle switch used to enable or disable
+ * a specific visual attribute in the augmentation configuration.
+ *
+ * It uses Zustand state to manage toggling of various image-derived visual properties
+ * such as color, shape, or texture metrics.
+ */
 const VisualAttributeSwitch = ({
-  attributeName: attributeName,
+  attributeName,
   icon,
   title,
   titleFontSize,
@@ -41,10 +58,15 @@ const VisualAttributeSwitch = ({
     typeof description === "string" ? { base: description } : description
   );
 
+  /**
+   * Toggles the boolean state of the given visual attribute in the augmentation config.
+   * @param key The attribute key to toggle.
+   */
   const handleCheckBoxChange = (key: keyof typeof augConfig) => {
     setAugConfig(key, !augConfig[key]);
   };
 
+  /** Predefined descriptions for each visual attribute toggle. */
   const transforms = {
     eccentricity: "Measures how elongated an object is",
     equivalentDiameter:
@@ -65,7 +87,7 @@ const VisualAttributeSwitch = ({
       "Indicates texture uniformity, with higher values showing less complexity.",
   };
 
-  // Dynamically derive the title if not explicitly provided
+  /** Default title for the attribute if `title` is not explicitly provided. */
   const defaultTitle = {
     eccentricity: "Eccentricity",
     equivalentDiameter: "Equivalent Diameter",

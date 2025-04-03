@@ -4,9 +4,15 @@ import { IconType } from "react-icons";
 import { useAugConfigAndSetter } from "../../hooks";
 import { IconHeadingDescriptionCombo } from "../miscellaneous";
 
+/**
+ * Props for the ComboPlusSwitch component.
+ */
 interface Props {
+  /** Header text to be displayed beside the switch */
   header: string;
+  /** Optional ReactNode element to be used as a switch (not currently used in this implementation) */
   switch: ReactNode;
+  /** Key representing the specific transformation toggle in the augConfig state */
   transformName:
     | "randomCrop"
     | "flipUpDown"
@@ -16,9 +22,16 @@ interface Props {
     | "corruptContrast"
     | "corruptSaturation"
     | "augmentValData";
+  /** Optional icon to be shown beside the header and description */
   icon?: IconType | undefined;
+  /** Optional margin on the right side of the switch */
   switchRightMargin?: number;
 }
+
+/**
+ * ComboPlusSwitch component displays an icon-header-description combo with a toggle switch.
+ * The switch toggles a specific boolean configuration flag in the augmentation config.
+ */
 const ComboPlusSwitch = ({
   header,
   transformName,
@@ -27,10 +40,15 @@ const ComboPlusSwitch = ({
 }: Props) => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
 
+  /**
+   * Toggles the boolean state of the selected transformation config key.
+   * @param key The transformation config key to toggle.
+   */
   const handleCheckBoxChange = (key: keyof typeof augConfig) => {
     setAugConfig(key, !augConfig[key]);
   };
 
+  /** Descriptions of each transformation toggle option */
   const transforms = {
     randomCrop:
       "Randomly selects a portion of the image to crop, resizing it to the original dimensions.",

@@ -19,6 +19,20 @@ interface Props extends Omit<GridProps, "title"> {
   icon?: IconType | undefined;
   switchRightMargin?: number;
 }
+
+/**
+ * RandomTransformation is a configurable UI component that renders a transformation toggle switch
+ * (e.g., random crop, flip, rotation, brightness adjustment, etc.) along with an icon, title, and description.
+ * It updates the augmentation configuration state using Zustand's store.
+ *
+ * Props:
+ * - title: The title displayed beside the switch (can be responsive).
+ * - titleFontSize: Optional font size for the title (can be responsive).
+ * - description: Description of the transformation (can be responsive or overridden).
+ * - transformName: The key used in the augmentation config to identify the transformation.
+ * - icon: Optional icon displayed next to the title.
+ * - switchRightMargin: Optional margin to apply to the right of the switch.
+ */
 const RandomTransformation = ({
   title,
   titleFontSize,
