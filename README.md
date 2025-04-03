@@ -1,13 +1,12 @@
 # Morph and Split
 
-Live App: [https://www.morphandsplit.com](https://www.morphandsplit.com)
-
-**[Morph and Split](https://www.morphandsplit.com)** is a user-friendly tool for computer vision and machine learning practitioners
+**<a href="https://www.morphandsplit.com" target="_blank">Morph and Split</a>** is
+is a user-friendly tool for computer vision and machine learning practitioners
 to preprocess, augment, and split image-mask datasets into training, validation, and test sets.
 It supports both stratified and non-stratified splitting workflows, to maintain class balance across
 training, validation and test sets.
 
-- **Frontend**: Hosted on [Vercel](https://vercel.com) or runnable locally
+- **Frontend**: Hosted on **<a href="https://www.vercel.com" target="_blank">Vercel</a>** or runnable locally
 - **Backend**: Deployable on Google Cloud Run or runnable locally
 - **Storage**: Uses Google Cloud Storage (GCS) buckets.
 
@@ -16,32 +15,43 @@ training, validation and test sets.
 ## Table of Contents
 
 - [Morph and Split](#morph-and-split)
-- [Table of Contents](#table-of-contents-1)
-- [Screen Shots](#screen-shots)
-- [Project Structure](#project-structure)
-- [Technology Stack](#technology-stack)
-- [Security and Authentication](#security-and-authentication)
-- [Setup and installation](#setup-and-installation)
-- [Reference Table](#reference-table)
-- [**Development Setup**](#development-setup)
-- [Running the Backend](#running-the-backend)
-  - [Locally](#locally)
-  - [On Google Cloud Run](#on-google-cloud-run)
-- [Frontend Setup](#frontend-setup)
-- [Cloud Run Deployment](#cloud-run-deployment)
-- [You are all Set!](#you-are-all-set)
-- [License](#license)
-- [Author](#author)
+  - [Table of Contents](#table-of-contents-1)
+  - [Demo](#demo)
+  - [Project Structure](#project-structure)
+  - [Technology Stack](#technology-stack)
+  - [Security and Authentication](#security-and-authentication)
+  - [Setup and installation](#setup-and-installation)
+  - [Reference Table](#reference-table)
+  - [**Development Setup**](#development-setup)
+  - [Running the Backend](#running-the-backend)
+    - [Locally](#locally)
+    - [On Google Cloud Run](#on-google-cloud-run)
+  - [Frontend Setup](#frontend-setup)
+  - [Cloud Run Deployment](#cloud-run-deployment)
+  - [You are all Set!](#you-are-all-set)
+  - [License](#license)
+  - [Author](#author)
 
 ---
 
-## Screen Shots
+## DEMO
+
+Check out the live application here: **<a href="https://www.morphandsplit.com" target="_blank">Morph and Split</a>**  
+Experience the tool in action with real-time image augmentation and dataset splitting.
+
+#### Preview of uploaded images and masks
 
 ![Alt text](./screenshots/5.png)
 
+#### Augmenation settings sections
+
 ![Alt text](./screenshots/4.png)
 
+#### Various morphological transformations
+
 ![Alt text](./screenshots/7.png)
+
+#### Preview of augmented results
 
 ![Alt text](./screenshots/10.png)
 
