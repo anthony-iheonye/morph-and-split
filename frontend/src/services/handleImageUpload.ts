@@ -18,6 +18,24 @@ interface Props {
   ) => void;
 }
 
+/**
+ * Handles the full upload pipeline for images in the Morph and Split app.
+ *
+ * Workflow:
+ * 1. Uploads raw image files to Google Cloud Storage using signed URLs.
+ * 2. Transfers uploaded images from GCS to the backend project directory.
+ * 3. Resizes the images on the backend.
+ * 4. Transfers the resized images back to GCS for frontend preview.
+ * 5. Deletes any existing stratification data file to avoid stale state.
+ * 6. Invalidates relevant queries and shows user feedback via toast.
+ *
+ * @param files - Array of image files to upload.
+ * @param queryClient - React Query client for invalidating cached data.
+ * @param toast - Chakra UI toast for showing success or error messages.
+ * @param augConfig - Current augmentation config (not used here but passed for consistency).
+ * @param setIsUploading - Sets the uploading state in the UI.
+ * @param setBackendResponseLog - Zustand action to flag backend operation status.
+ */
 const handleImageUpload = async ({
   files,
   queryClient,
@@ -48,7 +66,7 @@ const handleImageUpload = async ({
     setIsUploading(true);
     setBackendResponseLog("imageIsUploading", true);
 
-    // Upload Images to Google Cloud Storaege (GCS) bucket.
+    // Step 1: Upload images to GCS using signed URLs
     const uploaded = await uploadClient.uploadToGoogleCloudBucket(
       files,
       bucketFolders.images
@@ -60,7 +78,7 @@ const handleImageUpload = async ({
       );
     }
 
-    // Transfer uploaded images from GCS bucket to backend
+    // Step 2: Transfer uploaded images to backend project directory
     const imagesTransfered = await imageTransferClient.postData();
     if (!imagesTransfered.success) {
       throw new CustomError(
@@ -69,7 +87,7 @@ const handleImageUpload = async ({
       );
     }
 
-    // Resize uploaded images
+    // Step 3: Resize the uploaded images
     const resized = await resizeClient.postData();
     if (!resized.success) {
       throw new CustomError(
@@ -78,7 +96,7 @@ const handleImageUpload = async ({
       );
     }
 
-    // Transfer resized images to GCS bucket for frontend preview
+    // Step 4: Upload resized images back to GCS for frontend preview
     const resizedImagesTransfered = await resizedImageTransferClient.postData();
     if (!resizedImagesTransfered.success) {
       throw new CustomError(
@@ -87,7 +105,7 @@ const handleImageUpload = async ({
       );
     }
 
-    // Delete stratification data file from backend storage
+    // Step 5: Delete old stratification data (if any)
     const response =
       await deleteStratificationFileClient.deleteFileOrDirectory();
     if (!response.success) {
@@ -99,7 +117,7 @@ const handleImageUpload = async ({
         isClosable: true,
       });
     } else {
-      // Invalidate uploaded image names, uploaded image and mask metadata, and image upload status.
+      // Step 6: Invalidate related query caches and show success toast
       invalidateQueries(queryClient, [
         "imageNames",
         "metadata",
