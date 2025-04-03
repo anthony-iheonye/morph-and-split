@@ -6,6 +6,9 @@ import ImgDimension from "../entities/ImgDimension";
 import ImgMaskChannels from "../entities/ImgMaskChannels";
 import StratificationDataFile from "../entities/VisualAttributeFile";
 
+/**
+ * Configuration object for augmentation and dataset splitting.
+ */
 export interface AugConfig {
   initialTrainSaveId?: number;
   initialValSaveId?: number;
@@ -51,22 +54,56 @@ export interface AugConfig {
   reset?: boolean;
 }
 
+/**
+ * Zustand store interface for managing augmentation configuration and preview UI state.
+ */
 export interface AugConfigStore {
   augConfig: AugConfig;
   previewSelection: boolean;
   previewAugmentedResult: boolean;
+
+  /**
+   * Sets whether a preview selection is currently active.
+   */
   setPreviewSelection: (previewSelection: boolean) => void;
+
+  /**
+   * Sets whether to display the preview of the augmented result.
+   */
   setPreviewAugmentedResult: (previewAugmentedResult: boolean) => void;
+
+  /**
+   * Updates a specific key in the augmentation config object.
+   */
   setAugConfig: <K extends keyof AugConfig>(
     key: K,
     value: AugConfig[K]
   ) => void;
+
+  /**
+   * Updates the augmented images stored in the config.
+   */
   setAugmentedImages: (augmentedImages: AugImage[]) => void;
+
+  /**
+   * Updates the augmented masks stored in the config.
+   */
   setAugmentedMasks: (augmentedMasks: AugMask[]) => void;
+
+  /**
+   * Sets the train, validation, and test split ratios.
+   */
   setRatios: (train: number, val: number, test: number) => void;
+
+  /**
+   * Resets the entire augmentation config and preview state to initial defaults.
+   */
   resetAugConfig: () => void;
 }
 
+/**
+ * Initial/default configuration used when the store is first loaded or reset.
+ */
 const initialAugConfig: AugConfig = {
   initialTrainSaveId: 1,
   initialValSaveId: 1,
@@ -117,6 +154,9 @@ const initialAugConfig: AugConfig = {
   reset: false,
 };
 
+/**
+ * Zustand store for managing the Morph and Split augmentation configuration and UI preview toggles.
+ */
 const useAugConfigStore = create<AugConfigStore>()(
   (set: (fn: (state: AugConfigStore) => Partial<AugConfigStore>) => void) => ({
     augConfig: initialAugConfig,
