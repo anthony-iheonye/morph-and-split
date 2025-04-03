@@ -6,22 +6,24 @@ interface HandleLinkClickProps {
 }
 
 /**
- * A function that controls if a link is disabled or not.
- * @param event
- * @param param1
- * @returns
+ * Conditionally handles anchor tag clicks by:
+ * - Preventing navigation if the link is disabled.
+ * - Invoking a custom `onClick` handler if provided and not disabled.
+ *
+ * @param event - The mouse click event on the anchor element.
+ * @param param1 - Destructured props containing `disabled` and optional `onClick` handler.
  */
 const handleLinkClick = (
   event: MouseEvent<HTMLAnchorElement>,
   { disabled, onClick }: HandleLinkClickProps
 ) => {
   if (disabled) {
-    event.preventDefault(); // prevent navigation
+    event.preventDefault(); // Prevent default link behavior
     return;
   }
 
   if (onClick) {
-    onClick(event); // Call the custom onClick handler if provided.
+    onClick(event); // Call the provided onClick handler
   }
 };
 
