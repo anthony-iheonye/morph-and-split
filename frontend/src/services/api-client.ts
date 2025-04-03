@@ -10,16 +10,19 @@ export interface FetchResponse<T> {
   success?: boolean;
 }
 
-// Local backend base URL
+// Uncomment to use the Local backend base URL
 // export const baseURL = "http://127.0.0.1:5000";
 
-// Uncomment to use the deployed backend on Google Cloud Run
+// The deployed backend on Google Cloud Run (comment to use the local backend base URL)
 export const baseURL =
   "https://morph-and-split-backend-470140954383.us-south1.run.app"; // Google cloud run backend base URL
 
 const axiosInstance = axios.create({ baseURL: baseURL });
 
-// Automatically inject sessionId into all requests
+/**
+ * Axios interceptor that automatically injects the sessionId into all outgoing requests.
+ * Ensures that each client session is uniquely identified by the backend.
+ */
 axiosInstance.interceptors.request.use((config) => {
   const sessionId = getSessionId();
   if (!config.params) {
