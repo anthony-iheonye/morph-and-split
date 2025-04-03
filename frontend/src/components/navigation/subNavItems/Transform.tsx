@@ -6,6 +6,13 @@ import {
 } from "../../../hooks";
 import SubNavBarItem from "./SubNavBarItem";
 
+/**
+ * Transform component renders a navigation item for applying random transformations.
+ * It provides the user with an option to select and apply various transformations to images and their masks.
+ * It uses the SubNavBarItem component to display the item in the sub-navigation bar.
+ *
+ * @returns {JSX.Element} A SubNavBarItem element that links to the select transformation settings page.
+ */
 const Transform = () => {
   const { subParentColor } = useActiveNavColor();
   const activeSubParent = useActiveSubParent();

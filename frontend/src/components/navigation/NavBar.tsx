@@ -10,6 +10,18 @@ import {
   // ViewState,
 } from "./mainNavBarItems";
 
+/**
+ * NavBar component renders the main vertical or horizontal navigation bar for the application.
+ *
+ * This component includes:
+ * - A clickable company logo that redirects to the home page.
+ * - Icon buttons for navigating to different sections such as uploading data, configuring augmentation, starting augmentation, and resetting the app.
+ * - A color mode toggle to switch between light and dark themes.
+ *
+ * It is responsive:
+ * - On mobile (`base`), items are laid out in a row.
+ * - On medium (`md`) and larger screens, items are arranged in a vertical column.
+ */
 const NavBar = () => {
   return (
     <Flex
@@ -18,10 +30,12 @@ const NavBar = () => {
       minHeight={{ md: "100%" }}
       padding="10px"
     >
+      {/* Clickable logo redirects to home */}
       <Link to={"/"}>
         <CompanyLogo />
       </Link>
 
+      {/* Navigation icons for major app functions */}
       <Flex
         direction={{ base: "row", md: "column" }}
         justifyContent="space-evenly"
@@ -31,9 +45,10 @@ const NavBar = () => {
         <AugmentationConfigIcon />
         <AugmentIcon />
         <ResetIcon />
-        {/* <ViewState /> */}
+        {/* <ViewState /> Uncomment if state debugging is needed */}
       </Flex>
 
+      {/* Color mode toggle positioned at bottom/end */}
       <Box
         alignSelf={{ base: "flex-end", md: "center" }}
         mb={{ base: 1, md: 4 }}

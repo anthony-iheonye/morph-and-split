@@ -8,9 +8,19 @@ import {
 } from "../../../hooks";
 import SubNavBarItem from "./SubNavBarItem";
 
+/**
+ * AugmentationResult renders a sub-navigation item that links to the page
+ * for previewing augmented results.
+ *
+ * It includes:
+ * - A grid icon representing the preview section.
+ * - A label and tooltip for accessibility and guidance.
+ * - Dynamic highlighting when active.
+ * - Disabling when augmentation is still running or hasn't completed.
+ */
 const AugmentationResult = () => {
-  const { subParentColor } = useActiveNavColor();
-  const activeSubParent = useActiveSubParent();
+  const { subParentColor } = useActiveNavColor(); // Color for active sub-navigation item
+  const activeSubParent = useActiveSubParent(); // Currently active sub-parent name
   const { previewResult } = subParentNames;
   const { augmentationIsRunning } = useBackendResponse();
   const { data: augmentationCompleted } = useAugmentationIsComplete();
@@ -24,7 +34,7 @@ const AugmentationResult = () => {
       backgroundColor={
         activeSubParent === previewResult ? subParentColor : "transparent"
       }
-      tooltipLabel="Preveiw augmentation data"
+      tooltipLabel="Preview augmentation data"
       disabled={augmentationIsRunning || !augmentationCompleted?.success}
     />
   );
