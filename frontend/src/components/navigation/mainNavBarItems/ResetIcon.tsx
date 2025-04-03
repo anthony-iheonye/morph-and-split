@@ -29,6 +29,11 @@ import { APIClient, handleEndSession } from "../../../services";
 import invalidateQueries from "../../../services/invalidateQueries";
 import { IconButtonWithToolTip } from "../../buttons";
 
+/**
+ * ResetIcon component is used for handling session reset and termination.
+ * It triggers session reset operations, displays a confirmation dialog,
+ * and manages the state and effects related to the reset process.
+ */
 const ResetIcon = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { augConfig, setAugConfig, resetAugConfig } = useAugConfigAndSetter();
@@ -45,39 +50,50 @@ const ResetIcon = () => {
   const toast = useToast();
   const backgroundColor = useNavIconColor();
 
-  // Query client for reseting queries
+  // Query client for resetting queries
   const queryClient = useQueryClient();
   const { data } = useIsBackendRunning();
   const navigate = useNavigate();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  // Create API clients
+  // Create API clients for resetting data and configurations
   const GCSDeleteClient = new APIClient<BackendResponse>("/gcs/delete_bucket");
-
   const GCSCreateClient = new APIClient<BackendResponse>("/gcs/create_bucket");
-
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "project_directories/create"
   );
-
   const signedUrlsClient = new APIClient<BackendResponse>(
     "/reset-all-signed-download-urls"
   );
 
+  /**
+   * handleReset is responsible for performing the session reset operations.
+   * It interacts with the backend to delete and create resources (e.g., GCS bucket, directories)
+   * and resets the necessary queries and configurations.
+   *
+   * Side Effects:
+   * - Deletes and creates GCS buckets
+   * - Creates project directories
+   * - Resets signed download URLs
+   * - Resets local configuration and backend response states
+   * - Invalidates queries to refresh data
+   * - Navigates to the image upload page after success
+   */
   const handleReset = async (key: keyof typeof augConfig) => {
     try {
+      // Indicate reset is in progress by setting isResetting to true
       setBackendResponseLog("isResetting", true);
 
-      // Delete GCS bucket
+      // Step 1: Delete existing GCS bucket
       const gcsBucketDeletion = await GCSDeleteClient.deleteFileOrDirectory();
       if (!gcsBucketDeletion) {
         throw new CustomError(
-          "GCS Storage Deletion  Failed.",
+          "GCS Storage Deletion Failed.",
           "Failed to delete Google Cloud Storage bucket."
         );
       }
 
-      // Create new bucket
+      // Step 2: Create new GCS bucket
       const gcsBucketCreation = await GCSCreateClient.executeAction();
       if (!gcsBucketCreation.success) {
         throw new CustomError(
@@ -86,10 +102,9 @@ const ResetIcon = () => {
         );
       }
 
-      // Create new backend project directories
+      // Step 3: Create new backend project directories
       const projectDirectoryCreation =
         await projectDirectoryClient.executeAction();
-
       if (!projectDirectoryCreation.success) {
         throw new CustomError(
           "Project Directory Creation Failed.",
@@ -97,6 +112,7 @@ const ResetIcon = () => {
         );
       }
 
+      // Step 4: Reset signed download URLs
       const resetSignedDownloadUrls = await signedUrlsClient.executeAction();
       if (!resetSignedDownloadUrls.success) {
         throw new CustomError(
@@ -104,6 +120,7 @@ const ResetIcon = () => {
           "Failed to reset signed download URLs."
         );
       } else {
+        // Show success toast once the reset is successful
         toast({
           title: "Session reset successfully!",
           status: "success",
@@ -116,7 +133,7 @@ const ResetIcon = () => {
         resetBackendResponseLog();
         setAugConfig(key, !augConfig[key]);
 
-        // Reset queries.
+        // Reset queries to refresh the session's data state
         invalidateQueries(queryClient, [
           "imageNames",
           "maskNames",
@@ -128,12 +145,14 @@ const ResetIcon = () => {
           "validationSet",
           "testingSet",
           "stratificationFileName",
-          "strafied_split_parameters",
+          "stratified_split_parameters",
         ]);
 
+        // Navigate to the upload data page after the reset
         navigate("/upload_data/images");
       }
     } catch (error) {
+      // Show error toast if the reset operation fails
       toast({
         title: "Failed to reset session",
         description: "An unknown error occurred.",
@@ -142,15 +161,18 @@ const ResetIcon = () => {
         isClosable: true,
       });
     } finally {
+      // Indicate reset process is complete by setting isResetting to false
       setBackendResponseLog("isResetting", false);
     }
   };
 
+  // Handles the reset confirmation button click
   const confirmReset = () => {
     handleReset("reset");
     onClose();
   };
 
+  // Handles the end session confirmation button click
   const confirmEndSession = () => {
     handleEndSession({
       resetAugConfig,

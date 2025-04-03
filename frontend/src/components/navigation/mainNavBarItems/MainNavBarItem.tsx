@@ -7,6 +7,25 @@ import {
 import { Link, To } from "react-router-dom";
 import { useNavIconColor } from "../../../hooks";
 
+/**
+ * MainNavBarItem component represents a navigation item in the main navbar,
+ * consisting of an icon button that links to a specified route.
+ * It also supports optional tooltips and dynamic disabling of the button.
+ *
+ * The button can be disabled by passing the `disabled` prop, which will prevent
+ * the user from interacting with it.
+ *
+ * Props:
+ * - `to`: The target route to navigate when the button is clicked.
+ * - `tooltipLabel`: Optional tooltip that appears when hovering over the button.
+ * - `icon`: The icon to be displayed on the button.
+ * - `iconLabel`: The label for the icon used for accessibility (aria-label).
+ * - `backgroundColor`: Optional background color for the button.
+ * - `tooltipPlacement`: Optional placement of the tooltip (defaults to "top-start").
+ * - `disabled`: Optional flag to disable the button (defaults to `false`).
+ *
+ * @returns {JSX.Element} The navigation item for the main navbar with an icon and optional tooltip.
+ */
 interface Props {
   to: To;
   tooltipLabel?: string;

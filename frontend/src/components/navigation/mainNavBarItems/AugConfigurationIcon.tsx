@@ -10,6 +10,18 @@ import {
 } from "../../../hooks";
 import MainNavBarItem from "./MainNavBarItem";
 
+/**
+ * AugmentationConfigIcon renders a navigation item for accessing the augmentation settings.
+ * It displays a settings icon and applies dynamic styles based on the current state of the app.
+ * The navigation item is disabled under certain conditions, such as:
+ * - Image upload not being successful
+ * - Backend is not running
+ * - Image mask balance check not successful
+ * - Augmentation is currently running
+ * - The system is shutting down or resetting
+ *
+ * @returns {JSX.Element} A navigation item linking to the augmentation settings page, with dynamic states and a tooltip.
+ */
 const AugmentationConfigIcon = () => {
   const activeParent = useActiveParent();
   const { augmentationConfig } = parentNames;
