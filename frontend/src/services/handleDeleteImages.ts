@@ -14,6 +14,22 @@ interface Props {
   ) => void;
 }
 
+/**
+ * Handles the deletion and recreation of the image directory,
+ * along with cleanup and reset of resized images and signed URLs.
+ *
+ * Workflow:
+ * 1. Deletes original and resized image directories from local and cloud storage.
+ * 2. Recreates required image folders.
+ * 3. Resets signed URLs for resized images and masks.
+ * 4. Updates React Query cache.
+ *
+ * Displays appropriate toast notifications and sets loading flags via Zustand.
+ *
+ * @param queryClient - React Query client for invalidating stale queries.
+ * @param toast - Chakra UI toast for displaying success or error messages.
+ * @param setBackendResponseLog - Zustand store function to set deletion state.
+ */
 const handleDeleteImages = async ({
   queryClient,
   toast,
@@ -37,7 +53,8 @@ const handleDeleteImages = async ({
 
   try {
     setBackendResponseLog("deletingImages", true);
-    // Delete image from backend storage
+
+    // Step 1: Delete uploaded and resized images
     const deletedImages =
       await deleteImageDirectoryClient.deleteFileOrDirectory();
     if (!deletedImages.success) {
@@ -47,7 +64,7 @@ const handleDeleteImages = async ({
       );
     }
 
-    // Recreate image directory in backend
+    // Step 2: Recreate empty local image directory
     const createdImageDirectory =
       await createImageDirectoryClient.executeAction();
     if (!createdImageDirectory.success) {
@@ -57,7 +74,7 @@ const handleDeleteImages = async ({
       );
     }
 
-    // Delete and recreate resized image directory on Gooogle cloud bucket.
+    // Step 3: Delete resized images in GCS and prepare for fresh upload
     const recreatResizedDirectory =
       await recreatResizedImageDirectoryClient.deleteFileOrDirectory();
     if (!recreatResizedDirectory.success) {
@@ -67,21 +84,22 @@ const handleDeleteImages = async ({
       );
     }
 
-    // reset signed URLs for uploaded images and masks.
+    // Step 4: Reset signed URLs so new uploads are accessible
     const resetSignedUrls = await resetURLsClient.executeAction();
     if (!resetSignedUrls.success) {
       throw new CustomError(
         "Resetting signed URLs",
-        "Failed to reset signed urls for resized images and mask ."
+        "Failed to reset signed urls for resized images and mask."
       );
-    } else {
-      invalidateQueries(queryClient, [
-        "imageNames",
-        "metadata",
-        "imageUploadStatus",
-        "imageMaskBalanceStatus",
-      ]);
     }
+
+    // Step 5: Invalidate stale queries
+    invalidateQueries(queryClient, [
+      "imageNames",
+      "metadata",
+      "imageUploadStatus",
+      "imageMaskBalanceStatus",
+    ]);
   } catch (error: any) {
     toast({
       title: "Error Deleting Images",
