@@ -6,6 +6,13 @@ import {
   useStratifiedSplitParameters,
 } from "../../hooks";
 
+/**
+ * SplitParameterSelector is a dropdown menu component that allows users
+ * to select a parameter used for stratified data splitting.
+ *
+ * It displays available parameters from the backend and updates the
+ * augmentation configuration upon selection.
+ */
 const SplitParameterSelector = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
   const { data } = useStratifiedSplitParameters();
@@ -26,7 +33,7 @@ const SplitParameterSelector = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _hover={{
           border: `2px solid ${hoverBorder}`,
           boxShadow: `0 0 0 2px ${hoverBorder}`,

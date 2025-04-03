@@ -1,6 +1,14 @@
 import { Select } from "@chakra-ui/react";
 import { useAugConfigAndSetter } from "../../hooks";
 
+/**
+ * ImageChannel is a select dropdown component for choosing the number of image input channels.
+ *
+ * It updates the augmentation configuration's `imageMaskChannels.imgChannels` value.
+ * Available options include:
+ * - 1 (for Binary/Grayscale images)
+ * - 3 (for RGB images)
+ */
 const ImageChannel = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
 

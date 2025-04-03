@@ -1,6 +1,18 @@
 import { Select } from "@chakra-ui/react";
 import { useAugConfigAndSetter } from "../../hooks";
 
+/**
+ * SplitParameterSelector is a dropdown component that allows users to select
+ * a visual attribute for stratified splitting.
+ *
+ * The available attributes are grouped into categories:
+ * - Color (L, a, b channels)
+ * - Size (e.g., Equivalent Diameter, Perimeter)
+ * - Shape (e.g., Eccentricity, Roundness)
+ * - Texture (e.g., Contrast, Energy)
+ *
+ * Upon selection, it updates the `splitParameter` value in the augmentation config.
+ */
 const SplitParameterSelector = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
 

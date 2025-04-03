@@ -1,6 +1,14 @@
 import { Select } from "@chakra-ui/react";
 import { useAugConfigAndSetter } from "../../hooks";
 
+/**
+ * MaskChannel is a select dropdown component for choosing the number of mask input channels.
+ *
+ * It updates the augmentation configuration's `imageMaskChannels.maskChannels` value.
+ * Available options include:
+ * - 1 (for Binary/Grayscale masks)
+ * - 3 (for RGB masks)
+ */
 const MaskChannel = () => {
   const { augConfig, setAugConfig } = useAugConfigAndSetter();
 
