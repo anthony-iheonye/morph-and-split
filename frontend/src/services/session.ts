@@ -6,7 +6,7 @@ const SESSION_KEY = "morph-session-id";
  * Retrieves the session ID from localStorage.
  * If not found, generates a new UUID, stores it, and returns it.
  *
- * @returns {string} The session ID.
+ * @returns The active session ID.
  */
 export const getSessionId = (): string => {
   let sessionId = localStorage.getItem(SESSION_KEY);
