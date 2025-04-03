@@ -17,6 +17,20 @@ interface Props {
   ) => void;
 }
 
+/**
+ * Handles deletion of the uploaded stratification data file.
+ *
+ * Workflow:
+ * 1. Sends a DELETE request to remove the stratification file from the backend.
+ * 2. Updates state flags and resets the selected split parameter.
+ * 3. Invalidates related queries to refresh UI state.
+ * 4. Displays success or error notifications via toast.
+ *
+ * @param queryClient - React Query client for cache invalidation.
+ * @param toast - Chakra UI toast function for user notifications.
+ * @param setBackendResponseLog - Zustand state updater for backend flags.
+ * @param setAugConfig - Zustand updater for AugConfig to clear splitParameter.
+ */
 const handleDeleteStratDataFile = async ({
   queryClient,
   toast,
@@ -30,9 +44,10 @@ const handleDeleteStratDataFile = async ({
   try {
     setBackendResponseLog("deletingStratDataFile", true);
 
-    // Delete stratification data file from backend storage
+    // Step 1: Attempt to delete the stratification file from backend
     const response =
       await deleteStratificationFileClient.deleteFileOrDirectory();
+
     if (!response.success) {
       toast({
         title: response.error,
@@ -42,12 +57,14 @@ const handleDeleteStratDataFile = async ({
         isClosable: true,
       });
     } else {
+      // Step 2: Invalidate related queries so UI updates with no file
       invalidateQueries(queryClient, [
         "stratificationFileName",
         "strafied_split_parameters",
       ]);
     }
   } catch (error: any) {
+    // Step 3: Handle backend or network errors
     const errorTitle = error.response?.data?.error || "Delete Error";
     const errorDescription =
       error.response?.data?.message ||
@@ -61,6 +78,7 @@ const handleDeleteStratDataFile = async ({
       isClosable: true,
     });
   } finally {
+    // Step 4: Reset state flags and clear selected split parameter
     setBackendResponseLog("deletingStratDataFile", false);
     setAugConfig("splitParameter", "");
   }
