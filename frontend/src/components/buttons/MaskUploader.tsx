@@ -17,23 +17,33 @@ import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
 
+/**
+ * MaskUploader component allows users to upload mask files.
+ *
+ * The upload workflow involves:
+ * 1. Uploading masks to Google Cloud Storage using signed URLs.
+ * 2. Transferring masks to the backend.
+ * 3. Resizing the uploaded masks.
+ * 4. Transferring resized masks to GCS.
+ * 5. Resetting signed URLs.
+ * 6. Deleting stratification metadata if it exists.
+ * 7. Invalidating cached queries for updated app state.
+ *
+ * Displays a button that indicates upload progress and supports file re-selection.
+ * Shows toast notifications based on success or failure of the operation.
+ */
 const MaskUploader = () => {
   const uploadClient = new APIClient<SignedUrls>("/generate-signed-upload-url");
-
   const maskTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_masks_to_backend"
   );
-
   const resizeClient = new APIClient<BackendResponse>("/resize-uploaded-masks");
-
   const resizedMasksTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_resized_original_masks_to_gcs"
   );
-
   const signedUrlResetClient = new APIClient<BackendResponse>(
     "/reset-signed-urls-for-resized-images-and-masks"
   );
-
   const deleteStratificationFileClient = new APIClient(
     "/stratification_data_file/delete"
   );
@@ -55,10 +65,12 @@ const MaskUploader = () => {
     hoverBackgroundColor,
   } = useButtonThemedColor();
 
+  /**
+   * Handles mask file uploads and the associated upload pipeline.
+   */
   const { handleFileChange } = useFileUploader<File>(
     async (files) => {
       try {
-        // Trigger the upload process
         const uploaded = await uploadClient.uploadToGoogleCloudBucket(
           files,
           bucketFolders.masks
@@ -96,7 +108,6 @@ const MaskUploader = () => {
           );
         }
 
-        // Reset the Signed urls
         const signedUrlsReset = await signedUrlResetClient.executeAction();
         if (!signedUrlsReset.success) {
           throw new CustomError(
@@ -105,7 +116,6 @@ const MaskUploader = () => {
           );
         }
 
-        // Delete stratification data file from backend storage
         const response =
           await deleteStratificationFileClient.deleteFileOrDirectory();
         if (!response.success) {
@@ -117,8 +127,6 @@ const MaskUploader = () => {
             isClosable: true,
           });
         } else {
-          // Invalidate uploaded masks names, uploaded image and mask metadata,
-          // mask upload status and image-mask balance.
           invalidateQueries(queryClient, [
             "maskNames",
             "metadata",
@@ -130,7 +138,6 @@ const MaskUploader = () => {
           ]);
         }
 
-        // Show toast if only everything above succeeded.
         toast({
           title: "Upload Successful",
           description: `${files.length} file(s) uploaded successfully.`,
@@ -153,8 +160,11 @@ const MaskUploader = () => {
     "maskIsUploading"
   );
 
+  /**
+   * Resets the file input so the same file can be re-uploaded if needed.
+   */
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.target.value = ""; // Reset the file input's value so the previous file can be reuploaded, if we choose to.
+    event.target.value = "";
   };
 
   return (
@@ -170,7 +180,7 @@ const MaskUploader = () => {
       border={`1px solid ${borderColor}`}
       borderRadius={10}
       color={textColor}
-      transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+      transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
       _hover={{
         border: `2px solid ${hoverBorder}`,
         boxShadow: `0 0 0 2px ${hoverBorder}`,

@@ -6,6 +6,14 @@ import { useAugConfigAndSetter, useButtonThemedColor } from "../../hooks";
 import { APIClient, getFileExt } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 
+/**
+ * StratifiedDataFileUploader component allows uploading a CSV file containing
+ * stratification parameters for data splitting.
+ *
+ * The uploaded file is validated and sent to the backend. On success,
+ * it updates the augmentation configuration and invalidates relevant queries.
+ * A toast notification provides real-time feedback for both errors and success.
+ */
 const StratifiedDataFileUploader = () => {
   const [uploading, setIsUploading] = useState(false);
   const toast = useToast();
@@ -24,10 +32,17 @@ const StratifiedDataFileUploader = () => {
     "/upload/backend/stratification_file"
   );
 
+  /**
+   * Resets the file input so the same file can be selected again if needed.
+   */
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.target.value = "";
   };
 
+  /**
+   * Handles the CSV file upload process, including format validation,
+   * API request, state updates, and user feedback.
+   */
   const handleFileChange = async (
     event: ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -113,7 +128,7 @@ const StratifiedDataFileUploader = () => {
         bg={backgroundColor}
         border={`1px solid ${borderColor}`}
         color={textColor}
-        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+        transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
         _hover={{
           border: `2px solid ${hoverBorder}`,
           boxShadow: `0 0 0 2px ${hoverBorder}`,

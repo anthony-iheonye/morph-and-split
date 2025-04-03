@@ -14,48 +14,65 @@ import { useSessionIsRunning } from "../../hooks";
 import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 
+/**
+ * Props for the StartSession component.
+ */
 interface Props {
+  /** Label for the button. Can be a string or a responsive object. */
   label?: string | { base?: string; md?: string; lg?: string };
+  /** Path to navigate to once the session has been successfully started. */
   to: string;
+  /** Whether the button should be disabled. Default is false. */
   disable?: boolean;
 }
 
+/**
+ * StartSession component displays a button to initialize a new session.
+ *
+ * Upon clicking, it performs the following steps:
+ * - Creates a Google Cloud Storage (GCS) bucket
+ * - Creates directories within that bucket
+ * - Creates backend project directories
+ * - Marks the session as running on the backend
+ * - Navigates the user to the given path if successful
+ *
+ * Displays appropriate loading and success/failure indicators with toast notifications.
+ */
 const StartSession = ({
   to,
   label = "Start a Session",
   disable = false,
 }: Props) => {
   const GCSClient = new APIClient<BackendResponse>("/gcs/create_bucket");
-
   const bucketDirectoryClient = new APIClient<BackendResponse>(
     "/gcs/create_folders_in_bucket"
   );
-
   const projectDirectoryClient = new APIClient<BackendResponse>(
     "project_directories/create"
   );
-
   const sessionClient = new APIClient<BackendResponse>(
     "/session/start_session"
   );
 
   const { data: session } = useSessionIsRunning();
-
   const navigate = useNavigate();
   const toast = useToast();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
+  /** Resolves label text based on current screen size */
   const responsiveLabel = useBreakpointValue(
     typeof label === "string" ? { base: label } : label
   );
 
+  /**
+   * Handles the button click to initiate the session setup process.
+   */
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      // Create a new bucket
-      const bucketCreation = await GCSClient.executeAction();
 
+      const bucketCreation = await GCSClient.executeAction();
       if (!bucketCreation.success) {
         throw new CustomError(
           "GCS Bucket Creation",
@@ -63,7 +80,6 @@ const StartSession = ({
         );
       }
 
-      // Create folders within the bucket
       const directoryCreation = await bucketDirectoryClient.executeAction();
       if (!directoryCreation.success) {
         throw new CustomError(
@@ -72,10 +88,8 @@ const StartSession = ({
         );
       }
 
-      // Create backend project directories
       const projectDirectoryCreation =
         await projectDirectoryClient.executeAction();
-
       if (!projectDirectoryCreation.success) {
         throw new CustomError(
           "Project Directory Creation",
@@ -83,7 +97,6 @@ const StartSession = ({
         );
       }
 
-      // Mark session as 'started'
       const session = await sessionClient.executeAction();
       if (!session.isRunning) {
         throw new CustomError("Session State", "Failed to start new session.");

@@ -5,13 +5,27 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 
+/**
+ * Props for the IconButtonWithToolTip component.
+ * Extends Chakra UI's IconButtonProps to include tooltip configuration and custom hover styling.
+ */
 interface Props extends IconButtonProps {
+  /** Label displayed in the tooltip. */
   tooltipLabel: string;
+  /** Optional placement of the tooltip relative to the button. */
   placement?: PlacementWithLogical | undefined;
+  /** Optional background color applied to the icon on hover. */
   iconHoverBackgroundColor?: string;
+  /** Optional text/icon color applied on hover. */
   iconHoverColor?: string;
 }
 
+/**
+ * IconButtonWithToolTip is a wrapper around Chakra UI's IconButton with an added tooltip.
+ *
+ * This component supports optional hover styles for background and icon color,
+ * and ensures accessibility via the required `aria-label`.
+ */
 const IconButtonWithToolTip = ({
   tooltipLabel,
   "aria-label": ariaLabel,

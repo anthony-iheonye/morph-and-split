@@ -6,8 +6,9 @@ import { Spinner, useToast } from "@chakra-ui/react";
 import { useBackendResponse } from "../../hooks";
 
 /**
- * Delete uploaded images.
- * @returns
+ * DeleteImages component renders a button for deleting uploaded images.
+ *
+ * @returns {JSX.Element} An IconButton component configured with delete functionality and tooltip.
  */
 const DeleteImages = () => {
   const queryClient = useQueryClient();
@@ -15,18 +16,21 @@ const DeleteImages = () => {
   const { setBackendResponseLog, imageIsUploading, deletingImages } =
     useBackendResponse();
 
+  // Handles the deletion of uploaded images using backend service.
+  const handleDelete = () => {
+    handleDeleteImages({
+      queryClient,
+      setBackendResponseLog,
+      toast,
+    });
+  };
+
   return (
     <IconButtonWithToolTip
       aria-label="Click to delete uploaded images"
       tooltipLabel="Delete all images"
       icon={deletingImages ? <Spinner /> : <MdDeleteForever />}
-      onClick={() =>
-        handleDeleteImages({
-          queryClient,
-          setBackendResponseLog,
-          toast,
-        })
-      }
+      onClick={handleDelete}
       placement="left-start"
       isDisabled={imageIsUploading}
     />

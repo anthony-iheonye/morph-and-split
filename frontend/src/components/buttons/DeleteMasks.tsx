@@ -6,8 +6,9 @@ import { handleDeleteMasks } from "../../services";
 import IconButtonWithToolTip from "./IconButtonWithToolTip";
 
 /**
- * Delete uploaded images.
- * @returns
+ * DeleteMasks component renders a button for deleting uploaded masks.
+ *
+ * @returns {JSX.Element} An IconButton component configured with mask deletion functionality and tooltip.
  */
 const DeleteMasks = () => {
   const queryClient = useQueryClient();

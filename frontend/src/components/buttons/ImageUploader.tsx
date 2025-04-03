@@ -16,25 +16,35 @@ import { APIClient } from "../../services";
 import invalidateQueries from "../../services/invalidateQueries";
 import { bucketFolders } from "../../store";
 
+/**
+ * ImageUploader component handles the selection and uploading of image files.
+ *
+ * The component performs a multi-step process:
+ * 1. Uploads selected images to a Google Cloud Storage bucket using signed URLs.
+ * 2. Transfers the images to the backend.
+ * 3. Resizes the images.
+ * 4. Transfers resized images to GCS.
+ * 5. Resets signed URLs for resized images.
+ * 6. Deletes any existing stratification metadata file.
+ * 7. Invalidates relevant React Query cache.
+ *
+ * Displays a responsive button that shows a spinner while uploading is in progress.
+ * Toast notifications inform the user of success or failure at each step.
+ */
 const ImageUploader = () => {
   const uploadClient = new APIClient<SignedUrls>("/generate-signed-upload-url");
-
   const imageTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_images_to_backend"
   );
-
   const resizeClient = new APIClient<BackendResponse>(
     "/resize-uploaded-images"
   );
-
   const resizedImageTransferClient = new APIClient<BackendResponse>(
     "/gcs/transfer_resized_original_images_to_gcs"
   );
-
   const signedUrlResetClient = new APIClient<BackendResponse>(
     "/reset-signed-urls-for-resized-images-and-masks"
   );
-
   const deleteStratificationFileClient = new APIClient(
     "/stratification_data_file/delete"
   );
@@ -56,10 +66,12 @@ const ImageUploader = () => {
   const queryClient = useQueryClient();
   const toast = useToast();
 
+  /**
+   * Handles file selection and executes upload and post-processing pipeline.
+   */
   const { handleFileChange } = useFileUploader<File>(
     async (files) => {
       try {
-        // Trigger the upload process
         const uploaded = await uploadClient.uploadToGoogleCloudBucket(
           files,
           bucketFolders.images
@@ -97,7 +109,6 @@ const ImageUploader = () => {
           );
         }
 
-        // Reset the Signed urls
         const signedUrlsReset = await signedUrlResetClient.executeAction();
         if (!signedUrlsReset.success) {
           throw new CustomError(
@@ -106,7 +117,6 @@ const ImageUploader = () => {
           );
         }
 
-        // Delete stratification data file from backend storage
         const response =
           await deleteStratificationFileClient.deleteFileOrDirectory();
         if (!response.success) {
@@ -118,7 +128,6 @@ const ImageUploader = () => {
             isClosable: true,
           });
         } else {
-          // Invalidate uploaded image names, uploaded image and mask metadata, and image upload status.
           invalidateQueries(queryClient, [
             "imageNames",
             "metadata",
@@ -130,7 +139,6 @@ const ImageUploader = () => {
           ]);
         }
 
-        // Show toast if only everything above succeeded.
         toast({
           title: "Upload Successful",
           description: `${files.length} file(s) uploaded successfully.`,
@@ -153,8 +161,11 @@ const ImageUploader = () => {
     "imageIsUploading"
   );
 
+  /**
+   * Resets the file input element to allow re-selection of the same file.
+   */
   const resetInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.target.value = ""; // Reset the file input's value so the previous file can be reuploaded, if we choose to.
+    event.target.value = "";
   };
 
   return (
@@ -171,7 +182,7 @@ const ImageUploader = () => {
       bg={backgroundColor}
       border={`1px solid ${borderColor}`}
       color={textColor}
-      transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out" //Smooth transitions
+      transition="background-color 0.2s ease-in-out, border-color 0.2s ease-in-out"
       _hover={{
         border: `2px solid ${hoverBorder}`,
         boxShadow: `0 0 0 2px ${hoverBorder}`,
