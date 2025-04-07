@@ -22,7 +22,7 @@ training, validation and test sets.
   - [Security and Authentication](#security-and-authentication)
   - [Setup and installation](#setup-and-installation)
   - [Reference Table](#reference-table)
-  - [**Development Setup**](#development-setup)
+  - [Development Setup](#development-setup)
   - [Running the Backend](#running-the-backend)
     - [Locally](#locally)
     - [On Google Cloud Run](#on-google-cloud-run)
@@ -322,8 +322,9 @@ docker build -t anthonyiheonye/morph_and_split-backend:12 .
 
 ### 3. Deploy service to Cloud Run
 
-Let’s say we want to deploy a service called `morph-and-split-backend` using your container
-image hosted on Docker Hub. Below are the deployment details:
+Let’s say we want to deploy a service called `morph-and-split-backend`, on Google Cloud Run, using a container image hosted on Docker Hub. To achieve this goal on the command line, we will provide parameters ranging from the Project name to the environment variable for the service account key.
+
+The example below are parameters I used for creating such a service:
 
 - **Project**: `morph-and-split-toolkit`
 - **Service name**: `morph-and-split-backend`
@@ -389,14 +390,42 @@ Service [morph-and-split-backend] revision [morph-and-split-backend-xxxxx] has b
 Service URL: https://morph-and-split-backend-xxxxx-uc.a.run.app
 ```
 
-Copy the service URL (the last line). Then, go to:
+Copy the service URL (the last line), we will use it shortly. However, before we need to set the Cloud Run runtime service account to impersonate the Target account.
+
+### Impersonate the Target Account
+
+The example above, the Cloud Run Runtime service account is the account (`--service-account`) we used when setting up the service `morph-and-split-backend`:
+
+```bash
+gcloud run deploy morph-and-split-backend \
+  --project=morph-and-split-toolkit \
+  --image=docker.io/anthonyiheonye/morph_and_split-backend:12 \
+  --service-account=morph-and-split-toolkit-sa@morph-and-split-toolkit.iam.gserviceaccount.com \
+```
+
+While the `target impersonated service account` is the account our code is trying to impersonate at runtime. To run the Morph and Split app, this target account should have the ability to tell (impersonate) the `Cloud Run Service Account` _"Hi friend, it is time to run the service `morph-and-split-backend`. I can run it on your behalf"_.
+
+Importantly, the target account can only communicate with the Cloud Run Service account after we have granted the target account the `serviceAccountTokenCreator` role that enables it to impersonate the `Cloud Run Service Account.`
+
+In the [example](#3-deploy-service-to-cloud-run) above, I set the Cloud Run Service account to be same as the Target Impersonated Service Account. To enable communication between both account, let us grant target service account the `serviceAccountTokenCreator` role:
+
+```bash
+gcloud iam service-accounts add-iam-policy-binding morph-and-split-toolkit-sa@morph-and-split-toolkit.iam.gserviceaccount.com \
+  --member="serviceAccount:morph-and-split-toolkit-sa@morph-and-split-toolkit.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountTokenCreator"
+```
+
+The first service account in the command is the Cloud run Service Account. The next account is the Target impersonated service account. Finally, let's set the base URL to the service URL we copied previouly.
+
+### Set Base URL.
+
+Navigate to:
 
 ```bash
 frontend/src/services/api-client.ts
 ```
 
-And update the baseUrl variable with your new Cloud Run URL. Save the file — and just like that,
-your frontend will start communicating with your deployed backend on Cloud Run.
+And update the baseUrl variable with your new Cloud Run URL. After saving the file, your frontend will begin communicating directly with your deployed Cloud Run backend. If it doesn't connect, please revisit the [Cloud Run Deployment](#cloud-run-deployment) section to ensure all steps were followed correctly.
 
 ---
 
