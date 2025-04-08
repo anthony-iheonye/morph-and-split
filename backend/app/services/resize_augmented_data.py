@@ -49,11 +49,11 @@ def resize_augmented_data(session_id: str):
     """
     directory_store = session_store.get_directory_store(session_id)
 
-    sample_img_name = list_filenames(directory_store.image_dir)[0]
-    sample_img_path = str(os.path.join(directory_store.image_dir, sample_img_name))
+    sample_img_name = list_filenames(directory_store.train_image_dir)[0]
+    sample_img_path = str(os.path.join(directory_store.train_image_dir, sample_img_name))
 
-    sample_mask_name = list_filenames(directory_store.mask_dir)[0]
-    sample_mask_path = str(os.path.join(directory_store.mask_dir, sample_mask_name))
+    sample_mask_name = list_filenames(directory_store.train_mask_dir)[0]
+    sample_mask_path = str(os.path.join(directory_store.train_mask_dir, sample_mask_name))
 
     resize_height, resize_width, image_channels, _ , _ = get_resized_dimension(sample_img_path)
     _, _, mask_channels, _, _ = get_resized_dimension(sample_mask_path)
