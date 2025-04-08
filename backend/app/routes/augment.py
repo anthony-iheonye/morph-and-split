@@ -109,7 +109,9 @@ def augment_data():
 
         # Determine if the final the image-mask pair should be resized before augmentation.
         if aug_config.get("resizeAugImage"):
-            final_image_shape = tuple(aug_config.get("augImageDimension").values())
+            height = aug_config.get("augImageDimension").get("height")
+            width = aug_config.get("augImageDimension").get("width")
+            final_image_shape = (height, width)
         else:
             final_image_shape = None
 

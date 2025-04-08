@@ -302,6 +302,10 @@ class DataSplitterAugmenterAndSaver:
             if self.crop_image_and_mask:
                 if self.target_height != self.new_image_height or self.target_width != self.new_image_width:
                     self.resize_images = True
+            else:
+                if self.new_image_height != self.image_shape[0] or self.new_image_width != self.image_shape[1]:
+                    self.resize_images = True
+
 
         elif final_image_shape is None and self.crop_image_and_mask and crop_dimension is not None:
             self.final_image_shape = (self.target_height, self.target_width, self.image_channels)
@@ -516,7 +520,6 @@ class DataSplitterAugmenterAndSaver:
                     f" bin with only one image.\n"
                     f"To fix this, try choosing a different parameter or increase the split ratio "
                     f"of your validation/test sets.") from ve
-
 
     def _create_directories(self):
         """
