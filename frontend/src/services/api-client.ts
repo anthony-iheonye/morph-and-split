@@ -10,11 +10,10 @@ export interface FetchResponse<T> {
   success?: boolean;
 }
 
-// // Uncomment to use the Local backend base URL
+// Uncomment to use the Local backend base URL
 // export const baseURL = "http://127.0.0.1:5000";
 
 // The deployed backend on Google Cloud Run (comment to use the local backend base URL)
-
 export const baseURL =
   "https://morph-and-split-backend-166007833561.us-south1.run.app"; // Google cloud run backend base URL
 
