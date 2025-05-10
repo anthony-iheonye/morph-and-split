@@ -76,7 +76,7 @@ const StartSession = ({
       if (!bucketCreation.success) {
         throw new CustomError(
           "GCS Bucket Creation",
-          "Failed to create a Google Cloud Storage bucket."
+          "Google Cloud credit is exhausted. Please, load more credit." // Failed to create a Google Cloud Storage bucket
         );
       }
 
@@ -112,7 +112,7 @@ const StartSession = ({
         title: error.title || "Failed to Start Session",
         description: error.message || "An unexpected error occurred.",
         status: "error",
-        duration: 3000,
+        duration: 4000,
         isClosable: true,
       });
     } finally {
