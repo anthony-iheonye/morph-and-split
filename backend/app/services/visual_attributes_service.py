@@ -15,7 +15,6 @@ class VisualAttributesDatasetCreator:
                                              'correlation', 'energy', 'entropy',
                                              'homogeneity', 'uniformity', 'equivalent_diameter', 'eccentricity',
                                              'feret_diameter_max', 'filled_area', 'perimeter', 'roundness')):
-
         """
         Produces normalized tensorflow dataset of the training, validation and test visual attributes.
 
@@ -94,7 +93,8 @@ class VisualAttributesDatasetCreator:
         elif extension == '.csv':
             visual_props = pd.read_csv(file_path)
         else:
-            raise TypeError(f'The visual attribute file must be a JSON or CSV format, got file of {extension} format.')
+            raise TypeError(
+                f'The visual attribute file must be a JSON or CSV format, got file of {extension} format.')
         visual_props = visual_props.copy().loc[::, self.visual_properties]
         # visual_props.drop(columns=['image_id'], inplace=True)
 
@@ -142,7 +142,8 @@ class VisualAttributesDatasetCreator:
         :return: Pandas dataframe containing sample weight for each visual properties value with the
             'visual_props_dataframe'.
         """
-        visual_attribute_weights_df = pd.DataFrame(data=None, columns=self.visual_properties)
+        visual_attribute_weights_df = pd.DataFrame(
+            data=None, columns=self.visual_properties)
         #
         # for column in visual_props_dataframe.columns:
         #     bin_threshold = self.upper_thresholds_dict[column]
@@ -184,12 +185,14 @@ class VisualAttributesDatasetCreator:
         self.train_unnorm_visual_props_dataframe = self._read_visual_attribute_file(
             file_path=self.train_visual_props_file_path)
 
-        self._compute_bin_weights(unnorm_train_dataframe=self.train_unnorm_visual_props_dataframe)
+        self._compute_bin_weights(
+            unnorm_train_dataframe=self.train_unnorm_visual_props_dataframe)
 
         self.train_visual_props_weights_dataframe = self._produce_visual_attribute_weights_dataframe()
 
         # compute normalization statistics (mean and std)
-        self.mean, self.std = self._compute_normalization_statistics(dataframe=self.train_unnorm_visual_props_dataframe)
+        self.mean, self.std = self._compute_normalization_statistics(
+            dataframe=self.train_unnorm_visual_props_dataframe)
         self.train_normalized_visual_props_df = self._normalize_dataframe(
             dataframe=self.train_unnorm_visual_props_dataframe)
 
@@ -198,12 +201,14 @@ class VisualAttributesDatasetCreator:
         if self.val_visual_props_file_path is not None:
             self.val_unnorm_visual_props_dataframe = self._read_visual_attribute_file(
                 file_path=self.val_visual_props_file_path)
-            self.val_normalized_visual_props_df = self._normalize_dataframe(self.val_unnorm_visual_props_dataframe)
+            self.val_normalized_visual_props_df = self._normalize_dataframe(
+                self.val_unnorm_visual_props_dataframe)
 
         if self.test_visual_props_file_path is not None:
             self.test_unnorm_visual_props_dataframe = self._read_visual_attribute_file(
                 file_path=self.test_visual_props_file_path)
-            self.test_normalized_visual_props_df = self._normalize_dataframe(self.test_unnorm_visual_props_dataframe)
+            self.test_normalized_visual_props_df = self._normalize_dataframe(
+                self.test_unnorm_visual_props_dataframe)
 
     def _produce_train_val_test_datasets(self):
         """Produces the training, validation and test datasets."""
@@ -231,5 +236,3 @@ class VisualAttributesDatasetCreator:
         self._produce_train_visual_props_weight_dataset()
         if self.save_visual_props_stats:
             self._save_stats()
-
-

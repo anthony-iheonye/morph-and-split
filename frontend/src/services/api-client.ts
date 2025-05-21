@@ -15,7 +15,7 @@ export interface FetchResponse<T> {
 
 // The deployed backend on Google Cloud Run (comment to use the local backend base URL)
 export const baseURL =
-  "https://morph-and-split-backend-166007833561.us-south1.run.app"; // Google cloud run backend base URL
+  "https://morph-and-split-backend-532789929876.us-south1.run.app"; // Google cloud run backend base URL
 
 const axiosInstance = axios.create({ baseURL: baseURL });
 
