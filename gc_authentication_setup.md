@@ -150,7 +150,7 @@ gcloud projects add-iam-policy-binding morph-and-split-toolkit \
 
 ## 11. Assign roles to your email
 
-These are need for local development access and impersonation.
+These are needed for local development access and impersonation.
 
 ### a. Allow impersonation
 
@@ -272,12 +272,8 @@ Create a credentials JSON file (let's name it **morph-and-split-key.json**) for 
 so our local backend could impersonate our service account.
 
 ```bash
-gcloud iam workload-identity-pools create-cred-config \
-  --workload-identity-pool-project="YOUR_PROJECT_NAME" \
-  --workload-identity-pool="YOUR_WORKLOAD_IDENTITY_POOL_NAME" \
-  --provider="YOUR_WORKLOAD_IDENTITY_PROVIDER_NAME" \
-  --service-account="YOUR_SERVICE_ACCOUNT_NAME@YOUR_PROJECT_NAME.iam.gserviceaccount.com" \
-  --output-file="morph-and-split-key.json"
+gcloud iam service-accounts keys create morph-and-split-key.json \
+  --iam-account=YOUR_SERVICE_ACCOUNT_NAME@YOUR_PROJECT_NAME.iam.gserviceaccount.com
 ```
 
 Place the file inside your backend directory, as indicted in the project tree.
@@ -299,6 +295,29 @@ Place the file inside your backend directory, as indicted in the project tree.
 ├── docker-compose.yml
 ├── frontend
 ```
+
+If the plan is to run your backend on Cloud Run, the service account key must be injected into the service securely. To do this, we store the key as a secret in Secret Manager, which will later be exposed to the service as an environment variable (e.g., GCS_SIGNED_URL_KEY).
+
+Let’s create the secret:
+
+```bash
+gcloud secrets create GCS_SIGNED_URL_KEY \
+  --data-file=morph-and-split-engine-key.json \
+  --project=YOUR_PROJECT_NAME
+```
+
+> You can rename the environment variable to suit your use case. I named mine GCS_SIGNED_URL_KEY because the service account key is used to generate signed download and upload URLs for Google Cloud Storage.
+
+To allow Cloud Run to access the secret at runtime, we need to grant the deployed service account permission to read the secret from Secret Manager.
+
+```bash
+gcloud secrets add-iam-policy-binding GCS_SIGNED_URL_KEY \
+  --member="serviceAccount:YOUR_SERVICE_ACCOUNT_NAME@YOUR_PROJECT_NAME.iam.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor" \
+  --project=YOUR_PROJECT_NAME
+```
+
+Replace `YOUR_SERVICE_ACCOUNT_NAME` and `YOUR_PROJECT_NAME` with your actual values.
 
 ## 17. Update the GoogleCloudStorageConfig class
 

@@ -202,6 +202,7 @@ Here is a placeholder reference table:
 | 3   | Service Account Name            | YOUR_SERVICE_ACCOUNT_NAME            | morph-and-split-app-sa   |
 | 4   | Workload Identity Pool Name     | YOUR_WORKLOAD_IDENTITY_POOL_NAME     | morph-and-split-wif      |
 | 5   | Workload Identity Provider Name | YOUR_WORKLOAD_IDENTITY_PROVIDER_NAME | morph-and-split-provider |
+| 6   | Secret Name                     | YOUR_SECRET_NAME                     | GCS_SIGNED_URL_KEY       |
 
 ---
 
