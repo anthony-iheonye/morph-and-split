@@ -11,8 +11,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { BackendResponse, CustomError } from "../../entities";
 import { useSessionIsRunning } from "../../hooks";
-import { APIClient } from "../../services";
-import invalidateQueries from "../../services/invalidateQueries";
+import { APIClient, invalidateQueries, removeSessionId } from "../../services";
 
 /**
  * Props for the StartSession component.
@@ -70,6 +69,7 @@ const StartSession = ({
    */
   const handleClick = async () => {
     try {
+      removeSessionId();
       setIsLoading(true);
 
       const bucketCreation = await GCSClient.executeAction();
