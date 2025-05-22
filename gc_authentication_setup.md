@@ -250,7 +250,7 @@ gcloud iam workload-identity-pools providers create-oidc YOUR_WORKLOAD_IDENTITY_
 To grant WIF access to your service account, you will need the project number. Let us retrieve it:
 
 ```bash
-gcloud projects describe morph-and-split-toolkit --format="value(projectNumber)"
+gcloud projects describe YOUR_PROJECT_NAME --format="value(projectNumber)"
 ```
 
 Replace PROJECT_NUMBER with the actual project number you just retrieved. Also replace:
