@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 # Blueprint definition
 gcs_management = Blueprint('gcs_management', __name__)
 
+
 @gcs_management.route('/gcs/create_bucket', methods=['POST'])
 def create_bucket():
     """Create a new Google Cloud Storage Bucket scoped to a session."""
@@ -31,7 +32,7 @@ def create_bucket():
 
         if bucket is None:
             return jsonify({'success': False,
-                            'message': f"Failed to create storage bucket '{bucket_name}'."}), 500
+                            'error': f"Failed to create storage bucket '{bucket_name}'. Check billing or IAM permissions"}), 500
 
         # Add bucket to session store
         session_store.set_bucket(session_id=session_id, bucket=bucket)
@@ -74,7 +75,8 @@ def delete_bucket():
         session_id = request.args.get('sessionId')
         bucket_name = session_store.get_bucket_name(session_id=session_id)
 
-        bucket_deleted = delete_google_cloud_storage_bucket(session_id=session_id)
+        bucket_deleted = delete_google_cloud_storage_bucket(
+            session_id=session_id)
 
         if bucket_deleted:
             session_store.clear_bucket(session_id=session_id)
@@ -127,5 +129,3 @@ def delete_uploaded_masks():
                         'message': 'Successfully deleted uploaded masks in Google Cloud Storage Bucket'}), 200
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
-
-
