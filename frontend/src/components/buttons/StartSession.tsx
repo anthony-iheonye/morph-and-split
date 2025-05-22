@@ -76,7 +76,7 @@ const StartSession = ({
       if (!bucketCreation.success) {
         throw new CustomError(
           "GCS Bucket Creation",
-          "Google Cloud credit is exhausted. Please, load more credit." // Failed to create a Google Cloud Storage bucket
+          "Could not create storage bucket. Billing account not active."
         );
       }
 
