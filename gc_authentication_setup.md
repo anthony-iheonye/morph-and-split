@@ -323,7 +323,7 @@ Replace `YOUR_SERVICE_ACCOUNT_NAME` and `YOUR_PROJECT_NAME` with your actual val
 
 At this point, you should have the names of your Google Cloud project, your service account, and
 the service account key file (the JSON file generated in step 16). The **GoogleCloudStorageConfig** class
-in **backend/config/google_cloud_storage.py** contains instance attributes that must be updated
+in **backend/app/config/google_cloud_storage.py** contains instance attributes that must be updated
 to reflect these values.
 
 Update the following three attributes:
