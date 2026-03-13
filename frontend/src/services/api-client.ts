@@ -15,7 +15,8 @@ export interface FetchResponse<T> {
 
 // The deployed backend on Google Cloud Run (comment to use the local backend base URL)
 export const baseURL =
-  "https://morph-and-split-backend-532789929876.us-south1.run.app"; // Google cloud run backend base URL
+  // "https://morph-and-split-backend-532789929876.us-south1.run.app"; // Google cloud run backend base URL
+  "https://morph-and-split-backend-895402815112.us-central1.run.app"; // Google cloud run backend base URL
 
 const axiosInstance = axios.create({ baseURL: baseURL });
 
@@ -48,13 +49,13 @@ class APIClient<T> {
    */
   executeAction = async (
     data?: object,
-    requestConfig?: AxiosRequestConfig
+    requestConfig?: AxiosRequestConfig,
   ): Promise<BackendResponse> => {
     try {
       const response = await axiosInstance.post<BackendResponse>(
         this.endpoint,
         data || {},
-        requestConfig
+        requestConfig,
       );
       return response.data;
     } catch (error: any) {
@@ -67,7 +68,7 @@ class APIClient<T> {
    */
   fetchAugmentedResults = (
     id: string | number,
-    requestConfig?: AxiosRequestConfig
+    requestConfig?: AxiosRequestConfig,
   ) =>
     axiosInstance
       .get<T>(`${this.endpoint}/${id}`, requestConfig)
@@ -78,13 +79,13 @@ class APIClient<T> {
    */
   downloadLocalFiles = async (
     filenames: string[],
-    requestConfig?: AxiosRequestConfig
+    requestConfig?: AxiosRequestConfig,
   ) => {
     try {
       const downloadPromises = filenames.map(async (filename) => {
         const response = await axiosInstance.get(
           `${this.endpoint}/${encodeURIComponent(filename)}`,
-          { responseType: "blob", ...requestConfig }
+          { responseType: "blob", ...requestConfig },
         );
         console.log(`Downloaded: ${filename}`);
         this.handleDownloadBlob(response.data, filename);
@@ -148,12 +149,12 @@ class APIClient<T> {
     filenames: string[],
     contentTypes: string[],
     folder_path: string = "",
-    requestConfig?: AxiosRequestConfig
+    requestConfig?: AxiosRequestConfig,
   ): Promise<FetchResponse<U>> => {
     const response = await axiosInstance.post<FetchResponse<U>>(
       this.endpoint,
       { filenames, folder_path, content_types: contentTypes },
-      requestConfig
+      requestConfig,
     );
     return response.data;
   };
@@ -162,7 +163,7 @@ class APIClient<T> {
    * Retrieves signed download URLs from the backend for specified files.
    */
   getSignedDownloadUrls = async (
-    filenames: string[]
+    filenames: string[],
   ): Promise<SignedUrls[]> => {
     const response = await axiosInstance.get<{
       success: boolean;
@@ -170,7 +171,7 @@ class APIClient<T> {
     }>(
       `${this.endpoint}?${filenames
         .map((f) => `filenames=${encodeURIComponent(f)}`)
-        .join("&")}`
+        .join("&")}`,
     );
 
     if (response.data.success) {
@@ -185,7 +186,7 @@ class APIClient<T> {
    */
   uploadToGoogleCloudBucket = async (
     files: File[],
-    folder_path: string = ""
+    folder_path: string = "",
   ): Promise<{ success: boolean; failedFiles: string[] }> => {
     const filenames = files.map((file) => file.name);
     const contentTypes = files.map((file) => file.type);
@@ -195,14 +196,14 @@ class APIClient<T> {
         await this.getSignedUploadUrls<SignedUrls>(
           filenames,
           contentTypes,
-          folder_path
+          folder_path,
         );
 
       const failedFiles: string[] = [];
 
       const uploadPromises = files.map(async (file) => {
         const signedUrl = signedUrlsObjs.find(
-          (urlObj) => urlObj.filename === file.name
+          (urlObj) => urlObj.filename === file.name,
         )?.url;
 
         if (!signedUrl) {
@@ -234,7 +235,7 @@ class APIClient<T> {
       if (axios.isAxiosError(error)) {
         console.error(
           "Error uploading files to Google Cloud Bucket",
-          error.message
+          error.message,
         );
       }
       throw error;
@@ -248,8 +249,8 @@ class APIClient<T> {
     filenames: string[],
     setBackendResponseLog: <K extends keyof BackendResponseLog>(
       key: K,
-      value: BackendResponseLog[K]
-    ) => void
+      value: BackendResponseLog[K],
+    ) => void,
   ) => {
     try {
       setBackendResponseLog("isDownloading", true);
@@ -277,13 +278,13 @@ class APIClient<T> {
    */
   postData = async (
     data?: FormData | object,
-    requestConfig?: AxiosRequestConfig
+    requestConfig?: AxiosRequestConfig,
   ): Promise<T> => {
     try {
       const response = await axiosInstance.post<T>(
         this.endpoint,
         data || {},
-        requestConfig
+        requestConfig,
       );
       return response.data;
     } catch (error) {
@@ -299,7 +300,7 @@ class APIClient<T> {
    */
   deleteFileOrDirectory = async (
     path?: string,
-    requestConfig?: AxiosRequestConfig
+    requestConfig?: AxiosRequestConfig,
   ): Promise<BackendResponse> => {
     try {
       const endpoint = path
@@ -308,7 +309,7 @@ class APIClient<T> {
 
       const response = await axiosInstance.delete<BackendResponse>(
         endpoint,
-        requestConfig
+        requestConfig,
       );
       return response.data;
     } catch (error) {
